@@ -63,13 +63,7 @@ const sobre = idioma === 'pt' ? {
       <h2 id="destaque">{i.destaqueTitulo[0]} <em>{i.destaqueTitulo[1]}</em></h2>
       <p>{i.destaqueTexto}</p>
       <RegistrosAmsterdam idioma={idioma} />
-      {
-        pronta('estudantes') && (
-          <a class="italico" href={para('estudantes')}>
-            {i.destaqueElo}
-          </a>
-        )
-      }
+
     </div>
   </section>
 
