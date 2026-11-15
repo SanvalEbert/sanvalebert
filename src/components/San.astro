@@ -8,7 +8,7 @@ const textos = pt ? {
   abrir: 'Conversar com San', fechar: 'Fechar conversa', titulo: 'San · guia do portal',
   descricao: 'Respostas a partir do conteúdo do site', pergunta: 'O que você procura?', enviar: 'Enviar',
   boasVindas: 'Olá! Sou San, o guia virtual deste portal. Posso ajudar você a encontrar pesquisas, publicações, resultados dos estudantes e informações sobre palestras. O que gostaria de conhecer?',
-  limite: 'Nesta versão, consulto o catálogo do portal. Para outras informações, fale com Sanval pelo WhatsApp.',
+  limite: 'Respondo com base no portal. Quando a IA estiver indisponível, consulto o catálogo local. Para outras informações, use o WhatsApp.',
   desconhecido: 'Não encontrei essa informação no conteúdo do portal. Você pode explorar as publicações ou falar diretamente com Sanval.',
   voce: 'Você', limpar: 'Limpar conversa',
   contato: 'Falar com Sanval no WhatsApp', pesquisa: 'Pesquisa e publicações',
@@ -17,7 +17,7 @@ const textos = pt ? {
   abrir: 'Chat with San', fechar: 'Close conversation', titulo: 'San · portal guide',
   descricao: 'Answers from this website’s content', pergunta: 'What are you looking for?', enviar: 'Send',
   boasVindas: 'Hello! I’m San, this portal’s virtual guide. I can help you find research, publications, student achievements and information about talks. What would you like to explore?',
-  limite: 'In this version, I search the portal catalogue. For other information, contact Sanval on WhatsApp.',
+  limite: 'I answer from portal content, with local catalogue fallback when AI is unavailable. For other questions, use WhatsApp.',
   desconhecido: 'I couldn’t find that information in the portal content. You can explore the publications or contact Sanval directly.',
   voce: 'You', limpar: 'Clear conversation',
   contato: 'Contact Sanval on WhatsApp', pesquisa: 'Research and publications',
@@ -83,6 +83,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
     const campo = raiz.querySelector<HTMLInputElement>('input')!;
     const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const singular = (s: string) => s.length > 4 ? s.replace(/s$/, '') : s;
+    const historicoIA: { papel: 'usuario' | 'assistente'; texto: string }[] = [];
     const ignorar = new Set(['para','como','sobre','quero','saber','qual','quais','pode','voce','gostaria','conhecer','with','what','about','would','like','know','does','from','that','this','your','mais','fale','portal']);
     function mensagem(texto: string, usuario = false, fontes: {titulo:string;url:string}[] = []) {
       const bloco = document.createElement('div');
@@ -102,8 +103,9 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       // Keep the conversation bounded and in memory only.
       while (historico.childElementCount > 41) historico.firstElementChild?.remove();
       bloco.scrollIntoView({block:'nearest'});
+      return bloco;
     }
-    function responder(pergunta: string) {
+    async function responder(pergunta: string) {
       const texto = pergunta.trim().slice(0, 500);
       if (!texto) return;
       mensagem(texto, true);
@@ -125,16 +127,48 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       }).filter(r => r.score > 0).sort((a,b) => b.score - a.score).slice(0,3);
       if (!resultados.length) {
         mensagem(txt.desconhecido, false, [{titulo:txt.pesquisa, url:config.pesquisa}, {titulo:txt.contato, url:config.contatoWhatsApp}]);
-      } else {
-        mensagem(resultados[0].e.resumo, false, [...resultados.map(r => ({titulo:r.e.titulo,url:r.e.url})), {titulo:txt.contato,url:config.contatoWhatsApp}]);
+        return;
       }
+      const fontes = [...resultados.map(r => ({titulo:r.e.titulo,url:r.e.url})), {titulo:txt.contato,url:config.contatoWhatsApp}];
+      const respostaLocal = resultados[0].e.resumo;
+      const pendente = mensagem(config.pt ? 'Consultando as informações do portal…' : 'Checking portal information…');
+      let respostaFinal = respostaLocal;
+      try {
+        const controlador = new AbortController();
+        const tempo = setTimeout(() => controlador.abort(), 9000);
+        try {
+          const retorno = await fetch(`${import.meta.env.BASE_URL}api/chat`, {
+            method: 'POST',
+            signal: controlador.signal,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              pergunta: texto,
+              idioma: config.pt ? 'pt' : 'en',
+              referencias: resultados.map(r => ({titulo:r.e.titulo, resumo:r.e.resumo, url:r.e.url})),
+              historico: historicoIA.slice(-4),
+            }),
+          });
+          if (retorno.ok) {
+            const dados: {resposta?: string} = await retorno.json();
+            if (typeof dados.resposta === 'string' && dados.resposta.trim()) respostaFinal = dados.resposta.trim();
+          }
+        } finally {
+          clearTimeout(tempo);
+        }
+      } catch {
+        // Sem rede, credenciais ou serviço: usa o catálogo local, sem interromper a conversa.
+      }
+      pendente.remove();
+      mensagem(respostaFinal, false, fontes);
+      historicoIA.push({papel: 'usuario', texto}, {papel: 'assistente', texto: respostaFinal});
+      if (historicoIA.length > 6) historicoIA.splice(0, historicoIA.length - 6);
     }
     abrir.addEventListener('click', () => { painel.showModal(); if (!historico.childElementCount) mensagem(txt.boasVindas); campo.focus(); });
     raiz.querySelector('[data-san-fechar]')!.addEventListener('click', () => painel.close());
     painel.addEventListener('close', () => abrir.focus());
     raiz.querySelector('[data-san-form]')!.addEventListener('submit', e => { e.preventDefault(); responder(campo.value); campo.value = ''; campo.focus(); });
     raiz.querySelectorAll<HTMLButtonElement>('[data-san-sugestao]').forEach(b => b.addEventListener('click', () => responder(b.textContent || '')));
-    raiz.querySelector('[data-san-limpar]')!.addEventListener('click', () => { historico.replaceChildren(); mensagem(txt.boasVindas); campo.focus(); });
+    raiz.querySelector('[data-san-limpar]')!.addEventListener('click', () => { historico.replaceChildren(); historicoIA.length = 0; mensagem(txt.boasVindas); campo.focus(); });
   }
 </script>
 <style>
