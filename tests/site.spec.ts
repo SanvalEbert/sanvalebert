@@ -2,6 +2,8 @@ import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 const paginas = [
+  { rota: '/pesquisa/', idioma: 'pt-BR' },
+  { rota: '/en/research/', idioma: 'en' },
   { rota: '/contratar/', idioma: 'pt-BR' },
   { rota: '/en/hire/', idioma: 'en' },
   { rota: '/', idioma: 'pt-BR' },
@@ -105,4 +107,35 @@ test('apresentação leva aos perfis e à contratação', async ({ page }) => {
   await page.getByRole('link', { name: 'Contratar palestra ou formação', exact: true }).click();
   await expect(page).toHaveURL(/\/contratar\/$/);
   await expect(page.getByRole('link', { name: /Conversar sobre uma proposta/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/sanval-ebert/');
+});
+
+test('Pesquisa permite encontrar publicações por assunto e área', async ({ page }) => {
+ await abrir(page, '/');
+ await page.getByRole('navigation', { name: 'Menu principal' }).getByRole('link', { name: /Pesquisa/ }).click();
+ await expect(page).toHaveURL(/\/pesquisa\/$/);
+ await expect(page.locator('[data-publicacao]:visible')).toHaveCount(13);
+ await page.getByRole('searchbox').fill('Parkinson');
+ await expect(page.locator('[data-publicacao]:visible')).toHaveCount(1);
+ await expect(page.locator('[data-publicacao]:visible').getByRole('link', { name: /Publicação e DOI/ })).toHaveAttribute('href','https://doi.org/10.1038/s41598-025-94252-2');
+ await page.getByLabel('Área',{exact:true}).selectOption('ia');
+ await expect(page.locator('[data-vazio]')).toBeVisible();
+ await page.getByRole('searchbox').fill('');
+ await page.getByLabel('Área',{exact:true}).selectOption('');
+ await expect(page.locator('[data-publicacao]:visible')).toHaveCount(13);
+});
+
+test('Pesquisa mantém o contexto ao trocar de idioma e identifica a fonte da métrica', async ({ page }) => {
+ await abrir(page, '/pesquisa/');
+ await expect(page.locator('.alcance')).toContainText('34');
+ await expect(page.locator('.alcance')).toContainText('ResearchGate');
+ await page.getByRole('link',{name:'English',exact:true}).click();
+ await expect(page).toHaveURL(/\/en\/research\/$/);
+ await expect(page.locator('[data-publicacao]')).toHaveCount(13);
+});
+
+test('Estudantes apresenta conquistas sem oferta comercial no conteúdo e rodapé', async ({ page }) => {
+ await abrir(page, '/estudantes/');
+ await expect(page.getByRole('heading',{level:1})).toContainText('estudantes e egressos');
+ await expect(page.locator('main a[href="/contratar/"], footer a[href="/contratar/"]')).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'Três equipes da universidade na final'})).toBeVisible();
 });

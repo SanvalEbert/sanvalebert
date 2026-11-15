@@ -78,12 +78,12 @@ const pt = {
   estudantes: {
     titulo: 'Resultados dos estudantes · Sanval Ebert',
     descricao:
-      'Competições, prêmios e projetos de estudantes de Engenharia de Computação e de Ciência de Dados e IA da Universidade SENAI CIMATEC.',
+      'Competições, prêmios e projetos de estudantes e egressos de Engenharia de Computação e de Ciência de Dados e IA da Universidade SENAI CIMATEC.',
     rotulo: 'Resultados dos estudantes',
-    chamada: ['O que os estudantes dos cursos que coordeno', 'já conquistaram.'],
+    chamada: ['Conquistas dos estudantes e egressos', 'dos cursos que coordeno.'],
     resumoRotulo: 'Resumo.',
     resumo:
-      'Competições, prêmios e projetos de estudantes de Engenharia de Computação e de Ciência de Dados e IA da Universidade SENAI CIMATEC.',
+      'Competições, prêmios e projetos de estudantes e egressos de Engenharia de Computação e de Ciência de Dados e IA da Universidade SENAI CIMATEC.',
     destaqueRotulo: 'HackaStone 2026 · Amsterdã · Agentes de IA para a educação',
     destaqueTitulo: ['Engage-Agent:', '2º lugar mundial'],
     destaqueTexto:
@@ -205,12 +205,12 @@ const en: Textos = {
   estudantes: {
     titulo: 'Student results · Sanval Ebert',
     descricao:
-      'Competitions, awards and projects by Computer Engineering and Data Science and AI students at SENAI CIMATEC University.',
+      'Competitions, awards and projects by Computer Engineering and Data Science and AI students and graduates at SENAI CIMATEC University.',
     rotulo: 'Student results',
-    chamada: ['What students in the programs I coordinate', 'have already achieved.'],
+    chamada: ['Achievements of students and graduates', 'from the programs I coordinate.'],
     resumoRotulo: 'Abstract.',
     resumo:
-      'Competitions, awards and projects by Computer Engineering and Data Science and AI students at SENAI CIMATEC University.',
+      'Competitions, awards and projects by Computer Engineering and Data Science and AI students and graduates at SENAI CIMATEC University.',
     destaqueRotulo: 'HackaStone 2026 · Amsterdam · AI agents for education',
     destaqueTitulo: ['Engage-Agent:', '2nd place worldwide'],
     destaqueTexto:

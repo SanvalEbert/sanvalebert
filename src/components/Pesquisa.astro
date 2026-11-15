@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import { publicacoes, fontesPesquisa } from '../data/publicacoes';
+import { endereco, type Idioma } from '../data/site';
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props;
+const pt = idioma === 'pt';
+const areas: Record<string,string> = pt ? {ia:'IA e aprendizagem',imersao:'Tecnologias imersivas',dados:'Dados e sinais',formacao:'Formação profissional'} : {ia:'AI and learning',imersao:'Immersive technologies',dados:'Data and signals',formacao:'Professional training'};
+const tipos: Record<string,string> = pt ? {artigo:'Artigo',capitulo:'Capítulo',congresso:'Trabalho de congresso',preprint:'Preprint'} : {artigo:'Journal article',capitulo:'Book chapter',congresso:'Conference paper',preprint:'Preprint'};
+const principal = publicacoes.find(p => p.id === 'etd')!;
+const destaques = ['agentes','paa'].map(id => publicacoes.find(p => p.id === id)!);
+const rg = (id: string) => 'https://www.researchgate.net/publication/' + id;
+const titulo = pt ? 'Pesquisa e publicações · Sanval Ebert' : 'Research and publications · Sanval Ebert';
+const descricao = pt ? 'Conheça as pesquisas de Sanval Ebert em inteligência artificial, educação e tecnologias emergentes. Artigos, capítulos e projetos com acesso às fontes originais.' : 'Explore Sanval Ebert’s research in artificial intelligence, education and emerging technologies, with publications and links to original sources.';
+---
+<Base idioma={idioma} pagina="pesquisa" titulo={titulo} descricao={descricao}>
+ <section class="conteudo secao coluna abertura-pesquisa">
+  <p class="rotulo destaque">{pt ? 'Pesquisa' : 'Research'}</p>
+  <h1 class="titulo-pagina">{pt ? 'Inteligência artificial, tecnologias emergentes e' : 'Artificial intelligence, emerging technologies and'} <em>{pt ? 'educação.' : 'education.'}</em></h1>
+  <p class="abertura">{pt ? 'Investigo como a tecnologia pode ampliar as possibilidades de ensinar e aprender. Aqui reúno trabalhos de autoria e coautoria, suas contribuições e as questões que conectam a pesquisa à prática.' : 'I investigate how technology can expand opportunities for teaching and learning. Here I bring together authored and co-authored work and the questions connecting research and practice.'}</p>
+  <div class="linha"><a class="botao" href="#publicacoes">{pt ? 'Explorar publicações' : 'Explore publications'}</a><a class="italico" href={fontesPesquisa.researchgate}>ResearchGate ↗</a><a class="italico" href={fontesPesquisa.scholar}>Google Scholar ↗</a></div>
+  <p class="apoio">{pt ? '13 publicações no catálogo · 7 artigos em periódicos · 2020–2026' : '13 publications in the catalogue · 7 journal articles · 2020–2026'}</p>
+ </section>
+ <section class="conteudo secao" aria-labelledby="linhas">
+  <div class="cabeca-secao"><h2 id="linhas">{pt ? 'Questões que orientam meus estudos' : 'Questions guiding my research'}</h2></div>
+  <div class="grade eixos">
+   <article class="celula"><h3>{pt ? 'IA e ambientes de aprendizagem' : 'AI and learning environments'}</h3><p>{pt ? 'Agentes inteligentes, personalização e apoio ao trabalho docente. Como integrar IA ao planejamento e ao acompanhamento da aprendizagem?' : 'Intelligent agents, personalisation and teacher support. How can AI support planning and the understanding of student progress?'}</p></article>
+   <article class="celula"><h3>{pt ? 'Experiências imersivas' : 'Immersive experiences'}</h3><p>{pt ? 'Realidade virtual, metaverso e interação humano-computador. Como criar e avaliar experiências que ajudem a compreender conceitos e explorar ambientes?' : 'Virtual reality, metaverse and human-computer interaction. How can we create and evaluate experiences that help people understand concepts and explore environments?'}</p></article>
+   <article class="celula"><h3>{pt ? 'Colaborações e formação' : 'Collaboration and training'}</h3><p>{pt ? 'Modelagem de dados e sinais biomédicos, além da formação profissional em tecnologia. Colaborações que ampliam o diálogo entre educação e outras áreas do conhecimento.' : 'Data modelling and biomedical signals, alongside professional training in technology. Collaborations extending the dialogue between education and other fields.'}</p></article>
+  </div>
+ </section>
+ <section class="conteudo secao" aria-labelledby="destaques">
+  <div class="cabeca-secao"><p class="rotulo destaque">{pt ? 'Por onde começar' : 'Where to start'}</p><h2 id="destaques">{pt ? 'Trabalhos em destaque' : 'Featured publications'}</h2></div>
+  <article class="principal">
+   <div class="coluna"><p class="apoio">{principal.year} · {principal.venue}</p><h3>{principal.title}</h3><p>{principal.summary[idioma]}</p><p class="apoio">{principal.authors}</p>
+    <div class="linha"><a class="botao" href={'https://doi.org/' + principal.doi}>{pt ? 'Ler o artigo' : 'Read the article'} ↗</a><a class="italico" href={rg(principal.rg)}>ResearchGate ↗</a></div>
+   </div>
+   <aside class="alcance" aria-label={pt ? 'Citações deste artigo' : 'Citations for this article'}><p class="numero">{fontesPesquisa.citacoesDestaque}</p><p>{pt ? 'citações deste artigo no ResearchGate' : 'citations for this article on ResearchGate'}</p><p class="apoio">{pt ? 'Contagem no registro consultado em 15/11/2026.' : 'Count in the record consulted on 15 November 2026.'}</p><a class="italico" href={rg(principal.rg)}>{pt ? 'Consultar registro' : 'View record'} ↗</a></aside>
+  </article>
+  <div class="grade secundarios">{destaques.map(p => <article class="celula coluna"><p class="apoio">{p.year} · {p.venue}</p><h3>{p.title}</h3><p>{p.summary[idioma]}</p><a class="italico" href={'https://doi.org/' + p.doi}>{pt ? 'Conhecer o trabalho' : 'Explore this work'} ↗</a></article>)}</div>
+ </section>
+ <section class="conteudo secao" aria-labelledby="conexoes">
+  <div class="cabeca-secao"><h2 id="conexoes">{pt ? 'Da investigação às experiências de aprendizagem' : 'From research to learning experiences'}</h2></div>
+  <div class="conexoes coluna">
+   <p class="abertura">{pt ? 'Os trabalhos se conectam por uma pergunta: como aproximar as possibilidades da tecnologia das necessidades de quem ensina e aprende?' : 'These studies share a question: how can technological possibilities meet the needs of teachers and learners?'}</p>
+   <p>{pt ? 'Os estudos de 2021 discutem a integração de IA aos ambientes virtuais. A revisão sobre agentes inteligentes amplia esse olhar; os modelos conceituais exploram novas formas de organizar a aprendizagem e apoiar o planejamento docente. Os trabalhos de imersão acrescentam outra dimensão: experimentar e compreender conceitos em ambientes virtuais.' : 'The 2021 studies discuss integrating AI into virtual environments. The review of intelligent agents broadens this perspective; conceptual models explore ways to organise learning and support teacher planning. The immersive studies add another dimension: experiencing and understanding concepts in virtual environments.'}</p>
+   <p>{pt ? 'Essas questões também dialogam com minha atuação na orientação de estudantes. No Engage-Agent, equipe que orientei e que conquistou o segundo lugar mundial no HackaStone 2026, o foco é acompanhar o percurso de aprendizagem e apoiar o professor.' : 'These questions also connect with my work mentoring students. Engage-Agent, the team I mentored that placed second worldwide at HackaStone 2026, focuses on following learning progress and supporting teachers.'}</p>
+   <a class="italico" href={endereco((pt ? 'estudantes/' : 'en/students/') + '#engage')}>{pt ? 'Conhecer o projeto Engage-Agent' : 'Explore the Engage-Agent project'} →</a>
+  </div>
+ </section>
+ <section id="publicacoes" class="conteudo secao" aria-labelledby="catalogo">
+  <div class="cabeca-secao"><h2 id="catalogo">{pt ? 'Publicações' : 'Publications'}</h2><p>{pt ? 'Artigos, capítulos, trabalhos de congresso e preprint. Os títulos foram preservados no idioma de publicação; a autoria completa e os textos estão nos registros originais.' : 'Journal articles, book chapters, conference papers and a preprint. Titles retain their original language; complete authorship and texts are available in the original records.'}</p></div>
+  <form class="filtros" data-filtros hidden role="search" aria-label={pt ? 'Buscar publicações' : 'Search publications'}>
+   <label>{pt ? 'Buscar por título, autor ou tema' : 'Search by title, author or topic'}<input type="search" name="busca" autocomplete="off" /></label>
+   <label>{pt ? 'Área' : 'Area'}<select name="area"><option value="">{pt ? 'Todas as áreas' : 'All areas'}</option>{Object.entries(areas).map(([valor,nome]) => <option value={valor}>{nome}</option>)}</select></label>
+  </form>
+  <p class="apoio resultado-busca" role="status" data-contagem data-pt={pt ? 'true' : 'false'}>{publicacoes.length} {pt ? 'publicações' : 'publications'}</p>
+  <ol class="lista-publicacoes">{publicacoes.map(p => <li class="publicacao" data-publicacao data-area={p.area} data-busca={[p.title,p.authors,p.venue,p.summary[idioma],areas[p.area]].join(' ')}><p class="ano">{p.year}</p><article class="coluna">
+   <p class="apoio">{tipos[p.type]} · {areas[p.area]}</p><h3>{p.title}</h3><p class="apoio">{p.venue}</p><p>{p.summary[idioma]}</p><p class="autoria">{p.authors}</p>
+   {p.note && <p class="apoio">{p.note[idioma]}</p>}
+   <div class="linha">{p.doi && <a class="italico" href={'https://doi.org/' + p.doi}>{pt ? 'Publicação e DOI' : 'Publication and DOI'} ↗<span class="so-leitor">: {p.title}</span></a>}<a class="italico" href={rg(p.rg)}>ResearchGate ↗<span class="so-leitor">: {p.title}</span></a></div>
+  </article></li>)}</ol>
+  <p data-vazio hidden>{pt ? 'Nenhuma publicação encontrada. Tente outro termo ou selecione todas as áreas.' : 'No publications found. Try another term or select all areas.'}</p>
+  <p class="apoio fontes">{pt ? 'Catálogo organizado a partir do ResearchGate e dos registros dos periódicos e editoras, consultados em 15/11/2026. Citações e leituras variam entre plataformas e ao longo do tempo.' : 'Catalogue compiled from ResearchGate, journal and publisher records consulted on 15 November 2026. Citation and read counts vary across platforms and over time.'} <a href={fontesPesquisa.researchgate}>ResearchGate</a> · <a href={fontesPesquisa.scholar}>Google Scholar</a></p>
+ </section>
+</Base>
+<script>
+ const form = document.querySelector<HTMLFormElement>('[data-filtros]');
+ const busca = form?.querySelector<HTMLInputElement>('input');
+ const area = form?.querySelector<HTMLSelectElement>('select');
+ const itens = Array.from(document.querySelectorAll<HTMLElement>('[data-publicacao]'));
+ const contagem = document.querySelector<HTMLElement>('[data-contagem]');
+ const vazio = document.querySelector<HTMLElement>('[data-vazio]');
+ const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
+ function filtrar() {
+  const termo = normalizar(busca?.value ?? '').trim(); let total = 0;
+  for (const item of itens) { const aparece = normalizar(item.dataset.busca ?? '').includes(termo) && (!area?.value || item.dataset.area === area.value); item.hidden = !aparece; if (aparece) total++; }
+  if (contagem) contagem.textContent = total + (contagem.dataset.pt === 'true' ? (total === 1 ? ' publicação' : ' publicações') : (total === 1 ? ' publication' : ' publications'));
+  if (vazio) vazio.hidden = total > 0;
+ }
+ if (form) { form.hidden = false; form.addEventListener('submit', e => e.preventDefault()); busca?.addEventListener('input',filtrar); area?.addEventListener('change',filtrar); }
+</script>
+<style>
+.abertura-pesquisa{gap:24px}.eixos{grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr))}
+.principal{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr);gap:48px;padding:28px 0 36px;border-top:3px solid var(--azul)}
+.principal h3{font-size:clamp(26px,3vw,36px);line-height:1.14}.alcance{border-left:1px solid var(--fio);padding-left:28px;display:flex;flex-direction:column;gap:14px}.numero{font-size:88px;line-height:1;color:var(--azul-claro)}
+.secundarios{grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));margin-top:20px}.conexoes{max-width:900px}
+.filtros{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr);gap:20px;margin:28px 0 20px}.filtros[hidden],.publicacao[hidden]{display:none}.filtros label{display:flex;flex-direction:column;gap:8px;font-family:var(--mono);font-size:13px}
+input,select{font:inherit;min-height:48px;color:var(--papel);background:var(--noite);border:1px solid var(--nevoa);padding:12px;width:100%;border-radius:0}
+.resultado-busca{margin-bottom:18px}.lista-publicacoes{list-style:none;padding:0;margin:0}.publicacao{display:grid;grid-template-columns:80px minmax(0,1fr);gap:28px;padding:30px 0;border-top:1px solid var(--fio)}.ano{font-family:var(--mono);font-size:18px;color:var(--azul-claro)}.publicacao .coluna{gap:10px}.publicacao h3{font-size:clamp(23px,2.5vw,30px);line-height:1.2;overflow-wrap:anywhere}.autoria{font-size:16px;color:var(--nevoa)}.fontes{margin-top:28px}
+.so-leitor{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:640px){.principal,.filtros{grid-template-columns:1fr;gap:24px}.alcance{border-left:0;border-top:1px solid var(--fio);padding:20px 0 0}.numero{font-size:64px}.publicacao{grid-template-columns:1fr;gap:12px}}
+</style>

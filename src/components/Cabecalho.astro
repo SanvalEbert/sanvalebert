@@ -1,145 +1,39 @@
 ---
 import { codigoHtml, endereco, link, menu, paginas, type Idioma, type Pagina } from '../data/site';
 import { t } from '../i18n/textos';
-
-interface Props {
-  idioma: Idioma;
-  pagina: Pagina;
-}
-
+interface Props { idioma: Idioma; pagina: Pagina }
 const { idioma, pagina } = Astro.props;
 const txt = t(idioma);
 const outro: Idioma = idioma === 'pt' ? 'en' : 'pt';
-const numero = (i: number) => String(i + 1).padStart(2, '0');
+const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
 ---
-
-<header class="conteudo cabecalho">
-  <div class="faixa rotulo">
-    <span>{txt.site.edicao}</span>
-    <span class="local">{txt.site.local}</span>
-    <span class="acoes">
-      <a
-        class="idioma"
-        href={endereco(paginas[pagina].rota[outro])}
-        lang={codigoHtml[outro]}
-        hreflang={codigoHtml[outro]}
-        title={txt.site.outroIdiomaAviso}>{txt.site.outroIdioma}</a
-      >
-      <a class="contratar" href={link('contratar', idioma)}>{txt.site.contratar} →</a>
-    </span>
-  </div>
-
-  <div class="titulo">
-    <a class="marca" href={link('inicio', idioma)}>Sanval <em>Ebert</em></a>
-    <span class="rotulo">{txt.site.assinatura}</span>
-  </div>
-
-  <nav class="menu rotulo" aria-label={txt.site.menuPrincipal}>
-    {
-      menu.map((item, i) =>
-        (paginas[item].pronta || item === 'sobre') ? (
-          <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>
-            {numero(i)} {txt.menu[item]}
-          </a>
-        ) : (
-          <span class="inativo" title={txt.site.emBreve}>
-            {numero(i)} {txt.menu[item]}
-          </span>
-        ),
-      )
-    }
+<header class="portal-header">
+ <div class="conteudo estrutura">
+  <a class="identidade" href={link('inicio', idioma)} aria-label={idioma === 'pt' ? 'Sanval Ebert — início' : 'Sanval Ebert — home'}>
+   <span class="monograma" aria-hidden="true">SE</span>
+   <span class="marca"><span class="nome">Sanval <em>Ebert</em></span><span class="descricao">{idioma === 'pt' ? 'Educação, pesquisa e tecnologia' : 'Education, research and technology'}</span></span>
+  </a>
+  <nav class="menu" aria-label={txt.site.menuPrincipal}>
+   {visiveis.map(item => <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>)}
   </nav>
+  <div class="acoes">
+   <a class="idioma" href={endereco(paginas[pagina].rota[outro])} lang={codigoHtml[outro]} hreflang={codigoHtml[outro]} title={txt.site.outroIdiomaAviso}>{txt.site.outroIdioma}</a>
+   <a class="contratar" href={link('contratar', idioma)} aria-current={pagina === 'contratar' ? 'page' : undefined}>{txt.site.contratar}<span aria-hidden="true"> ↗</span></a>
+  </div>
+ </div>
 </header>
-
 <style>
-  .cabecalho {
-    padding-top: 16px;
-  }
-
-  .faixa {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0 24px;
-  }
-
-  .acoes {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .faixa a {
-    text-decoration: none;
-    padding: 14px 0;
-    display: inline-block;
-  }
-
-  .idioma {
-    border: 1px solid var(--papel);
-    padding: 8px 12px !important;
-  }
-
-  .idioma:hover {
-    border-color: var(--azul-claro);
-  }
-
-  .contratar {
-    color: var(--azul-claro);
-    font-weight: 500;
-  }
-
-  .titulo {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 4px 24px;
-    border-top: 3px solid var(--azul);
-    border-bottom: 1px solid var(--papel);
-    padding: 12px 0 8px;
-    margin-top: 4px;
-  }
-
-  .marca {
-    text-decoration: none;
-    font-size: clamp(40px, 5vw, 60px);
-    line-height: 1;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
-
-  .marca:hover {
-    color: var(--papel);
-  }
-
-  .menu {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 28px;
-    border-bottom: 1px solid var(--papel);
-  }
-
-  .menu a,
-  .menu span {
-    padding: 14px 0;
-    text-decoration: none;
-    border-bottom: 3px solid transparent;
-  }
-
-  .menu a[aria-current='page'] {
-    color: var(--azul-claro);
-    border-bottom-color: var(--azul);
-  }
-
-  .inativo {
-    color: var(--nevoa);
-  }
-
-  @media (max-width: 540px) {
-    .local {
-      display: none;
-    }
-  }
+.portal-header{border-bottom:1px solid var(--fio)}
+.estrutura{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 24px;padding-top:24px;padding-bottom:24px}
+.identidade{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
+.monograma{background:var(--azul);color:white;display:grid;place-items:center;width:44px;height:44px;font-size:23px;font-weight:500}
+.marca{display:flex;flex-direction:column;gap:5px}.nome{font-size:32px;line-height:1;letter-spacing:-.02em}
+.descricao{font-family:var(--mono);font-size:10px;line-height:1.5;color:var(--nevoa)}
+.menu{display:flex;flex-wrap:wrap;gap:4px 22px}.menu a{font-family:var(--mono);font-size:12px;padding:12px 0;text-decoration:none;border-bottom:2px solid transparent}
+.menu a[aria-current='page']{color:var(--azul-claro);border-bottom-color:var(--azul)}
+.acoes{display:flex;align-items:center;gap:18px}.acoes a{font-family:var(--mono);font-size:12px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.contratar{background:var(--azul);padding:10px 16px;gap:8px;color:white}.contratar:hover{background:#2a5bf0;color:white}
+@media(max-width:1100px){.menu{order:3;flex-basis:100%}}
+@media(max-width:540px){.estrutura{gap:16px;padding-top:20px;padding-bottom:12px}.nome{font-size:28px}.descricao{font-size:9px}.acoes{gap:12px}.acoes a{font-size:11px}.contratar{padding:8px 12px}.menu{gap:4px 20px}}
+@media(max-width:380px){.acoes{flex-basis:100%;justify-content:space-between}}
 </style>

@@ -15,7 +15,7 @@ export const codigoHtml: Record<Idioma, string> = { pt: 'pt-BR', en: 'en' };
 export const paginas = {
   inicio: { rota: { pt: '', en: 'en/' }, pronta: true },
   sobre: { rota: { pt: 'sobre/', en: 'en/about/' }, pronta: false },
-  pesquisa: { rota: { pt: 'pesquisa/', en: 'en/research/' }, pronta: false },
+  pesquisa: { rota: { pt: 'pesquisa/', en: 'en/research/' }, pronta: true },
   estudantes: { rota: { pt: 'estudantes/', en: 'en/students/' }, pronta: true },
   palestras: { rota: { pt: 'palestras/', en: 'en/talks/' }, pronta: true },
   cursos: { rota: { pt: 'cursos/', en: 'en/courses/' }, pronta: false },
