@@ -1,0 +1,313 @@
+/* Identidade "Periódico azul noite".
+   As regras de design ficam aqui, em um só lugar, para todas as páginas saírem iguais. */
+
+:root {
+  /* Cores */
+  --noite: #0a0f1f; /* fundo principal */
+  --azul: #1447e6; /* azul de assinatura: linhas, botões, blocos */
+  --papel: #f2f4f8; /* texto sobre escuro, fundo claro */
+  --azul-claro: #7fa6ff; /* destaque de texto sobre escuro */
+  --nevoa: #aab4c8; /* textos de apoio */
+  --fio: rgba(242, 244, 248, 0.3); /* linhas finas */
+  --branco: #ffffff;
+
+  /* Tipografia */
+  --serifa: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+
+  /* Medidas */
+  --largura: 1200px;
+  --margem: clamp(20px, 4vw, 48px);
+  --secao: clamp(40px, 6vw, 56px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--noite);
+  color: var(--papel);
+  font-family: var(--serifa);
+  font-size: 18px;
+  line-height: 1.5;
+  font-optical-sizing: auto;
+}
+
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 500;
+}
+
+h1 {
+  font-size: clamp(44px, 6vw, 84px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--azul-claro);
+}
+
+a {
+  color: var(--papel);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--azul-claro);
+}
+
+:focus-visible {
+  outline: 3px solid var(--azul-claro);
+  outline-offset: 3px;
+}
+
+.pular {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--papel);
+  color: var(--noite);
+  padding: 12px 16px;
+  z-index: 10;
+}
+
+.pular:focus {
+  left: 8px;
+  top: 8px;
+}
+
+/* Estrutura */
+
+.conteudo {
+  max-width: var(--largura);
+  margin: 0 auto;
+  padding-left: var(--margem);
+  padding-right: var(--margem);
+}
+
+.secao {
+  padding-top: var(--secao);
+  padding-bottom: var(--secao);
+  border-bottom: 1px solid var(--fio);
+}
+
+.coluna {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.linha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  align-items: center;
+}
+
+.grade {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+}
+
+/* Texto */
+
+.rotulo {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.apoio {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--nevoa);
+}
+
+.destaque {
+  color: var(--azul-claro);
+}
+
+.abertura {
+  font-size: 21px;
+  max-width: 38em;
+}
+
+.italico {
+  font-style: italic;
+  display: inline-block;
+  padding: 10px 0;
+}
+
+.cabeca-secao {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+/* Componentes */
+
+.botao {
+  display: inline-block;
+  background: var(--azul);
+  color: var(--branco);
+  padding: 15px 24px;
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  border: 0;
+}
+
+.botao:hover {
+  color: var(--branco);
+  background: #2a5bf0;
+}
+
+.botao-noite {
+  background: var(--noite);
+}
+
+.botao-noite:hover {
+  background: #1a2238;
+}
+
+.celula {
+  border-top: 3px solid var(--azul);
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.valor {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.figura {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.figura figcaption {
+  font-size: 15px;
+  font-style: italic;
+}
+
+.figura figcaption .rotulo {
+  font-style: normal;
+  margin-right: 6px;
+}
+
+.espaco-foto {
+  border: 1px solid var(--papel);
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(127, 166, 255, 0.28) 0 1px,
+    transparent 1px 10px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+}
+
+.sumario {
+  border-bottom: 1px solid var(--fio);
+}
+
+.sumario a {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 18px 0;
+  border-top: 1px solid var(--fio);
+  text-decoration: none;
+}
+
+.sumario .nome {
+  font-size: clamp(24px, 3vw, 30px);
+  line-height: 1.1;
+}
+
+.sumario .pontos {
+  flex: 1;
+  border-bottom: 1px dotted var(--nevoa);
+  min-width: 24px;
+}
+
+.sumario .destino {
+  font-style: italic;
+}
+
+.bloco-azul {
+  background: var(--azul);
+  color: var(--branco);
+  padding: clamp(24px, 4vw, 48px);
+}
+
+.bloco-azul a:not(.botao) {
+  color: var(--branco);
+}
+
+@media (max-width: 640px) {
+  .sumario a {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .sumario a .pontos {
+    display: none;
+  }
+
+  .sumario a .destino {
+    flex-basis: 100%;
+    padding-left: 28px;
+  }
+}

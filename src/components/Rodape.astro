@@ -1,0 +1,91 @@
+---
+import { link, referencias, type Idioma } from '../data/site';
+import { t } from '../i18n/textos';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma);
+---
+
+<footer class="conteudo rodape">
+  <div class="topo">
+    <div class="assinatura">
+      <p class="nome">Sanval <em>Ebert</em></p>
+      <p class="rotulo">{txt.site.selo}</p>
+    </div>
+
+    <nav aria-label={txt.site.referencias}>
+      <p class="rotulo destaque">{txt.site.referencias}</p>
+      <ol class="lista apoio">
+        {
+          referencias.map((r, i) => (
+            <li>
+              <a href={r.url} rel="me noopener">
+                [{i + 1}] {r.nome}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <a class="botao" href={link('contratar', idioma)}>{txt.site.contratar}</a>
+  </div>
+
+  <p class="apoio direitos">{txt.rodape.direitos}</p>
+</footer>
+
+<style>
+  .rodape {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .assinatura {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .nome {
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .lista {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    max-width: 520px;
+  }
+
+  .lista a {
+    display: inline-block;
+    padding: 10px 0;
+    color: var(--papel);
+  }
+
+  .lista a:hover {
+    color: var(--azul-claro);
+  }
+
+  .direitos {
+    margin-top: 32px;
+  }
+</style>

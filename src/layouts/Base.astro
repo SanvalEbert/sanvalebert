@@ -1,0 +1,56 @@
+---
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '../styles/global.css';
+
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+import { codigoHtml, endereco, idiomas, paginas, type Idioma, type Pagina } from '../data/site';
+import { t } from '../i18n/textos';
+
+interface Props {
+  idioma: Idioma;
+  pagina: Pagina;
+  titulo: string;
+  descricao: string;
+}
+
+const { idioma, pagina, titulo, descricao } = Astro.props;
+const txt = t(idioma);
+const absoluto = (rota: string) => new URL(endereco(rota), Astro.site).href;
+const canonico = absoluto(paginas[pagina].rota[idioma]);
+---
+
+<!doctype html>
+<html lang={codigoHtml[idioma]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonico} />
+    {
+      idiomas.map((i) => (
+        <link rel="alternate" hreflang={codigoHtml[i]} href={absoluto(paginas[pagina].rota[i])} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={absoluto(paginas[pagina].rota.pt)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonico} />
+    <meta property="og:locale" content={idioma === 'pt' ? 'pt_BR' : 'en_US'} />
+    <meta name="theme-color" content="#0a0f1f" />
+    <link rel="icon" type="image/svg+xml" href={endereco('favicon.svg')} />
+  </head>
+  <body>
+    <a class="pular" href="#conteudo">{txt.site.pular}</a>
+    <Cabecalho idioma={idioma} pagina={pagina} />
+    <main id="conteudo">
+      <slot />
+    </main>
+    <Rodape idioma={idioma} />
+  </body>
+</html>

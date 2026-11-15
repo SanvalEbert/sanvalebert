@@ -1,0 +1,226 @@
+---
+// Página inicial, compartilhada pelas versões em português e em inglês.
+import Base from '../layouts/Base.astro';
+import { link, paginas, type Idioma, type Pagina } from '../data/site';
+import { t } from '../i18n/textos';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma);
+const i = txt.inicio;
+const pronta = (p: string) => paginas[p as Pagina].pronta;
+const para = (p: string) => link(p as Pagina, idioma);
+const contato = link('contratar', idioma);
+const numero = (n: number) => String(n + 1).padStart(2, '0');
+---
+
+<Base idioma={idioma} pagina="inicio" titulo={i.titulo} descricao={i.descricao}>
+  <section class="conteudo secao abre">
+    <div class="coluna texto">
+      <h1>{i.chamada[0]} <em>{i.chamada[1]}</em></h1>
+      <p class="abertura"><span class="rotulo">{i.resumoRotulo}</span> {i.resumo}</p>
+      <p class="apoio palavras">{i.palavrasChave}</p>
+      <div class="linha">
+        <a class="botao" href={contato}>{i.botaoPalestra}</a>
+        {pronta('sobre') && <a class="italico" href={para('sobre')}>{i.verTrajetoria}</a>}
+      </div>
+    </div>
+    <figure class="figura foto">
+      <div class="espaco-foto rotulo" style="aspect-ratio: 4 / 5">{txt.site.fotoEmBreve}</div>
+      <figcaption><span class="rotulo destaque">Fig. 1</span>{i.fig1}</figcaption>
+    </figure>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="marcos">
+    <h2 id="marcos" class="rotulo rotulo-tabela">
+      <span class="destaque">{idioma === 'pt' ? 'Tabela 1' : 'Table 1'}</span>{' '}{i.marcosRotulo}
+    </h2>
+    <div class="grade">
+      {
+        i.marcos.map((m) => (
+          <div class="celula">
+            <p class="valor">
+              {m.valor[0]} {m.valor[1] && <em>{m.valor[1]}</em>}
+            </p>
+            <p class="apoio">{m.texto}</p>
+            {pronta(m.pagina) && (
+              <a class="italico" href={para(m.pagina)}>
+                {m.elo}
+              </a>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="sumario">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{i.sumarioRotulo}</p>
+      <h2 id="sumario">{i.sumarioTitulo}</h2>
+    </div>
+    <div class="sumario">
+      {
+        i.sumario.map((s, n) =>
+          pronta(s.pagina) ? (
+            <a href={para(s.pagina)}>
+              <span class="rotulo destaque">{numero(n)}</span>
+              <span class="nome">{s.nome}</span>
+              <span class="pontos" aria-hidden="true" />
+              <span class="destino">{s.destino}</span>
+            </a>
+          ) : (
+            <div class="item-inativo">
+              <span class="rotulo destaque">{numero(n)}</span>
+              <span class="nome">{s.nome}</span>
+              <span class="pontos" aria-hidden="true" />
+              <span class="destino">{s.destino}</span>
+              <span class="rotulo breve">{txt.site.emBreve}</span>
+            </div>
+          ),
+        )
+      }
+    </div>
+  </section>
+
+  <section class="conteudo secao destaque-recente" aria-labelledby="destaque">
+    <figure class="figura">
+      <div class="espaco-foto rotulo" style="aspect-ratio: 3 / 2">{txt.site.fotoEmBreve}</div>
+      <figcaption><span class="rotulo destaque">Fig. 2</span>{i.fig2}</figcaption>
+    </figure>
+    <div class="coluna">
+      <p class="rotulo destaque">{i.destaqueRotulo}</p>
+      <h2 id="destaque">{i.destaqueTitulo[0]} <em>{i.destaqueTitulo[1]}</em></h2>
+      <p>{i.destaqueTexto}</p>
+      {
+        pronta('estudantes') && (
+          <a class="italico" href={para('estudantes')}>
+            {i.destaqueElo}
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="palestras">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{i.palestrasRotulo}</p>
+      <h2 id="palestras">{i.palestrasTitulo}</h2>
+    </div>
+    <div class="grade">
+      {
+        i.palestras.map((p) => (
+          <div class="celula">
+            <p class="apoio rotulo">{p.publico}</p>
+            <h3>{p.titulo}</h3>
+            <p>{p.texto}</p>
+          </div>
+        ))
+      }
+    </div>
+    <div class="linha depois">
+      <a class="botao" href={contato}>{i.palestrasBotao}</a>
+      {
+        pronta('palestras') && (
+          <a class="italico" href={para('palestras')}>
+            {i.palestrasElo}
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="curso">
+    <div class="bloco-azul coluna">
+      <p class="rotulo">{i.cursoRotulo}</p>
+      <h2 id="curso">{i.cursoTitulo[0]} <i>{i.cursoTitulo[1]}</i></h2>
+      <p class="curso-texto">{i.cursoTexto}</p>
+      <div><a class="botao botao-noite" href={contato}>{i.cursoBotao}</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .abre {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 40px;
+  }
+
+  .texto {
+    flex: 999 1 480px;
+    min-width: 0;
+    gap: 24px;
+  }
+
+  .foto {
+    flex: 1 1 280px;
+    max-width: 420px;
+  }
+
+  .palavras {
+    max-width: 48em;
+  }
+
+  .rotulo-tabela {
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+
+  .item-inativo {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 18px 0;
+    border-top: 1px solid var(--fio);
+  }
+
+  .breve {
+    color: var(--nevoa);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .item-inativo {
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+    .item-inativo :global(.pontos) {
+      display: none;
+    }
+
+    .item-inativo :global(.destino) {
+      flex-basis: 100%;
+      padding-left: 28px;
+    }
+
+    .item-inativo .breve {
+      margin-left: auto;
+      order: -0;
+    }
+  }
+
+  .destaque-recente {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    align-items: start;
+  }
+
+  .depois {
+    margin-top: 28px;
+  }
+
+  .curso-texto {
+    max-width: 40em;
+  }
+
+  .bloco-azul i {
+    font-weight: 400;
+  }
+</style>
