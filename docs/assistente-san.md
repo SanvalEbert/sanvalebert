@@ -1,15 +1,41 @@
-# Assistente San
+# Assistente San com GPT-6 Luna
 
-O componente `src/components/San.astro` oferece um guia textual em todas as páginas, no idioma da página. Usa o personagem San em 3D aprovado pelo usuário, com fundo transparente, em `public/images/san-avatar-3d.webp`. O avatar aparece inteiro no botão e no cabeçalho da conversa. O botão fica à esquerda, separado dos controles de navegação e do VLibras.
+O componente `src/components/San.astro` é exibido em todas as páginas do portal em português e inglês. Preserva o avatar 3D de `public/images/san-avatar-3d.webp`, a navegação acessível e os links oficiais do catálogo.
 
-Esta primeira versão consulta um catálogo local por palavras, acentos e variações de plural. As respostas são trechos editoriais do catálogo; as publicações e suas sínteses vêm diretamente de `src/data/publicacoes.ts`. Cada resposta encontrada inclui links para as páginas ou fontes originais e contato pelo WhatsApp. Sem correspondência, informa que não encontrou a informação. Não confirma preços ou disponibilidade.
+## Arquitetura de baixo custo
 
-A interface usa diálogo modal nativo com foco inicial, Escape e retorno do foco ao botão de abertura. Os textos enviados são inseridos com `textContent`. A conversa permanece somente na memória da página, tem limite de mensagens e pode ser limpa. Não há envio de perguntas a APIs nem persistência em armazenamento do navegador.
+- O site Astro continua inteiramente estático.
+- `api/chat.js` é uma função HTTP da Vercel executada somente quando há consulta relevante.
+- O navegador envia a pergunta (até 500 caracteres), idioma, até três referências do catálogo e um histórico curto.
+- A função chama a **Responses API** pelo servidor usando `gpt-6-luna`, `reasoning.effort=none`, `max_output_tokens=260` e `store=false`.
+- O modelo recebe apenas o conteúdo relevante do portal e orientação para não inventar fatos. A interface mostra links oficiais separados da resposta.
+- Contato, saudações e agradecimentos são atendidos localmente para economizar tokens.
+- Em falta de chave, erro, falta de rede ou tempo esgotado, o catálogo local continua disponível.
+- Perguntas e respostas não são persistidas pelo projeto; o histórico da interface permanece apenas na memória da página.
 
-## Integração de IA pendente
+## Configuração necessária (nunca commitar chave)
 
-Esta versão não usa um modelo de linguagem. A integração exige escolher e configurar o provedor e criar uma rota de servidor com credenciais exclusivamente no servidor. O projeto atual é estático. A futura rota deve recuperar os conteúdos relevantes, devolver referências verificáveis, limitar requisições e manter o catálogo como alternativa quando o serviço estiver indisponível. Não colocar chaves em atributos HTML ou variáveis públicas.
+1. Na plataforma OpenAI, crie uma chave de API no projeto destinado ao portal e ative o faturamento.
+2. Na **Vercel**, abra o projeto que realmente publica `sanvalebert.vercel.app` → **Settings → Environment Variables**.
+3. Cadastre `OPENAI_API_KEY` como segredo do servidor, escolhendo os ambientes de Preview e Production desejados.
+4. Publique uma nova versão para carregar a variável. Nunca use prefixo `PUBLIC_` ou `VITE_` e nunca coloque a chave em HTML, JavaScript cliente, GitHub ou conversas.
+5. Configure notificações de consumo e orçamento na OpenAI; a cobrança é separada do ChatGPT Plus.
+6. Verifique se `POST /api/chat` está acessível pela implantação Vercel e teste a pesquisa e uma publicação. Sem a chave, a rota deve responder 503, sem revelar credenciais.
 
-## Validação
+> O site local `astro preview` serve as páginas estáticas, mas não executa a função Vercel. O modo fallback funciona localmente; o endpoint de IA precisa de implantação na Vercel para o teste real.
 
-`tests/san.spec.ts` cobre fontes de publicações, perguntas sem correspondência, tratamento de HTML como texto, teclado, histórico, português/inglês, layout e acessibilidade em computador e celular. Execute com a suíte existente: `npm test` em Node.js 24.
+## Controles e ressalvas
+
+- Origem de navegador deve coincidir com a hospedagem.
+- Tamanho de requisição e referências limitado, timeout de 12 segundos no provedor e de 9 segundos no cliente.
+- Limite inicial de 12 consultas por minuto e por IP **em cada instância**. Não é um rate limit global contra abuso distribuído; para produção com mais tráfego, configurar proteção e rate limit persistente na borda/Vercel WAF.
+- O teto de `max_output_tokens` reduz o custo por chamada, **não estabelece limite rígido de gastos mensais**. Acompanhe o faturamento e defina alertas ou limites disponíveis em sua conta.
+- A base de conhecimento é o catálogo do site, não a internet em tempo real. Para melhorar a cobertura, adicione conteúdo factual às páginas e ao catálogo antes de esperar novas respostas.
+
+## Testes
+
+- `node --test tests/api.test.mjs`: testes de contrato sem chamada real à OpenAI.
+- `tests/san-ai.spec.ts`: simulação da resposta da API e fallback no navegador.
+- `npm test`: tipos, build, links, API, navegador e acessibilidade, com Node.js 24.
+
+A integração real fica pendente da configuração da variável `OPENAI_API_KEY` e da validação do deployment Vercel correto.
