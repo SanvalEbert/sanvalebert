@@ -190,20 +190,13 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </section>
   <script is:inline data-interest-module={endereco('js/techedu-interesses.mjs')}>
-    /* Carrega a integração somente quando o visitante abre o piloto explicitamente. */
+    /* A rota /servicos/ sempre começa com uma tela pública de autenticação. */
     (() => {
       const origem = document.currentScript;
-      const parametros = new URLSearchParams(location.search);
-      let teste = parametros.get('cadastro') === 'teste' || parametros.has('code') || parametros.has('error');
-      try { teste ||= sessionStorage.getItem('techedu:piloto:v1') === '1'; } catch {}
-      if (teste) {
-        import(origem.dataset.interestModule).catch(() => {
-          const aviso = document.querySelector('[data-cadastro-status]');
-          const painel = document.querySelector('[data-techedu-piloto]');
-          if (painel) painel.hidden = false;
-          if (aviso) aviso.textContent = 'Não foi possível carregar o cadastro. Tente novamente mais tarde.';
-        });
-      }
+      import(origem.dataset.interestModule).catch(() => {
+        const aviso = document.querySelector('[data-login-status]');
+        if (aviso) aviso.textContent = 'Não foi possível carregar a autenticação. Tente novamente mais tarde ou utilize o contato.';
+      });
     })();
   </script>
 </Base>
