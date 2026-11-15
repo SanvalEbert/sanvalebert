@@ -94,7 +94,7 @@ if (raiz && window.isSecureContext) {
   function textoModal() {
     if (!modalidade || !continuar) return;
     modalidade.textContent = servicos[selecionado] || selecionado || '';
-    continuar.textContent = usuario ? texto.confirmar : texto.entrar;
+    continuar.textContent = texto.confirmar;
   }
 
   function ocultarDialogo() {
@@ -185,30 +185,33 @@ if (raiz && window.isSecureContext) {
     await carregarInteresses();
   }
 
-  async function iniciarGoogle() {
-    if (!MODALIDADES.has(selecionado) || ocupado) return;
+  async function iniciarLogin() {
+    if (ocupado) return;
     ocupado = true;
-    continuar.disabled = true;
+    btnLogin.disabled = true;
+    informar(texto.entrarGoogle);
     try {
-      if (usuario) {
-        await registrarInteresse(selecionado);
-        ocultarDialogo();
-        return;
-      }
-      // O usuário escolheu explicitamente a modalidade e prosseguimento com Google.
-      window.sessionStorage.setItem(PILOTO, '1');
-      window.sessionStorage.setItem(PENDENTE, selecionado);
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: RETORNO,
-          scopes: 'email profile',
-        },
+        options: { redirectTo: RETORNO, scopes: 'email profile' },
       });
       if (error) throw error;
     } catch {
-      window.sessionStorage.removeItem(PENDENTE);
       informar(texto.erroLogin);
+      btnLogin.disabled = false;
+      ocupado = false;
+    }
+  }
+
+  async function iniciarGoogle() {
+    if (!usuario || !MODALIDADES.has(selecionado) || ocupado) return;
+    ocupado = true;
+    continuar.disabled = true;
+    try {
+      await registrarInteresse(selecionado);
+      ocultarDialogo();
+    } catch {
+      informar(texto.falha);
       ocultarDialogo();
     } finally {
       continuar.disabled = false;
@@ -217,31 +220,37 @@ if (raiz && window.isSecureContext) {
   }
 
   async function iniciar() {
-    if (!exibirPiloto()) return; // visitas públicas continuam pelo WhatsApp
     const params = new URLSearchParams(window.location.search);
-    if (params.has('error')) {
-      informar(texto.erroLogin);
-      window.history.replaceState(null, '', window.location.pathname + '?cadastro=teste');
-      window.sessionStorage.removeItem(PENDENTE);
-    }
+    const erroOAuth = params.has('error');
+    const descricaoErro = (params.get('error_description') || '').toLowerCase();
+    const mensagemErro = descricaoErro.includes('invalid_client') || descricaoErro.includes('client secret')
+      ? texto.erroSegredo : texto.erroLogin;
     try {
       informar(texto.carregando);
       usuario = await conferirUsuario();
       mostrarConta(usuario);
-      if (!usuario) {
-        informar(params.has('error') ? texto.erroLogin : '');
-        return;
-      }
-      const pendente = window.sessionStorage.getItem(PENDENTE);
-      window.sessionStorage.removeItem(PENDENTE);
-      if (MODALIDADES.has(pendente)) {
-        await registrarInteresse(pendente);
+      if (usuario) {
+        const pendente = window.sessionStorage.getItem(PENDENTE);
+        window.sessionStorage.removeItem(PENDENTE);
+        if (MODALIDADES.has(pendente)) {
+          await registrarInteresse(pendente);
+        } else {
+          informar('');
+          await carregarInteresses();
+        }
       } else {
-        informar('');
-        await carregarInteresses();
+        btnLogin.disabled = false;
+        informar(erroOAuth ? mensagemErro : '');
       }
     } catch {
-      informar(texto.falha);
+      mostrarConta(null);
+      btnLogin.disabled = false;
+      informar(erroOAuth ? mensagemErro : texto.falha);
+    } finally {
+      // A URL do retorno não deve expor parâmetros de erro/código em links compartilhados.
+      if (erroOAuth || params.has('code') || params.has('cadastro')) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
     }
   }
 
@@ -249,6 +258,7 @@ if (raiz && window.isSecureContext) {
     btn.addEventListener('click', () => mostrarDialogo(btn.getAttribute('data-cadastro-modalidade-link')));
   });
   continuar?.addEventListener('click', iniciarGoogle);
+  btnLogin?.addEventListener('click', iniciarLogin);
   btnCancelar?.addEventListener('click', ocultarDialogo);
   lista?.addEventListener('click', async event => {
     const alvo = event.target.closest('button[data-cadastro-excluir]');
@@ -274,6 +284,7 @@ if (raiz && window.isSecureContext) {
       usuario = null;
       window.sessionStorage.removeItem(PENDENTE);
       mostrarConta(null);
+      btnLogin.disabled = false;
       informar(texto.desconectado);
     } catch {
       informar(texto.falha);
