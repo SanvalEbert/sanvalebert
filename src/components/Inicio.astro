@@ -1,7 +1,8 @@
 ---
 // Página inicial, compartilhada pelas versões em português e em inglês.
 import Base from '../layouts/Base.astro';
-import { link, paginas, type Idioma, type Pagina } from '../data/site';
+import { endereco, link, paginas, type Idioma, type Pagina } from '../data/site';
+import RegistrosAmsterdam from './RegistrosAmsterdam.astro';
 import { t } from '../i18n/textos';
 
 interface Props {
@@ -29,7 +30,7 @@ const numero = (n: number) => String(n + 1).padStart(2, '0');
       </div>
     </div>
     <figure class="figura foto">
-      <div class="espaco-foto rotulo" style="aspect-ratio: 4 / 5">{txt.site.fotoEmBreve}</div>
+      <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={idioma === 'pt' ? 'Retrato de Sanval Ebert, com óculos e blazer preto' : 'Portrait of Sanval Ebert wearing glasses and a black blazer'} fetchpriority="high" />
       <figcaption><span class="rotulo destaque">Fig. 1</span>{i.fig1}</figcaption>
     </figure>
   </section>
@@ -88,13 +89,14 @@ const numero = (n: number) => String(n + 1).padStart(2, '0');
 
   <section class="conteudo secao destaque-recente" aria-labelledby="destaque">
     <figure class="figura">
-      <div class="espaco-foto rotulo" style="aspect-ratio: 3 / 2">{txt.site.fotoEmBreve}</div>
+      <img class="foto-evento" src={endereco('images/engage-agent-amsterdam-2026.jpg')} width="1399" height="933" alt={idioma === 'pt' ? 'Premiação do Engage-Agent com o cheque de segundo lugar e as bandeiras do Brasil e do SENAI CIMATEC' : 'Engage-Agent award ceremony with the second-place cheque and the Brazilian and SENAI CIMATEC flags'} loading="lazy" decoding="async" />
       <figcaption><span class="rotulo destaque">Fig. 2</span>{i.fig2}</figcaption>
     </figure>
     <div class="coluna">
       <p class="rotulo destaque">{i.destaqueRotulo}</p>
       <h2 id="destaque">{i.destaqueTitulo[0]} <em>{i.destaqueTitulo[1]}</em></h2>
       <p>{i.destaqueTexto}</p>
+      <RegistrosAmsterdam idioma={idioma} />
       {
         pronta('estudantes') && (
           <a class="italico" href={para('estudantes')}>
@@ -159,8 +161,10 @@ const numero = (n: number) => String(n + 1).padStart(2, '0');
 
   .foto {
     flex: 1 1 280px;
-    max-width: 420px;
+    max-width: 322px;
   }
+
+  .retrato { display: block; width: 100%; height: auto; }
 
   .palavras {
     max-width: 48em;

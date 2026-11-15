@@ -83,7 +83,7 @@ const pt = {
     destaqueTexto:
       'Estudantes da Universidade SENAI CIMATEC levaram ao pódio do HackaStone 2026 um agente de IA que acompanha o percurso de cada estudante e avisa o professor a tempo de agir. Foram 51 universidades e 27 finalistas de 11 países.',
     destaqueElo: 'Ver resultados dos estudantes',
-    fig2: 'Time Engage-Agent na final do HackaStone 2026.',
+    fig2: 'Premiação do Engage-Agent: 2º lugar mundial no HackaStone 2026, em Amsterdã.',
     palestrasRotulo: '3. Palestras',
     palestrasTitulo: 'Leve a conversa sobre IA para o seu evento',
     palestras: [
@@ -198,7 +198,7 @@ const en: Textos = {
     destaqueTexto:
       'Students from SENAI CIMATEC University reached the HackaStone 2026 podium with an AI agent that follows each student’s progress and alerts the teacher in time to act. There were 51 universities and 27 finalists from 11 countries.',
     destaqueElo: 'See student results',
-    fig2: 'Team Engage-Agent at the HackaStone 2026 final.',
+    fig2: 'Engage-Agent award ceremony: 2nd place worldwide at HackaStone 2026, Amsterdam.',
     palestrasRotulo: '3. Talks',
     palestrasTitulo: 'Bring the AI conversation to your event',
     palestras: [

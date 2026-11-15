@@ -31,6 +31,11 @@ export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'palestras', '
 /** Enquanto a página Contratar não existe, os botões de contato levam ao LinkedIn. */
 export const contatoProvisorio = 'https://www.linkedin.com/in/sanval-ebert/';
 
+export const registrosAmsterdam = {
+  instagram: 'https://www.instagram.com/p/DfsskpaiBcC/?img_index=1',
+  linkedin: 'https://www.linkedin.com/feed/update/urn:li:activity:7526970043797037056/',
+} as const;
+
 export const referencias = [
   { nome: 'LinkedIn', url: 'https://www.linkedin.com/in/sanval-ebert/' },
   { nome: 'Instagram', url: 'https://www.instagram.com/sanvalebert/' },

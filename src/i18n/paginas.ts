@@ -92,7 +92,7 @@ const pt = {
     time: 'Victor Barreto Andrade Gonçalves, Amanda Lins, Átila Mascarenhas, Lucca Torres Badaro Silvani e Rafael Cezimbra.',
     papelRotulo: 'Meu papel',
     papel: 'Orientador do time.',
-    fig1: 'Time Engage-Agent na final, em Amsterdã.',
+    fig1: 'Premiação do Engage-Agent pelo 2º lugar mundial, em Amsterdã.',
     outrosRotulo: '1. Também no HackaStone 2026',
     outrosTitulo: 'Três equipes da universidade na final',
     outros: [
@@ -219,7 +219,7 @@ const en: Textos = {
     time: 'Victor Barreto Andrade Gonçalves, Amanda Lins, Átila Mascarenhas, Lucca Torres Badaro Silvani and Rafael Cezimbra.',
     papelRotulo: 'My role',
     papel: 'Team mentor.',
-    fig1: 'Team Engage-Agent at the final, in Amsterdam.',
+    fig1: 'Engage-Agent receiving the worldwide second-place award in Amsterdam.',
     outrosRotulo: '1. Also at HackaStone 2026',
     outrosTitulo: 'Three university teams in the final',
     outros: [

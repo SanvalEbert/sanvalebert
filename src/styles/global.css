@@ -234,6 +234,12 @@ a:hover {
   gap: 10px;
 }
 
+.foto-evento {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .figura figcaption {
   font-size: 15px;
   font-style: italic;

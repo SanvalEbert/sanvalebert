@@ -1,0 +1,18 @@
+---
+import { registrosAmsterdam, type Idioma } from '../data/site';
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props;
+---
+
+<div class="linha registros-amsterdam" aria-label={idioma === 'pt' ? 'Registros de Amsterdã nas redes sociais' : 'Amsterdam records on social media'}>
+  <a class="italico" href={registrosAmsterdam.instagram}>
+    {idioma === 'pt' ? 'Ver registros no Instagram' : 'See photos on Instagram'} <span aria-hidden="true">↗</span>
+  </a>
+  <a class="italico" href={registrosAmsterdam.linkedin}>
+    {idioma === 'pt' ? 'Ver a conquista no LinkedIn' : 'Read about the achievement on LinkedIn'} <span aria-hidden="true">↗</span>
+  </a>
+</div>
+
+<style>
+  .registros-amsterdam { gap: 4px 24px; }
+</style>
