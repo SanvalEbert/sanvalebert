@@ -54,9 +54,8 @@ const sobre = idioma === 'pt' ? {
     <div class="indicadores-sobre grade" aria-label={idioma === 'pt' ? 'Indicadores da universidade e do curso' : 'University and program indicators'}>
       <div class="celula"><p class="indicador-valor">IGC 5</p><p>{idioma === 'pt' ? 'Nota máxima da Universidade SENAI CIMATEC no Índice Geral de Cursos.' : 'SENAI CIMATEC University’s top score in Brazil’s General Course Index.'}</p></div>
       <div class="celula"><p class="indicador-valor">CPC 5</p><p>{idioma === 'pt' ? 'Nota máxima de Engenharia de Computação no Conceito Preliminar de Curso.' : 'Computer Engineering’s top score in Brazil’s Preliminary Course Score.'}</p></div>
-      <div class="celula"><p class="indicador-valor">{idioma === 'pt' ? '4º do Brasil' : '4th in Brazil'}</p><p>{idioma === 'pt' ? 'Engenharia de Computação, também destaque como o melhor curso do Norte e Nordeste, segundo divulgação da universidade em 2025.' : 'Computer Engineering, also ranked first in the North and Northeast, according to the university’s 2025 announcement.'}</p></div>
+      <div class="celula"><p class="indicador-valor">{idioma === 'pt' ? '4º do Brasil' : '4th in Brazil'}</p><p>{idioma === 'pt' ? 'Engenharia de Computação: 4º melhor curso do Brasil e melhor do Norte e Nordeste, segundo dados do MEC publicados em 2025, com base no CPC.' : 'Computer Engineering: 4th in Brazil and first in the North and Northeast, according to MEC data published in 2025, based on the CPC.'}</p></div>
     </div>
-    <p class="apoio fonte-indicadores"><a href="https://www.universidadesenaicimatec.edu.br/universidade-senai-cimatec-esta-entre-as-melhores-do-brasil-segundo-avaliacao-do-mec/">{idioma === 'pt' ? 'Conheça os resultados da Universidade SENAI CIMATEC — divulgação de 14/04/2025' : 'Explore SENAI CIMATEC University’s results — announcement of 14 April 2025'}</a></p>
   </section>
 
   <section class="conteudo secao destaque-recente" aria-labelledby="destaque">
@@ -134,7 +133,6 @@ const sobre = idioma === 'pt' ? {
 
   .indicadores-sobre { margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
   .indicador-valor { font-size: clamp(30px, 4vw, 46px); line-height: 1.15; color: var(--azul-claro); }
-  .fonte-indicadores { margin-top: 20px; }
   .sobre-grade { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; }
   @media (max-width: 760px) { .sobre-grade { grid-template-columns: 1fr; } }
 
