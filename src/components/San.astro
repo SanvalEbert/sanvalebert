@@ -1,0 +1,156 @@
+---
+import { publicacoes } from '../data/publicacoes';
+import { contatoWhatsApp, endereco, link, type Idioma } from '../data/site';
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props;
+const pt = idioma === 'pt';
+const textos = pt ? {
+  abrir: 'Conversar com San', fechar: 'Fechar conversa', titulo: 'San � guia do portal',
+  descricao: 'Respostas a partir do conte�do do site', pergunta: 'O que voc� procura?', enviar: 'Enviar',
+  boasVindas: 'Ol�! Sou San, o guia virtual deste portal. Posso ajudar voc� a encontrar pesquisas, publica��es, resultados dos estudantes e informa��es sobre palestras. O que gostaria de conhecer?',
+  limite: 'Nesta vers�o, consulto o cat�logo do portal. Para outras informa��es, fale com Sanval pelo WhatsApp.',
+  desconhecido: 'N�o encontrei essa informa��o no conte�do do portal. Voc� pode explorar as publica��es ou falar diretamente com Sanval.',
+  voce: 'Voc�', limpar: 'Limpar conversa',
+  contato: 'Falar com Sanval no WhatsApp', pesquisa: 'Pesquisa e publica��es',
+} : {
+  abrir: 'Chat with San', fechar: 'Close conversation', titulo: 'San � portal guide',
+  descricao: 'Answers from this website's content', pergunta: 'What are you looking for?', enviar: 'Send',
+  boasVindas: 'Hello! I'm San, this portal's virtual guide. I can help you find research, publications, student achievements and information about talks. What would you like to explore?',
+  limite: 'In this version, I search the portal catalogue. For other information, contact Sanval on WhatsApp.',
+  desconhecido: 'I couldn't find that information in the portal content. You can explore the publications or contact Sanval directly.',
+  voce: 'You', limpar: 'Clear conversation',
+  contato: 'Contact Sanval on WhatsApp', pesquisa: 'Research and publications',
+};
+const entradas = [
+  {
+    titulo: pt ? 'Sobre Sanval Ebert' : 'About Sanval Ebert', url: link('sobre', idioma),
+    termos: 'sobre biografia perfil quem sanval coordenador professor docente pesquisador about biography profile who coordinator researcher',
+    resumo: pt ? 'Sanval Ebert � docente e pesquisador na Universidade SENAI CIMATEC, onde coordena Engenharia de Computa��o e Ci�ncia de Dados e Intelig�ncia Artificial. Conecta educa��o, pesquisa e tecnologia.' : 'Sanval Ebert is an educator and researcher at SENAI CIMATEC University, coordinating Computer Engineering and Data Science and Artificial Intelligence. His work connects education, research and technology.',
+  },
+  {
+    titulo: textos.pesquisa, url: link('pesquisa', idioma),
+    termos: 'pesquisa publicacoes artigos research publications papers inteligencia artificial ia ai educacao education imersao realidade virtual metaverso',
+    resumo: pt ? 'As pesquisas do portal abordam IA e ambientes de aprendizagem, experi�ncias imersivas, modelagem de dados e forma��o profissional. O cat�logo re�ne artigos, cap�tulos, trabalhos de congresso e preprint, com fontes originais.' : 'The portal's research covers AI and learning environments, immersive experiences, data modelling and professional training. The catalogue includes articles, chapters, conference papers and a preprint, with original sources.',
+  },
+  {
+    titulo: pt ? 'Resultados � Engage-Agent' : 'Achievements � Engage-Agent', url: link('estudantes', idioma) + '#engage',
+    termos: 'resultados estudantes alunos equipe engage agent hackastone hackathon amsterdam holanda segundo lugar premio students achievements team award',
+    resumo: pt ? 'O Engage-Agent, equipe orientada por Sanval Ebert, conquistou o segundo lugar mundial no HackaStone 2026, em Amsterdam. O projeto acompanha o percurso de aprendizagem e apoia o professor. Conhe�a a equipe e os registros na p�gina de Resultados.' : 'Engage-Agent, the team mentored by Sanval Ebert, placed second worldwide at HackaStone 2026 in Amsterdam. The project follows learning progress and supports teachers. Meet the team and see the records on the Achievements page.',
+  },
+  {
+    titulo: pt ? 'Palestras e eventos' : 'Talks and events', url: link('palestras', idioma),
+    termos: 'palestra evento formacao curso oficina workshop contratar proposta preco valor agenda disponibilidade talk event training course hire proposal price schedule contact contato whatsapp',
+    resumo: pt ? 'O portal apresenta temas de palestras sobre educa��o, IA e tecnologias emergentes. Para consultar disponibilidade, valores ou solicitar uma proposta para seu evento ou forma��o, converse com Sanval pelo WhatsApp.' : 'The portal presents talks on education, AI and emerging technologies. To check availability, pricing or request a proposal for an event or training programme, contact Sanval on WhatsApp.',
+  },
+  ...publicacoes.map(p => ({ titulo: p.title, url: p.doi ? `https://doi.org/${p.doi}` : `https://www.researchgate.net/publication/${p.rg}`, termos: `${p.title} ${p.authors} ${p.year} ${p.area}`, resumo: `${p.year} � ${p.venue}. ${p.summary[idioma]}` })),
+];
+const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: link('pesquisa', idioma), pt });
+---
+<div class="san" data-san data-config={config}>
+  <button class="san-abrir" data-san-abrir aria-haspopup="dialog" aria-controls="san-painel" aria-label={textos.abrir}>
+    <img src={endereco('images/sanval-ebert.png')} width="42" height="42" alt="" loading="lazy" />
+    <span>{textos.abrir}</span><span class="san-luz" aria-hidden="true"></span>
+  </button>
+  <dialog id="san-painel" aria-labelledby="san-titulo" aria-describedby="san-descricao">
+    <header class="san-cabeca">
+      <img src={endereco('images/sanval-ebert.png')} width="44" height="44" alt="" loading="lazy" />
+      <div><h2 id="san-titulo">{textos.titulo}</h2><p id="san-descricao">{textos.descricao}</p></div>
+      <button class="san-fechar" data-san-fechar aria-label={textos.fechar}>�</button>
+    </header>
+    <div class="san-historico" role="log" aria-live="polite" aria-relevant="additions" aria-label={pt ? 'Conversa com San' : 'Conversation with San'} data-san-historico></div>
+    <div class="san-sugestoes" aria-label={pt ? 'Sugest�es de perguntas' : 'Suggested questions'}>
+      {[pt ? 'Pesquisas' : 'Research', pt ? 'Resultados' : 'Achievements', pt ? 'Palestras' : 'Talks'].map(s => <button type="button" data-san-sugestao>{s}</button>)}
+    </div>
+    <form class="san-form" data-san-form>
+      <label for="san-pergunta">{textos.pergunta}</label>
+      <div><input id="san-pergunta" name="pergunta" type="text" maxlength="500" required autocomplete="off" /><button type="submit">{textos.enviar}</button></div>
+    </form>
+    <div class="san-rodape"><p>{textos.limite}</p><button type="button" data-san-limpar>{textos.limpar}</button></div>
+  </dialog>
+</div>
+<script>
+  interface Entrada { titulo: string; url: string; termos: string; resumo: string }
+  const raiz = document.querySelector<HTMLElement>('[data-san]');
+  if (raiz) {
+    const config = JSON.parse(raiz.dataset.config!);
+    const entradas: Entrada[] = config.entradas;
+    const txt = config.textos;
+    const painel = raiz.querySelector<HTMLDialogElement>('dialog')!;
+    const abrir = raiz.querySelector<HTMLButtonElement>('[data-san-abrir]')!;
+    const historico = raiz.querySelector<HTMLElement>('[data-san-historico]')!;
+    const campo = raiz.querySelector<HTMLInputElement>('input')!;
+    const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const singular = (s: string) => s.length > 4 ? s.replace(/s$/, '') : s;
+    const ignorar = new Set(['para','como','sobre','quero','saber','qual','quais','pode','voce','gostaria','conhecer','with','what','about','would','like','know','does','from','that','this','your','mais','fale','portal']);
+    function mensagem(texto: string, usuario = false, fontes: {titulo:string;url:string}[] = []) {
+      const bloco = document.createElement('div');
+      bloco.className = usuario ? 'san-mensagem san-usuario' : 'san-mensagem';
+      const nome = document.createElement('strong'); nome.textContent = usuario ? txt.voce : 'San';
+      const p = document.createElement('p'); p.textContent = texto;
+      bloco.append(nome, p);
+      if (fontes.length) {
+        const lista = document.createElement('ul');
+        for (const fonte of fontes) {
+          const item = document.createElement('li'); const a = document.createElement('a');
+          a.textContent = fonte.titulo; a.href = fonte.url; item.append(a); lista.append(item);
+        }
+        bloco.append(lista);
+      }
+      historico.append(bloco);
+      // Keep the conversation bounded and in memory only.
+      while (historico.childElementCount > 41) historico.firstElementChild?.remove();
+      bloco.scrollIntoView({block:'nearest'});
+    }
+    function responder(pergunta: string) {
+      const texto = pergunta.trim().slice(0, 500);
+      if (!texto) return;
+      mensagem(texto, true);
+      const n = normalizar(texto);
+      if (/^(oi|ola|hello|hi|bom dia|boa tarde|boa noite)[!.\s]*$/.test(n)) { mensagem(txt.boasVindas); return; }
+      if (/^(obrigad[oa]|thanks|thank you)[!.\s]*$/.test(n)) { mensagem(config.pt ? 'Por nada! O que mais gostaria de explorar?' : 'You're welcome! What else would you like to explore?'); return; }
+      const tokens = [...new Set(n.split(/[^a-z0-9]+/).filter(t => (t.length > 2 || t === 'ia' || t === 'ai') && !ignorar.has(t)).map(singular))];
+      const resultados = entradas.map(e => {
+        const palavras = normalizar(`${e.termos} ${e.titulo} ${e.resumo}`).split(/[^a-z0-9]+/).map(singular);
+        const titulo = normalizar(e.titulo).split(/[^a-z0-9]+/).map(singular);
+        const score = tokens.reduce((s, t) => s + (titulo.includes(t) ? 6 : palavras.includes(t) ? 3 : palavras.some(p => t.length >= 5 && p.startsWith(t)) ? 1 : 0), 0);
+        return { e, score };
+      }).filter(r => r.score > 0).sort((a,b) => b.score - a.score).slice(0,3);
+      if (!resultados.length) {
+        mensagem(txt.desconhecido, false, [{titulo:txt.pesquisa, url:config.pesquisa}, {titulo:txt.contato, url:config.contatoWhatsApp}]);
+      } else {
+        mensagem(resultados[0].e.resumo, false, [...resultados.map(r => ({titulo:r.e.titulo,url:r.e.url})), {titulo:txt.contato,url:config.contatoWhatsApp}]);
+      }
+    }
+    abrir.addEventListener('click', () => { painel.showModal(); if (!historico.childElementCount) mensagem(txt.boasVindas); campo.focus(); });
+    raiz.querySelector('[data-san-fechar]')!.addEventListener('click', () => painel.close());
+    painel.addEventListener('close', () => abrir.focus());
+    raiz.querySelector('[data-san-form]')!.addEventListener('submit', e => { e.preventDefault(); responder(campo.value); campo.value = ''; campo.focus(); });
+    raiz.querySelectorAll<HTMLButtonElement>('[data-san-sugestao]').forEach(b => b.addEventListener('click', () => responder(b.textContent || '')));
+    raiz.querySelector('[data-san-limpar]')!.addEventListener('click', () => { historico.replaceChildren(); mensagem(txt.boasVindas); campo.focus(); });
+  }
+</script>
+<style>
+  .san { position:fixed;left:16px;bottom:16px;z-index:8;font-family:var(--sans); }
+  .san button,.san input { font:inherit; }
+  .san button { cursor:pointer;min-height:44px;border:1px solid #46617c;color:#eff6ff;background:#10243c;border-radius:12px;padding:8px 12px; }
+  .san button:hover { background:#1b3b5c; }
+  .san button:focus-visible,.san input:focus-visible { outline:3px solid #82e8f2;outline-offset:3px; }
+  .san-abrir { display:flex;align-items:center;gap:10px;box-shadow:0 0 24px #2452df40;font-size:14px!important; }
+  .san img { border-radius:50%;object-fit:cover;object-position:top;background:#143455;flex-shrink:0; }
+  .san-luz { width:7px;height:7px;background:#82e8f2;border-radius:50%; }
+  dialog { position:fixed;inset:auto auto 16px 16px;margin:0;padding:0;width:400px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);height:640px;color:#eff6ff;background:#091525;border:1px solid #46617c;border-radius:20px;box-shadow:0 20px 80px #0009; }
+  dialog[open] { display:flex;flex-direction:column; }
+  dialog::backdrop { background:#02081299; }
+  .san-cabeca { padding:16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #29435c; }
+  .san-cabeca div { flex:1; } .san-cabeca h2 { font:600 16px var(--sans);margin:0 0 5px; } .san-cabeca p { font-size:12px;color:#b3c2d8;margin:0; }
+  .san-fechar { font-size:24px!important;padding:0!important;min-width:44px; }
+  .san-historico { overflow:auto;flex:1;min-height:80px;padding:16px;overscroll-behavior:contain; }
+  .san-mensagem { padding:12px;background:#10243c;border-radius:12px;margin-bottom:12px;font-size:14px;line-height:1.55;overflow-wrap:anywhere; }
+  .san-mensagem strong { color:#82e8f2;font-size:12px; } .san-mensagem p { margin:6px 0 0; } .san-mensagem ul { margin:10px 0 0;padding-left:18px; } .san-mensagem li { margin:8px 0; } .san-mensagem a { color:#a9ecff; }
+  .san-usuario { background:#18334e;margin-left:24px; }
+  .san-sugestoes { display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px; } .san-sugestoes button { font-size:12px; }
+  .san-form { padding:0 16px; } .san-form label { display:block;font-size:12px;margin-bottom:7px; } .san-form div { display:flex;gap:8px; } .san-form input { min-width:0;flex:1;color:#eff6ff;background:#060c18;border:1px solid #67839d;border-radius:10px;padding:10px;font-size:16px; }
+  .san-rodape { padding:10px 16px;display:flex;align-items:center;gap:10px; } .san-rodape p { font-size:11px;line-height:1.5;color:#b3c2d8;margin:0;flex:1; } .san-rodape button { font-size:11px;max-width:95px; }
+  @media(max-width:540px) { .san-abrir span:not(.san-luz) { display:none; } .san-abrir { padding:6px!important; } dialog { bottom:8px;left:8px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px); } }
+  @media print { .san { display:none; } }
+</style>
