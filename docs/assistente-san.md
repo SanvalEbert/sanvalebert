@@ -39,3 +39,17 @@ O componente `src/components/San.astro` é exibido em todas as páginas do porta
 - `npm test`: tipos, build, links, API, navegador e acessibilidade, com Node.js 24.
 
 A integração real fica pendente da configuração da variável `OPENAI_API_KEY` e da validação do deployment Vercel correto.
+
+## Teste de prévia após configurar a chave
+
+Toda alteração de variáveis na Vercel exige **nova implantação**. Ao salvar `OPENAI_API_KEY`, faça novo deploy de **Preview** (por exemplo, por meio de commit na branch deste pull request); deploys anteriores não recebem a variável.
+
+Valide na URL de preview, antes de integrar à `main`:
+
+1. Confirme que o campo de variáveis da Vercel mostra `OPENAI_API_KEY` como **Secret**, nos escopos Production e Preview, sem mostrar o valor.
+2. Pergunte “Quais são as pesquisas de Sanval em IA?” e verifique uma resposta contextualizada, com links para fontes do portal.
+3. Pergunte “Quero o contato do professor Saval” e confira se o WhatsApp oficial é fornecido.
+4. Faça uma pergunta sem suporte no conteúdo e verifique se o assistente não inventa uma resposta.
+5. Se a rota de IA retornar 503/502, verificar o status de faturamento/permissões da OpenAI e os logs da função na Vercel, sem expor a chave.
+
+O registro de testes automatizados simula o provedor, portanto não substitui o teste real com a chave de API configurada.
