@@ -151,3 +151,10 @@ test('Resultados apresenta conquistas sem oferta comercial no conteúdo e rodap�
  await expect(page.locator('main a[href="/contratar/"], footer a[href="/contratar/"]')).toHaveCount(0);
  await expect(page.getByRole('heading',{name:'Três equipes da universidade na final'})).toBeVisible();
 });
+
+test('Analytics é carregado de forma privada, sem contador público', async ({ page }) => {
+  await page.route('**/_vercel/insights/script.js', route => route.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+  await abrir(page, '/');
+  await expect(page.locator('script[src="/_vercel/insights/script.js"]')).toHaveCount(1);
+  await expect(page.locator('[data-contador-publico], .visitantes-publicos')).toHaveCount(0);
+});
