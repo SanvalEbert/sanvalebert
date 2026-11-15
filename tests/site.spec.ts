@@ -63,12 +63,19 @@ test('o botão de idioma leva à mesma página no outro idioma e volta', async (
   await expect(page).toHaveURL(/\/palestras\/$/);
 });
 
-test('o menu leva às páginas prontas', async ({ page }) => {
+test('Tech Services aparece desabilitado no menu, sem link navegável nos dois idiomas', async ({ page }) => {
   await abrir(page, '/');
   const menu = page.getByRole('navigation', { name: 'Menu principal' });
-  await menu.getByRole('link', { name: 'Serviços', exact: true }).click();
-  await expect(page).toHaveURL(/\/servicos\/$/);
-  await expect(menu.getByRole('link', { name: 'Serviços', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(menu.getByRole('link', { name: 'Tech Services', exact: true })).toHaveAttribute('aria-disabled', 'true');
+  await expect(menu.locator('a', { hasText: 'Tech Services' })).toHaveCount(0);
+  await expect(page.locator('a[href="/servicos/"]')).toHaveCount(0);
+  await expect(menu.getByRole('link', { name: 'Pesquisa', exact: true })).toHaveAttribute('href', '/pesquisa/');
+
+  await abrir(page, '/en/');
+  const englishMenu = page.getByRole('navigation', { name: 'Main menu' });
+  await expect(englishMenu.getByRole('link', { name: 'Tech Services', exact: true })).toHaveAttribute('aria-disabled', 'true');
+  await expect(englishMenu.locator('a', { hasText: 'Tech Services' })).toHaveCount(0);
+  await expect(page.locator('a[href="/en/services/"]')).toHaveCount(0);
 });
 
 test('o botão de voltar ao topo aparece ao rolar e leva ao início', async ({ page }) => {
