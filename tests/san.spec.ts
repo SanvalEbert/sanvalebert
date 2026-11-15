@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 test.beforeEach(async ({ page }) => {
   await page.route(/vlibras\.gov\.br/, r => r.abort());
   await page.goto('/');
-  await page.getByRole('button', { name: 'Pergunte ao San', exact: true }).click();
+  await page.getByRole('button', { name: /Pergunte ao San/ }).click();
 });
 
 test('San localiza uma publicação e sua fonte original', async ({ page }) => {
@@ -29,15 +29,15 @@ test('San abre por teclado, fecha com Escape e devolve o foco', async ({ page })
   await expect(page.getByLabel('O que você procura?')).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).not.toBeVisible();
-  const abrir = page.getByRole('button', { name: 'Pergunte ao San', exact: true });
+  const abrir = page.getByRole('button', { name: /Pergunte ao San/ });
   await expect(abrir).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('dialog')).toBeVisible();
 });
 
 test('San oferece sugestões, limpa histórico e mantém a conversa apenas na página', async ({ page }) => {
-  await page.getByRole('button', { name: 'Resultados', exact: true }).click();
-  await expect(page.getByRole('log')).toContainText('segundo lugar mundial');
+  await page.getByRole('button', { name: 'Publicações', exact: true }).click();
+  await expect(page.getByRole('log')).toContainText('As pesquisas do portal abordam');
   await page.getByRole('button', { name: 'Limpar conversa' }).click();
   await expect(page.getByRole('log').locator('.san-mensagem')).toHaveCount(1);
   await page.reload();
@@ -56,7 +56,7 @@ test('conversa aberta é acessível e cabe na tela', async ({ page }) => {
 
 test('San responde em inglês nas páginas em inglês', async ({ page }) => {
   await page.goto('/en/research/');
-  await page.getByRole('button', { name: 'Ask San', exact: true }).click();
+  await page.getByRole('button', { name: /Ask San/ }).click();
   await page.getByRole('button', { name: 'Talks', exact: true }).click();
   await expect(page.getByRole('log')).toContainText('contact Sanval on WhatsApp');
 });
@@ -81,7 +81,7 @@ for (const pergunta of [
 
 test('contato em inglês mostra o número internacional', async ({ page }) => {
   await page.goto('/en/');
-  await page.getByRole('button', { name: 'Ask San', exact: true }).click();
+  await page.getByRole('button', { name: /Ask San/ }).click();
   await page.getByLabel('What are you looking for?').fill('How can I contact professor Saval?');
   await page.getByRole('button', { name: 'Send', exact: true }).click();
   await expect(page.getByRole('log')).toContainText('+55 71 98555-8490');
@@ -95,7 +95,7 @@ test('falar sobre pesquisa continua procurando conteúdos', async ({ page }) => 
 
 test('convite do San não cobre navegação e conserva hierarquia visual', async ({ page }) => {
   await page.getByRole('button', { name: 'Fechar conversa' }).click();
-  const convite = page.getByRole('button', { name: 'Pergunte ao San', exact: true });
+  const convite = page.getByRole('button', { name: /Pergunte ao San/ });
   await expect(convite).toContainText('Pesquisas, publicações e contato');
   const retConvite = await convite.boundingBox();
   const nav = await page.locator('.navegacao-pagina').boundingBox();
