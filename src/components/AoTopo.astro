@@ -4,9 +4,11 @@ const { rotulo, rotuloFim } = Astro.props;
 ---
 <nav class="navegacao-pagina" aria-label={rotulo === 'Voltar ao topo' ? 'Navegação da página' : 'Page navigation'}>
   <a class="ao-topo" href="#topo" aria-label={rotulo} title={rotulo} data-ao-topo>
+    <span class="texto-nav">{rotulo === 'Voltar ao topo' ? 'Topo' : 'Top'}</span>
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="2" /></svg>
   </a>
   <a class="ao-topo visivel" href="#rodape" aria-label={rotuloFim} title={rotuloFim} data-ao-fim>
+    <span class="texto-nav">{rotulo === 'Voltar ao topo' ? 'Fim' : 'Bottom'}</span>
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12M4 10l6 6 6-6" stroke="currentColor" stroke-width="2" /></svg>
   </a>
 </nav>
@@ -14,7 +16,7 @@ const { rotulo, rotuloFim } = Astro.props;
   const topo = document.querySelector<HTMLAnchorElement>('[data-ao-topo]');
   const fim = document.querySelector<HTMLAnchorElement>('[data-ao-fim]');
   function atualizar() {
-    topo?.classList.toggle('visivel', window.scrollY > 600);
+    topo?.classList.toggle('visivel', window.scrollY > 160);
     fim?.classList.toggle('visivel', window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 80);
   }
   window.addEventListener('scroll', atualizar, { passive: true });
@@ -22,3 +24,12 @@ const { rotulo, rotuloFim } = Astro.props;
   window.addEventListener('load', atualizar);
   atualizar();
 </script>
+
+<style>
+  .navegacao-pagina .ao-topo { width: auto; min-width: 84px; gap: 8px; padding: 10px 12px; }
+  .texto-nav { font-family: var(--mono); font-size: 11px; }
+  @media(max-width:480px) {
+    .navegacao-pagina .ao-topo { width: 48px; min-width: 48px; padding: 10px; }
+    .texto-nav { display: none; }
+  }
+</style>
