@@ -27,6 +27,7 @@ const pt = {
     pesquisa: 'Pesquisa',
     estudantes: 'Resultados',
     palestras: 'Palestras',
+    servicos: 'Serviços',
     cursos: 'Cursos',
     radar: 'Radar',
     contratar: 'Contratar',
@@ -76,7 +77,7 @@ const pt = {
     sumario: [
       { nome: 'Conhecer', destino: 'trajetória e pesquisa', pagina: 'sobre' },
       { nome: 'Aprender', destino: 'cursos e formações', pagina: 'cursos' },
-      { nome: 'Contratar', destino: 'palestras e consultoria', pagina: 'palestras' },
+      { nome: 'Contratar', destino: 'serviços e formações', pagina: 'servicos' },
     ],
     destaqueRotulo: 'Destaque',
     destaqueTitulo: ['Da Bahia para Amsterdã: Engage-Agent é', '2º lugar mundial'],
@@ -142,6 +143,7 @@ const en: Textos = {
     pesquisa: 'Research',
     estudantes: 'Results',
     palestras: 'Talks',
+    servicos: 'Services',
     cursos: 'Courses',
     radar: 'Radar',
     contratar: 'Hire me',
@@ -191,7 +193,7 @@ const en: Textos = {
     sumario: [
       { nome: 'Discover', destino: 'path and research', pagina: 'sobre' },
       { nome: 'Learn', destino: 'courses and training', pagina: 'cursos' },
-      { nome: 'Hire', destino: 'talks and consulting', pagina: 'palestras' },
+      { nome: 'Hire', destino: 'services and training', pagina: 'servicos' },
     ],
     destaqueRotulo: 'Highlight',
     destaqueTitulo: ['From Bahia to Amsterdam: Engage-Agent takes', '2nd place worldwide'],
