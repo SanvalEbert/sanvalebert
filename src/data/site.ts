@@ -18,7 +18,7 @@ export const paginas = {
   pesquisa: { rota: { pt: 'pesquisa/', en: 'en/research/' }, pronta: true },
   estudantes: { rota: { pt: 'estudantes/', en: 'en/students/' }, pronta: true },
   palestras: { rota: { pt: 'palestras/', en: 'en/talks/' }, pronta: true },
-  servicos: { rota: { pt: 'servicos/', en: 'en/services/' }, pronta: true },
+  servicos: { rota: { pt: 'servicos/', en: 'en/services/' }, pronta: false },
   privacidade: { rota: { pt: 'privacidade/', en: 'en/privacy/' }, pronta: true },
   cursos: { rota: { pt: 'cursos/', en: 'en/courses/' }, pronta: false },
   radar: { rota: { pt: 'radar/', en: 'en/radar/' }, pronta: false },

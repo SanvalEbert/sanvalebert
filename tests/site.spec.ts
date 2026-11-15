@@ -63,12 +63,19 @@ test('o botão de idioma leva à mesma página no outro idioma e volta', async (
   await expect(page).toHaveURL(/\/palestras\/$/);
 });
 
-test('o menu leva às páginas prontas', async ({ page }) => {
+test('Tech Services aparece desabilitado no menu, sem link navegável nos dois idiomas', async ({ page }) => {
   await abrir(page, '/');
   const menu = page.getByRole('navigation', { name: 'Menu principal' });
-  await menu.getByRole('link', { name: 'Serviços', exact: true }).click();
-  await expect(page).toHaveURL(/\/servicos\/$/);
-  await expect(menu.getByRole('link', { name: 'Serviços', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(menu.getByRole('link', { name: 'Tech Services', exact: true })).toHaveAttribute('aria-disabled', 'true');
+  await expect(menu.locator('a', { hasText: 'Tech Services' })).toHaveCount(0);
+  await expect(page.locator('a[href="/servicos/"]')).toHaveCount(0);
+  await expect(menu.getByRole('link', { name: 'Pesquisa', exact: true })).toHaveAttribute('href', '/pesquisa/');
+
+  await abrir(page, '/en/');
+  const englishMenu = page.getByRole('navigation', { name: 'Main menu' });
+  await expect(englishMenu.getByRole('link', { name: 'Tech Services', exact: true })).toHaveAttribute('aria-disabled', 'true');
+  await expect(englishMenu.locator('a', { hasText: 'Tech Services' })).toHaveCount(0);
+  await expect(page.locator('a[href="/en/services/"]')).toHaveCount(0);
 });
 
 test('o botão de voltar ao topo aparece ao rolar e leva ao início', async ({ page }) => {
@@ -207,7 +214,7 @@ test('Serviços mantém idioma, modalidades e navegação em inglês', async ({ 
   await expect(page).toHaveURL(/\/en\/services\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('education and technology.');
   await expect(page.locator('.grade-servicos article')).toHaveCount(4);
-  await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Services' })).toHaveAttribute('aria-current', 'page');
+  await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Tech Services' })).toHaveAttribute('aria-disabled', 'true');
 });
 test('política de privacidade está acessível pelo rodapé nas duas línguas', async ({ page }) => {
   await abrir(page, '/servicos/');
