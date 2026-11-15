@@ -197,8 +197,8 @@ test('Serviços começa com autenticação Google e não exibe modalidades sem s
   await expect(page.locator('button[data-cadastro-modalidade-link]:visible')).toHaveCount(0);
   await expect(page.getByRole('link', { name:'Leia a Política de Privacidade e Segurança' })).toHaveAttribute('href','/privacidade/');
   await page.locator('[data-cadastro-login]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__authParams?.provider)).toBe('google');
-  const params = await page.evaluate(()=>window.__authParams.options);
+  await expect.poll(()=>page.evaluate(()=>(window as any).__authParams?.provider)).toBe('google');
+  const params = await page.evaluate(()=>(window as any).__authParams.options);
   expect(params.redirectTo).toBe('https://techedu.sanvalebert.com.br/servicos/');
   expect(params.scopes).toBe('email profile');
 });
@@ -213,7 +213,7 @@ test('Serviços mostra nome e quatro modalidades após autenticação simulada',
   await expect(page.locator('[data-techedu-conta]')).toBeVisible();
   await expect(page.locator('[data-cadastro-nome]')).toHaveText('Participante de teste');
   await expect(page.locator('[data-cadastro-email]')).toHaveText('teste@example.com');
-  await expect(page.locator('[data-requer-login]:visible')).toHaveCount(4);
+  await expect(page.locator('[data-requer-login]:visible')).toHaveCount(5);
   const cards=page.locator('.grade-servicos article');
   await expect(cards).toHaveCount(4);
   for(const nome of ['Palestras','Treinamentos','Minicursos','Workshops']) {
