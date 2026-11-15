@@ -119,7 +119,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
       <h2 id="conversa-titulo">{texto.chamada}</h2>
       <p>{texto.descricaoFinal}</p>
       <div><a class="botao botao-noite" href={link('contratar', idioma)}>{texto.contato}</a></div>
-      <p class="privacidade">{texto.transparencia}</p>
+      <p class="privacidade">{texto.transparencia} <a href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança.' : 'Read the Privacy and Security Policy.'}</a></p>
     </div>
   </section>
 </Base>

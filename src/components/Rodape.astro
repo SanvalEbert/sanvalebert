@@ -27,7 +27,11 @@ const txt = t(idioma);
     {comercial && <a class="botao" href={link('contratar', idioma)}>{txt.site.contratar}</a>}
   </div>
 
-  <p class="apoio direitos">{txt.rodape.direitos}</p>
+  <p class="apoio direitos">
+    <span>{txt.rodape.direitos}</span>
+    <span aria-hidden="true"> · </span>
+    <a href={link('privacidade', idioma)}>{idioma === 'pt' ? 'Privacidade e Segurança' : 'Privacy and Security'}</a>
+  </p>
 </footer>
 
 <style>

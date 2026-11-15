@@ -10,6 +10,8 @@ const paginas = [
   { rota: '/palestras/', idioma: 'pt-BR' },
   { rota: '/servicos/', idioma: 'pt-BR' },
   { rota: '/en/services/', idioma: 'en' },
+  { rota: '/privacidade/', idioma: 'pt-BR' },
+  { rota: '/en/privacy/', idioma: 'en' },
   { rota: '/estudantes/', idioma: 'pt-BR' },
   { rota: '/en/', idioma: 'en' },
   { rota: '/en/talks/', idioma: 'en' },
@@ -206,4 +208,22 @@ test('Serviços mantém idioma, modalidades e navegação em inglês', async ({ 
   await expect(page.getByRole('heading', { level: 1 })).toContainText('education and technology.');
   await expect(page.locator('.grade-servicos article')).toHaveCount(4);
   await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Services' })).toHaveAttribute('aria-current', 'page');
+});
+test('política de privacidade está acessível pelo rodapé nas duas línguas', async ({ page }) => {
+  await abrir(page, '/servicos/');
+  await page.locator('footer').getByRole('link', { name: 'Privacidade e Segurança' }).click();
+  await expect(page).toHaveURL(/\/privacidade\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Seus dados');
+  await expect(page.locator('main')).toContainText('não exige login nem cadastro');
+  await expect(page.locator('main')).toContainText('O Google');
+  await page.getByRole('link', { name: 'English' }).click();
+  await expect(page).toHaveURL(/\/en\/privacy\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Your data');
+  await expect(page.locator('footer').getByRole('link', { name: 'Privacy and Security' })).toBeVisible();
+});
+
+test('catálogo informa privacidade antes do futuro cadastro Google', async ({ page }) => {
+  await abrir(page, '/servicos/');
+  await expect(page.locator('main').getByRole('link', { name: 'Leia a Política de Privacidade e Segurança.' })).toHaveAttribute('href', '/privacidade/');
+  await expect(page.locator('input[type="email"], input[type="password"]')).toHaveCount(0);
 });
