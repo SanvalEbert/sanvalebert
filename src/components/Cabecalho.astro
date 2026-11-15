@@ -23,16 +23,17 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
  </div>
 </header>
 <style>
-.portal-header{border-bottom:1px solid var(--fio)}
+.portal-header{border-bottom:1px solid var(--fio);background:rgba(5,12,25,.8);backdrop-filter:blur(18px)}
+.portal-header::after{content:"";position:absolute;bottom:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(130,232,242,.65),transparent);pointer-events:none}
 .estrutura{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 24px;padding-top:24px;padding-bottom:24px}
 .identidade{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
-.monograma{background:var(--azul);color:white;display:grid;place-items:center;width:44px;height:44px;font-size:23px;font-weight:500}
-.marca{display:flex;flex-direction:column;gap:5px}.nome{font-size:32px;line-height:1;letter-spacing:-.02em}
+.monograma{border:1px solid rgba(130,232,242,.55);border-radius:12px;box-shadow:0 0 24px rgba(36,82,223,.32),inset 0 1px 0 rgba(255,255,255,.2);background:linear-gradient(140deg,#2452df,#153381);color:white;display:grid;place-items:center;width:44px;height:44px;font-size:23px;font-weight:500}
+.marca{display:flex;flex-direction:column;gap:5px}.nome{font-size:28px;font-weight:650;line-height:1;letter-spacing:-.02em}
 .descricao{font-family:var(--mono);font-size:10px;line-height:1.5;color:var(--nevoa)}
 .menu{display:flex;flex-wrap:wrap;gap:4px 22px}.menu a{font-family:var(--mono);font-size:12px;padding:12px 0;text-decoration:none;border-bottom:2px solid transparent}
-.menu a[aria-current='page']{color:var(--azul-claro);border-bottom-color:var(--azul)}
+.menu a[aria-current='page']{color:var(--ciano);border-bottom-color:var(--ciano);text-shadow:0 0 18px rgba(130,232,242,.2)}
 .acoes{display:flex;align-items:center;gap:18px}.acoes a{font-family:var(--mono);font-size:12px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-.contratar{background:var(--azul);padding:10px 16px;gap:8px;color:white}.contratar:hover{background:#2a5bf0;color:white}
+.contratar{border:1px solid rgba(139,188,255,.4);border-radius:10px;box-shadow:0 5px 22px rgba(36,82,223,.2);background:var(--azul);padding:10px 16px;gap:8px;color:white}.contratar:hover{background:#2a5bf0;color:white}
 @media(max-width:1100px){.menu{order:3;flex-basis:100%}}
 @media(max-width:540px){.estrutura{gap:16px;padding-top:20px;padding-bottom:12px}.nome{font-size:28px}.descricao{font-size:9px}.acoes{gap:12px}.acoes a{font-size:11px}.contratar{padding:8px 12px}.menu{gap:4px 20px}}
 @media(max-width:380px){.acoes{flex-basis:100%;justify-content:space-between}}

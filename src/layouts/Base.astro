@@ -9,6 +9,7 @@ import Cabecalho from '../components/Cabecalho.astro';
 import Rodape from '../components/Rodape.astro';
 import AoTopo from '../components/AoTopo.astro';
 import VLibras from '../components/VLibras.astro';
+import Experiencia from '../components/Experiencia.astro';
 import { codigoHtml, endereco, idiomas, paginas, type Idioma, type Pagina } from '../data/site';
 import { t } from '../i18n/textos';
 
@@ -44,7 +45,7 @@ const canonico = absoluto(paginas[pagina].rota[idioma]);
     <meta property="og:description" content={descricao} />
     <meta property="og:url" content={canonico} />
     <meta property="og:locale" content={idioma === 'pt' ? 'pt_BR' : 'en_US'} />
-    <meta name="theme-color" content="#0a0f1f" />
+    <meta name="theme-color" content="#060c18" />
     <link rel="icon" type="image/svg+xml" href={endereco('favicon.svg')} />
   </head>
   <body id="topo">
@@ -56,5 +57,6 @@ const canonico = absoluto(paginas[pagina].rota[idioma]);
     <Rodape idioma={idioma} comercial={pagina !== 'estudantes'} />
     <AoTopo rotulo={txt.site.voltarAoTopo} rotuloFim={idioma === 'pt' ? 'Ir ao fim da página' : 'Go to the bottom of the page'} />
     {idioma === 'pt' && <VLibras />}
+    <Experiencia />
   </body>
 </html>

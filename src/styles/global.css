@@ -1,15 +1,18 @@
-/* Identidade "Periódico azul noite".
-   As regras de design ficam aqui, em um só lugar, para todas as páginas saírem iguais. */
+/* Atmosfera tecnológica: luz estratégica, superfícies escuras e leitura clara. */
 
 :root {
   /* Cores */
-  --noite: #0a0f1f; /* fundo principal */
-  --azul: #1447e6; /* azul de assinatura: linhas, botões, blocos */
+  --noite: #060c18; /* fundo principal */
+  --azul: #2452df; /* azul de assinatura: linhas, botões, blocos */
   --papel: #f2f4f8; /* texto sobre escuro, fundo claro */
-  --azul-claro: #7fa6ff; /* destaque de texto sobre escuro */
-  --nevoa: #aab4c8; /* textos de apoio */
-  --fio: rgba(242, 244, 248, 0.3); /* linhas finas */
+  --azul-claro: #8bbcff; /* destaque de texto sobre escuro */
+  --nevoa: #b3c2d8; /* textos de apoio */
+  --fio: rgba(139, 188, 255, 0.22); /* linhas finas */
   --branco: #ffffff;
+
+  --ciano: #82e8f2;
+  --painel: #0c1729;
+  --sans: 'Inter', 'Aptos', 'Segoe UI', Arial, sans-serif;
 
   /* Tipografia */
   --serifa: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
@@ -40,9 +43,11 @@ html {
 
 body {
   margin: 0;
-  background: var(--noite);
+  background: linear-gradient(180deg, #050a15, #080f1e 65%, #050a15);
   color: var(--papel);
-  font-family: var(--serifa);
+  font-family: var(--sans);
+  position: relative;
+  isolation: isolate;
   font-size: 18px;
   line-height: 1.5;
   font-optical-sizing: auto;
@@ -59,13 +64,14 @@ figure {
 h1,
 h2,
 h3 {
-  font-weight: 500;
+  font-weight: 650;
+  text-wrap: balance;
 }
 
 h1 {
   font-size: clamp(44px, 6vw, 84px);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
 }
 
 h2 {
@@ -80,9 +86,9 @@ h3 {
 }
 
 em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--azul-claro);
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--ciano);
 }
 
 a {
@@ -95,7 +101,7 @@ a:hover {
 }
 
 :focus-visible {
-  outline: 3px solid var(--azul-claro);
+  outline: 3px solid var(--ciano);
   outline-offset: 3px;
 }
 
@@ -175,7 +181,7 @@ a:hover {
 }
 
 .italico {
-  font-style: italic;
+  font-style: normal;
   display: inline-block;
   padding: 10px 0;
 }
@@ -198,12 +204,17 @@ a:hover {
   font-family: var(--mono);
   font-size: 13px;
   font-weight: 500;
-  border: 0;
+  border: 1px solid rgba(139, 188, 255, 0.45);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(21, 68, 205, 0.23), inset 0 1px 0 rgba(255,255,255,.12);
+  transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 
 .botao:hover {
   color: var(--branco);
   background: #2a5bf0;
+  box-shadow: 0 8px 32px rgba(43, 103, 255, 0.35), 0 0 0 1px rgba(130,232,242,.3);
+  transform: translateY(-2px);
 }
 
 .botao-noite {
@@ -215,8 +226,13 @@ a:hover {
 }
 
 .celula {
-  border-top: 3px solid var(--azul);
-  padding-top: 14px;
+  border: 1px solid var(--fio);
+  border-top: 1px solid rgba(130,232,242,.45);
+  padding: clamp(20px, 2.2vw, 28px);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(18, 35, 59, .94), rgba(9, 19, 35, .96));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025), 0 18px 38px rgba(0,0,0,.12);
+  transition: border-color .25s ease, box-shadow .25s ease;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -293,9 +309,12 @@ a:hover {
 }
 
 .bloco-azul {
-  background: var(--azul);
+  background: radial-gradient(ellipse at 100% 0%, rgba(53,163,204,.2), transparent 60%), linear-gradient(115deg, #10234b, #0a172e);
   color: var(--branco);
   padding: clamp(24px, 4vw, 48px);
+  border: 1px solid rgba(130,232,242,.35);
+  border-radius: 24px;
+  box-shadow: 0 20px 70px rgba(0,0,0,.2), inset 0 1px 0 rgba(130,232,242,.1);
 }
 
 .bloco-azul a:not(.botao) {
@@ -380,7 +399,7 @@ a:hover {
 
 .titulo-pagina {
   font-size: clamp(40px, 5.2vw, 72px);
-  line-height: 1;
+  line-height: 1.08;
 }
 
 /* Botão de voltar ao topo */
@@ -419,4 +438,60 @@ a:hover {
   .ao-topo {
     transition: none;
   }
+}
+
+
+/* Camadas de luz permanecem decorativas e não interceptam cliques. */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+body::before {
+  background:
+    radial-gradient(ellipse at 88% 8%, rgba(26, 103, 198, .24), transparent 48%),
+    radial-gradient(ellipse at 5% 55%, rgba(16, 99, 117, .13), transparent 46%);
+}
+body::after {
+  background-image: linear-gradient(rgba(130,232,242,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(130,232,242,.035) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: linear-gradient(#000, transparent 85%);
+}
+body > header, body > main, body > footer { position: relative; z-index: 1; }
+::selection { background: #82e8f2; color: #060c18; }
+h2 { line-height: 1.15; }
+h3 { line-height: 1.25; }
+p { text-wrap: pretty; }
+.rotulo { color: var(--nevoa); font-size: 11px; letter-spacing: .12em; }
+.rotulo.destaque { color: var(--ciano); }
+.abertura { color: #d4dfed; line-height: 1.7; font-size: clamp(18px, 1.6vw, 21px); }
+.cabeca-secao { margin-bottom: 30px; }
+.celula h3 { font-size: clamp(21px, 2vw, 26px); }
+.celula:focus-within { border-color: rgba(130,232,242,.65); }
+.figura img { border-radius: 16px; border: 1px solid rgba(139,188,255,.2); }
+.figura figcaption { font-family: var(--sans); font-style: normal; color: var(--nevoa); font-size: 13px; line-height: 1.6; }
+.registros { border-color: var(--fio); border-top-color: rgba(130,232,242,.5); }
+.registros li { padding: 22px 0; }
+.registros .nome { font-size: 20px; }
+.bloco-azul h2 i { color: var(--ciano); font-style: normal; }
+.ao-topo { border-color: rgba(130,232,242,.6); border-radius: 12px; box-shadow: 0 0 24px rgba(36,82,223,.25); }
+a, input, select { -webkit-tap-highlight-color: rgba(130,232,242,.2); }
+input:focus-visible, select:focus-visible { outline-offset: 4px; }
+@media (hover: hover) {
+  .celula:hover { border-color: rgba(130,232,242,.45); box-shadow: 0 16px 48px rgba(0,0,0,.18), inset 0 1px 0 rgba(130,232,242,.08); }
+}
+@media (max-width:640px) {
+  body::after { background-size: 48px 48px; opacity: .6; }
+  .grade { gap: 20px; }
+  .botao { min-height: 48px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-entrada="ativa"] { animation: entrada-luz .6s ease-out both; }
+  @keyframes entrada-luz { from { transform: translateY(8px); } to { transform: translateY(0); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
