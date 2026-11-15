@@ -9,7 +9,7 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
 ---
 <header class="portal-header">
  <div class="conteudo estrutura">
-  <a class="identidade" href={link('inicio', idioma)} aria-label={idioma === 'pt' ? 'Sanval Ebert — início' : 'Sanval Ebert — home'}>
+  <a class="identidade" href={link('inicio', idioma)} title={idioma === 'pt' ? 'Ir para o início' : 'Go to home'}>
    <span class="monograma" aria-hidden="true">SE</span>
    <span class="marca"><span class="nome">Sanval <em>Ebert</em></span><span class="descricao">{idioma === 'pt' ? 'Educação, pesquisa e tecnologia' : 'Education, research and technology'}</span></span>
   </a>
