@@ -5,7 +5,7 @@ interface Props { idioma: Idioma; pagina: Pagina }
 const { idioma, pagina } = Astro.props;
 const txt = t(idioma);
 const outro: Idioma = idioma === 'pt' ? 'en' : 'pt';
-const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
+const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' || item === 'servicos');
 ---
 <header class="portal-header">
  <div class="conteudo estrutura">
@@ -13,7 +13,10 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
    <span class="marca"><span class="nome">Sanval <em>Ebert</em></span><span class="descricao">{idioma === 'pt' ? 'Educação, pesquisa e tecnologia' : 'Education, research and technology'}</span></span>
   </a>
   <nav class="menu" aria-label={txt.site.menuPrincipal}>
-   {visiveis.map(item => <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>)}
+   {visiveis.map(item => item === 'servicos'
+     ? <span class="item-indisponivel" role="link" aria-disabled="true" title={txt.site.emBreve}>{txt.menu[item]}</span>
+     : <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>
+   )}
   </nav>
   <div class="acoes">
    <a class="idioma" href={endereco(paginas[pagina].rota[outro])} lang={codigoHtml[outro]} hreflang={codigoHtml[outro]} title={txt.site.outroIdiomaAviso}>{txt.site.outroIdioma}</a>
@@ -30,7 +33,8 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
 .marca{display:flex;flex-direction:column;gap:5px}
 .nome{font-size:clamp(30px,2.35vw,35px);font-weight:750;line-height:1.05;letter-spacing:-.035em;white-space:nowrap}
 .descricao{font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--nevoa);letter-spacing:.005em}
-.menu{display:flex;flex-wrap:wrap;gap:4px 22px}.menu a{font-family:var(--mono);font-size:12px;padding:12px 0;text-decoration:none;border-bottom:2px solid transparent}
+.menu{display:flex;flex-wrap:wrap;gap:4px 22px}.menu a,.menu .item-indisponivel{font-family:var(--mono);font-size:12px;padding:12px 0;text-decoration:none;border-bottom:2px solid transparent}
+.menu .item-indisponivel{color:var(--nevoa);opacity:.58;cursor:not-allowed;user-select:none}
 .menu a[aria-current='page']{color:var(--ciano);border-bottom-color:var(--ciano);text-shadow:0 0 18px rgba(130,232,242,.2)}
 .acoes{display:flex;align-items:center;gap:18px}.acoes a{font-family:var(--mono);font-size:12px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
 .contratar{border:1px solid rgba(139,188,255,.4);border-radius:10px;box-shadow:0 5px 22px rgba(36,82,223,.2);background:var(--azul);padding:10px 16px;gap:8px;color:white}.contratar:hover{background:#2a5bf0;color:white}
