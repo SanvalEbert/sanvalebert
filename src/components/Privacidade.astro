@@ -7,7 +7,7 @@ const { idioma } = Astro.props;
 const pt = idioma === 'pt';
 const d = pt ? {
   titulo: 'Privacidade e Segurança · TechEdu · Sanval Ebert',
-  descricao: 'Saiba como o portal TechEdu lida com informações de visitantes, perguntas ao assistente San e futuros cadastros, conforme a LGPD.',
+  descricao: 'Saiba como o TechEdu protege dados de visitantes, mensagens ao assistente San e registros experimentais de interesse via Google, conforme a LGPD.',
   rotulo: 'TechEdu · Transparência',
   chamada: 'Seus dados,',
   destaque: 'seu controle.',
@@ -33,41 +33,41 @@ const d = pt ? {
       titulo: '3. Para que os dados são usados',
       paragrafos: [
         'Os dados de navegação ajudam a compreender o uso do portal. As perguntas ao assistente são processadas para responder ao visitante. As mensagens de contato servem para esclarecer dúvidas e preparar propostas solicitadas.',
-        'Não utilizamos o login Google neste momento e não vendemos nem comercializamos bases de dados de visitantes. Quando uma funcionalidade de cadastro estiver disponível, sua finalidade e as informações solicitadas serão apresentadas antes do envio.',
+        'O catálogo público não exige login. O cadastro Google funciona apenas em acesso experimental para participantes autorizados como usuários de teste. Não vendemos nem comercializamos bases de dados de visitantes.',
       ],
     },
     {
-      titulo: '4. Cadastro com Google: funcionalidade futura',
+      titulo: '4. Cadastro com Google: acesso experimental',
       paragrafos: [
-        'Pretendemos oferecer um cadastro de interesse independente para o TechEdu. Quando ativado, solicitaremos apenas as informações básicas de identificação fornecidas pelo Google — nome, e-mail e identificador de conta — além do serviço escolhido e da data do interesse.',
-        'Não solicitaremos acesso ao conteúdo do Gmail, Google Drive ou contatos. O envio de ofertas e novidades será uma escolha separada e opcional. Esta funcionalidade ainda não está disponível, portanto nenhum cadastro é realizado automaticamente pelo botão de interesse atual.',
+        'No piloto, o Google fornece dados de identificação como nome, e-mail e identificador de conta ao Supabase Auth; o registro de interesse contém somente o identificador técnico do usuário, o serviço escolhido e a data. O Google pode fornecer metadados básicos de perfil, sujeitos às condições dos provedores.',
+        'Não solicitamos acesso ao conteúdo do Gmail, Google Drive ou contatos. O registro somente é criado após a escolha da modalidade e confirmação expressa do visitante. O piloto não cadastra pessoas em campanhas promocionais e o WhatsApp continua sendo o canal público de contato.',
       ],
     },
     {
       titulo: '5. Proteção e acesso às informações',
       paragrafos: [
-        'O site é servido por HTTPS. A chave de acesso à IA fica no servidor e não é fornecida ao navegador. Na implantação da base de interessados, serão exigidos acesso individualizado, permissões mínimas, isolamento entre usuários, proteção dos registros e acesso administrativo restrito.',
+        'O site utiliza HTTPS. A chave de acesso à IA permanece exclusivamente no servidor. A base separada TechEdu, hospedada no Supabase na região de São Paulo, utiliza regras de isolamento por usuário (RLS). Cada pessoa autenticada pode consultar e excluir seus próprios interesses; a área administrativa ainda não está ativada.',
         'Adotaremos processos para prevenir acesso indevido, revisar permissões e responder a possíveis incidentes. Nenhuma medida tecnológica elimina completamente os riscos; por isso, evitamos coletar informações desnecessárias.',
       ],
     },
     {
       titulo: '6. Fornecedores e armazenamento',
       paragrafos: [
-        'A Vercel hospeda o site e fornece estatísticas de acesso. A OpenAI processa solicitações feitas ao assistente San. O Google e o serviço de banco de dados escolhido participarão somente quando o login for ativado. O WhatsApp é utilizado exclusivamente quando o visitante inicia o contato.',
-        'Esses fornecedores podem realizar operações técnicas fora do Brasil, sujeitas às regras contratuais e legais aplicáveis. A futura base do TechEdu será separada de outras iniciativas educacionais e sua localização e período de retenção serão informados antes do início da coleta.',
+        'A Vercel hospeda o site e fornece estatísticas de acesso. A OpenAI processa mensagens enviadas ao assistente San. No piloto de cadastro, o Google fornece autenticação e o Supabase armazena a identidade e os registros de interesse. A biblioteca de autenticação é carregada sob demanda a partir de um serviço de distribuição de código (jsDelivr), que pode processar dados técnicos da conexão. O WhatsApp é utilizado quando o visitante inicia o contato.',
+        'Esses fornecedores podem realizar operações técnicas fora do Brasil, conforme condições e salvaguardas legais aplicáveis. O banco do TechEdu é independente das bases de outros cursos; o prazo de retenção será detalhado antes da abertura do cadastro ao público em geral.',
       ],
     },
     {
       titulo: '7. Retenção e direitos do titular',
       paragrafos: [
-        'Mantemos informações de contato apenas pelo período necessário ao atendimento da solicitação, considerando obrigações legais aplicáveis. Antes de iniciar os novos cadastros, divulgaremos um prazo objetivo de retenção e um procedimento para exclusão.',
+        'As informações são mantidas apenas pelo período necessário ao atendimento das solicitações e às obrigações legais. No piloto, o participante pode consultar e excluir seus registros de interesse diretamente na página de Serviços; para solicitar a exclusão da identidade mantida no provedor de autenticação, utilize o canal de contato. Os registros do piloto serão revisados antes da abertura ao público.',
         'Você poderá solicitar informações sobre o tratamento de seus dados, acesso, correção, oposição ou exclusão, quando cabível, conforme a Lei Geral de Proteção de Dados Pessoais (LGPD). Para fazer uma solicitação, utilize nosso canal de contato.',
       ],
     },
     {
       titulo: '8. Mudanças nesta política',
       paragrafos: [
-        'Esta política poderá ser atualizada quando novas funcionalidades forem lançadas, especialmente cadastro Google, matrículas, pagamentos ou Ambiente Virtual de Aprendizagem. Alterações relevantes serão apresentadas de forma clara antes de novas coletas.',
+        'Esta política será atualizada antes da abertura geral do cadastro e quando forem lançadas novas funcionalidades, como matrículas, pagamentos ou Ambiente Virtual de Aprendizagem. Alterações relevantes serão comunicadas antes de ampliar a coleta.',
       ],
     },
   ],
@@ -77,7 +77,7 @@ const d = pt ? {
   linkResponsavel: 'Contato de privacidade',
 } : {
   titulo: 'Privacy and Security · TechEdu · Sanval Ebert',
-  descricao: 'How TechEdu uses visitor information, questions sent to San and future account registrations, in accordance with Brazilian data protection law.',
+  descricao: 'How TechEdu uses visitor information, questions sent to San and Google-based pilot interest registration, in accordance with Brazilian data protection law.',
   rotulo: 'TechEdu · Transparency',
   chamada: 'Your data,',
   destaque: 'your choice.',
@@ -103,41 +103,41 @@ const d = pt ? {
       titulo: '3. Purposes',
       paragrafos: [
         'Traffic data helps us understand how the portal is used. Questions to San are processed to provide answers. Contact messages help address requests and prepare proposals requested by visitors.',
-        'Google login is not active yet, and visitor lists are not sold or traded. When registration becomes available, its specific purpose and the requested details will be displayed before submission.',
+        'Public browsing does not require an account. Google sign-in is available as a limited pilot for authorized test users only. We do not sell or trade visitor lists.',
       ],
     },
     {
-      titulo: '4. Google sign-in: future feature',
+      titulo: '4. Google sign-in: limited pilot',
       paragrafos: [
-        'We intend to offer a separate TechEdu interest-registration system. Once enabled, it will request only basic identification available from Google — name, email and account identifier — plus the selected service and date of interest.',
-        'We will not request access to Gmail messages, Google Drive files or contacts. Promotional communications will be a separate, optional choice. This feature is not yet available, so the current interest buttons do not automatically create an account.',
+        'During the pilot, Google supplies identity details such as name, email and account identifier to Supabase Auth. The interest database stores only the user ID, selected service and registration date. Google may also provide basic profile metadata, subject to provider terms.',
+        'We do not request Gmail messages, Drive files or contacts. An interest is created only after the visitor chooses a service and explicitly confirms registration. The pilot does not enroll visitors in marketing campaigns; public enquiries remain available over WhatsApp.',
       ],
     },
     {
       titulo: '5. Security and access',
       paragrafos: [
-        'The website uses HTTPS. The AI API key remains on the server rather than being exposed to browsers. When the interest database is implemented, access will be restricted per user, with minimal permissions and separate administrative access.',
+        'The website uses HTTPS. The AI API key remains on the server. The separate TechEdu database, hosted in São Paulo, uses Row Level Security (RLS) to isolate records. Signed-in users can view and delete only their own interests; administrative access has not yet been enabled.',
         'We plan to review access permissions, prevent unauthorized access and respond to security incidents. No system can eliminate risk entirely, which is why we avoid collecting unnecessary information.',
       ],
     },
     {
       titulo: '6. Service providers and storage',
       paragrafos: [
-        'Vercel hosts the website and provides usage analytics. OpenAI processes questions submitted to San. Google and the selected database provider will be involved only after sign-in is activated. WhatsApp is used only if visitors initiate contact.',
-        'These providers may perform technical operations outside Brazil, subject to applicable legal and contractual safeguards. The future TechEdu database will be separate from other educational initiatives, and its location and retention period will be disclosed before collection starts.',
+        'Vercel hosts the website and provides usage analytics. OpenAI processes questions submitted to San. During the pilot, Google provides sign-in and Supabase stores user identities and interests. The sign-in SDK loads only for pilot users through jsDelivr, which may process technical connection information. WhatsApp is used when visitors initiate contact.',
+        'These providers may perform technical operations outside Brazil, subject to applicable legal and contractual safeguards. TechEdu uses a separate database from other educational initiatives. We will publish a defined retention period before general availability.',
       ],
     },
     {
       titulo: '7. Retention and individual rights',
       paragrafos: [
-        'Contact information is kept only as long as needed to address requests, subject to applicable legal obligations. Before accounts are introduced, we will publish a defined retention period and a deletion procedure.',
+        'Information is kept only as long as needed to address requests, subject to legal obligations. In the pilot, participants can view and delete their own interests on the Services page. Requests to remove identity records held by the authentication provider can be made through the contact channel. Pilot records will be reviewed before public release.',
         'Under Brazil’s General Personal Data Protection Law (LGPD), you can request information about how data is used and, where applicable, access, correction, objection or deletion. Use our contact channel to make a request.',
       ],
     },
     {
       titulo: '8. Updates',
       paragrafos: [
-        'This notice may change as new features are introduced, particularly Google sign-in, enrollments, payments and a learning management system. Material changes will be communicated clearly before any new data collection.',
+        'This notice will be updated before general sign-in availability and when new features launch, including enrollments, payments and learning management. Material changes will be communicated before collection expands.',
       ],
     },
   ],

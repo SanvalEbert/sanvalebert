@@ -1,5 +1,20 @@
 # TechEdu — Serviços e captação de interessados
 
+## Piloto de cadastro com Google (novembro de 2026)
+
+Um protótipo controlado está disponível na rota pública \`https://techedu.sanvalebert.com.br/servicos/?cadastro=teste\`. O catálogo normal continua com WhatsApp como canal de contato até a verificação do Google OAuth por conta de teste autorizada e posterior abertura geral da Google Auth Platform.
+
+- Projeto Supabase **TechEdu** dedicado: \`rkmhpgyybawtmaeyvyva\`, região \`sa-east-1\` (São Paulo); os projetos anteriores não foram alterados.
+- Tabela \`public.interests\`: campos \`id\`, \`user_id\`, \`service_key\`, \`created_at\`, sem nome/e-mail duplicados. Nome e e-mail são tratados pelo Supabase Auth.
+- RLS com políticas separadas de leitura, inserção e exclusão de interesses próprios; nenhum acesso \`anon\`; nenhuma permissão de alteração de registros por usuários comuns. Verificar acesso cruzado com dois usuários reais antes de liberar publicamente.
+- A interface de teste exibe um modal com finalidade, dados mínimos e link para a política de privacidade antes de iniciar Google Login. Implementa \`flowType: 'pkce'\`, \`scopes:'email profile'\`, \`sessionStorage\` e retorno fixo à URL de produção já autorizada.
+- A biblioteca oficial Supabase JS está **pinada na versão 2.119.0** e é carregada do jsDelivr **somente no acesso piloto**, não nas visitas públicas ao catálogo. Na abertura geral, preferir mover a dependência para o bundle de build com arquivo de lock versionado, evitando uma dependência CDN em tempo de execução.
+- Usuário pode consultar, apagar interesses próprios e sair da conta. A exclusão da conta de identidade Supabase Auth requer solicitação pelo canal de privacidade, pois usuários não recebem privilégio de apagar a própria conta Auth.
+- Cada par (usuário, modalidade) tem apenas um registro de interesse, impedindo duplicação involuntária.
+- Não existe painel administrativo, marketing automático nem cursos pagos. Prazo de retenção objetivo e regras de limpeza devem ser aprovados antes da abertura ao público.
+
+**Importante:** passar nos testes de interface não comprova o OAuth real. Antes de habilitar os botões para todo o público, validar o consentimento no Google Cloud, a inclusão de um usuário de teste e uma inscrição e exclusão reais no Supabase.
+
 ## Objetivo
 
 A primeira fase cria o catálogo bilíngue em `/servicos/` e `/en/services/`, preservando as páginas atuais em `/palestras/` e `/en/talks/`. O item principal de navegação passa a ser **Serviços / Services**.
