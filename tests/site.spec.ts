@@ -158,3 +158,22 @@ test('Analytics é carregado de forma privada, sem contador público', async ({ 
   await expect(page.locator('script[src="/_vercel/insights/script.js"]')).toHaveCount(1);
   await expect(page.locator('[data-contador-publico], .visitantes-publicos')).toHaveCount(0);
 });
+
+test('cabeçalho exibe nome em destaque sem monograma SE', async ({ page }) => {
+  await abrir(page, '/');
+  const identidade = page.locator('.portal-header .identidade');
+  await expect(identidade.locator('.monograma')).toHaveCount(0);
+  await expect(identidade.locator('.nome')).toHaveText('Sanval Ebert');
+  await expect(identidade.locator('.descricao')).toHaveText('Educação, pesquisa e tecnologia');
+  await expect(identidade).toHaveAttribute('href', '/');
+  const fonte = await identidade.locator('.nome').evaluate(el => parseFloat(getComputedStyle(el).fontSize));
+  expect(fonte).toBeGreaterThanOrEqual(30);
+});
+
+test('cabeçalho preserva identidade e idioma em inglês', async ({ page }) => {
+  await abrir(page, '/en/');
+  const identidade = page.locator('.portal-header .identidade');
+  await expect(identidade.locator('.monograma')).toHaveCount(0);
+  await expect(identidade.locator('.nome')).toHaveText('Sanval Ebert');
+  await expect(identidade.locator('.descricao')).toHaveText('Education, research and technology');
+});
