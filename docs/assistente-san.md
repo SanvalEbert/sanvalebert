@@ -1,6 +1,6 @@
 # Assistente San
 
-O componente `src/components/San.astro` oferece um guia textual em todas as páginas, no idioma da página. Usa o retrato já publicado como avatar e a identidade visual do portal. O botão fica à esquerda, separado dos controles de navegação e do VLibras.
+O componente `src/components/San.astro` oferece um guia textual em todas as páginas, no idioma da página. Usa o personagem San em 3D aprovado pelo usuário, com fundo transparente, em `public/images/san-avatar-3d.webp`. O avatar aparece inteiro no botão e no cabeçalho da conversa. O botão fica à esquerda, separado dos controles de navegação e do VLibras.
 
 Esta primeira versão consulta um catálogo local por palavras, acentos e variações de plural. As respostas são trechos editoriais do catálogo; as publicações e suas sínteses vêm diretamente de `src/data/publicacoes.ts`. Cada resposta encontrada inclui links para as páginas ou fontes originais e contato pelo WhatsApp. Sem correspondência, informa que não encontrou a informação. Não confirma preços ou disponibilidade.
 

@@ -50,12 +50,12 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
 ---
 <div class="san" data-san data-config={config}>
   <button class="san-abrir" data-san-abrir aria-haspopup="dialog" aria-controls="san-painel" aria-label={textos.abrir}>
-    <img src={endereco('images/sanval-ebert.png')} width="42" height="42" alt="" loading="lazy" />
+    <img src={endereco('images/san-avatar-3d.webp')} width="88" height="84" alt="" loading="lazy" />
     <span>{textos.abrir}</span><span class="san-luz" aria-hidden="true"></span>
   </button>
   <dialog id="san-painel" aria-labelledby="san-titulo" aria-describedby="san-descricao">
     <header class="san-cabeca">
-      <img src={endereco('images/sanval-ebert.png')} width="44" height="44" alt="" loading="lazy" />
+      <img src={endereco('images/san-avatar-3d.webp')} width="64" height="61" alt="" loading="lazy" />
       <div><h2 id="san-titulo">{textos.titulo}</h2><p id="san-descricao">{textos.descricao}</p></div>
       <button class="san-fechar" data-san-fechar aria-label={textos.fechar}>×</button>
     </header>
@@ -144,7 +144,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
   .san button:hover { background:#1b3b5c; }
   .san button:focus-visible,.san input:focus-visible { outline:3px solid #82e8f2;outline-offset:3px; }
   .san-abrir { display:flex;align-items:center;gap:10px;box-shadow:0 0 24px #2452df40;font-size:14px!important; }
-  .san img { border-radius:50%;object-fit:cover;object-position:top;background:#143455;flex-shrink:0; }
+  .san img { object-fit:contain;flex-shrink:0; }
   .san-luz { width:7px;height:7px;background:#82e8f2;border-radius:50%; }
   dialog { position:fixed;inset:auto auto 16px 16px;margin:0;padding:0;width:400px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);height:640px;color:#eff6ff;background:#091525;border:1px solid #46617c;border-radius:20px;box-shadow:0 20px 80px #0009; }
   dialog[open] { display:flex;flex-direction:column; }
@@ -159,6 +159,6 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
   .san-sugestoes { display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px; } .san-sugestoes button { font-size:12px; }
   .san-form { padding:0 16px; } .san-form label { display:block;font-size:12px;margin-bottom:7px; } .san-form div { display:flex;gap:8px; } .san-form input { min-width:0;flex:1;color:#eff6ff;background:#060c18;border:1px solid #67839d;border-radius:10px;padding:10px;font-size:16px; }
   .san-rodape { padding:10px 16px;display:flex;align-items:center;gap:10px; } .san-rodape p { font-size:11px;line-height:1.5;color:#b3c2d8;margin:0;flex:1; } .san-rodape button { font-size:11px;max-width:95px; }
-  @media(max-width:540px) { .san-abrir span:not(.san-luz) { display:none; } .san-abrir { padding:6px!important; } dialog { bottom:8px;left:8px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px); } }
+  @media(max-width:540px) { .san-abrir span { display:none; } .san-abrir { padding:6px!important; } .san-abrir img { width:72px;height:auto; } dialog { bottom:8px;left:8px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px); } }
   @media print { .san { display:none; } }
 </style>
