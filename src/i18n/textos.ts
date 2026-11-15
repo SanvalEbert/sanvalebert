@@ -43,7 +43,7 @@ const pt = {
       'Palavras-chave: IA na educação; agentes inteligentes; ambientes virtuais de aprendizagem; tecnologias imersivas.',
     botaoPalestra: 'Contratar palestra ou formação',
     verTrajetoria: 'Ver trajetória',
-    fig1: 'Sanval Ebert, PhD. Pesquisador e coordenador na Universidade SENAI CIMATEC.',
+    fig1: 'PhD | Universidade SENAI CIMATEC | Coordenador de Engenharia de Computação e IA | Especialista em IA, Cloud Computing e Cibersegurança | Pesquisador em IA na Educação | Cisco Academy | AWS Academy | Fortinet',
     marcosRotulo: 'Marcos',
     marcos: [
       {
@@ -158,7 +158,7 @@ const en: Textos = {
       'Keywords: AI in education; intelligent agents; virtual learning environments; immersive technologies.',
     botaoPalestra: 'Book a talk or training',
     verTrajetoria: 'See my path',
-    fig1: 'Sanval Ebert, PhD. Researcher and program coordinator at SENAI CIMATEC University.',
+    fig1: 'PhD | SENAI CIMATEC University | Computer Engineering and AI Program Coordinator | Specialist in AI, Cloud Computing and Cybersecurity | Researcher in AI in Education | Cisco Academy | AWS Academy | Fortinet',
     marcosRotulo: 'Milestones',
     marcos: [
       {
