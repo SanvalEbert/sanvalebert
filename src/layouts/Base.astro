@@ -47,6 +47,9 @@ const canonico = absoluto(paginas[pagina].rota[idioma]);
     <meta property="og:url" content={canonico} />
     <meta property="og:locale" content={idioma === 'pt' ? 'pt_BR' : 'en_US'} />
     <meta name="theme-color" content="#060c18" />
+    {/* Estatísticas privadas no painel Vercel (sem contador público ou cookies).
+        Requer habilitar Web Analytics no projeto e gerar uma nova implantação. */}
+    <script is:inline defer src="/_vercel/insights/script.js"></script>
     <link rel="icon" type="image/svg+xml" href={endereco('favicon.svg')} />
   </head>
   <body id="topo">
