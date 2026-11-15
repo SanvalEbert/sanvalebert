@@ -66,10 +66,39 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
 ---
 
 <Base idioma={idioma} pagina="servicos" titulo={texto.titulo} descricao={texto.descricao}>
-  <section class="conteudo secao apresentacao">
+  <section class="conteudo secao portao-login" data-servicos-portao aria-labelledby="portao-titulo">
+    <div class="coluna portao-conteudo">
+      <p class="rotulo destaque">{pt ? 'TechEdu · Portal de Serviços' : 'TechEdu · Services Portal'}</p>
+      <h1 id="portao-titulo">{pt ? 'Entre com Google para acessar' : 'Sign in with Google to access'} <em>{pt ? 'nossos serviços.' : 'our services.'}</em></h1>
+      <p class="abertura">{pt
+        ? 'Após entrar, você poderá conhecer palestras, treinamentos, minicursos e workshops e registrar seu interesse.'
+        : 'After signing in, you can explore talks, training, short courses and workshops and register your interest.'}</p>
+      <p class="aviso-acesso">{pt
+        ? 'Usaremos a identificação básica da sua conta Google (nome, e-mail e identificador técnico). O registro de interesse guarda somente o identificador, a modalidade e a data. Não acessamos seu Gmail, Drive ou contatos.'
+        : 'We use basic Google identity (name, email and account identifier). Your interest record only stores your identifier, service and date. We do not access Gmail, Drive or contacts.'}</p>
+      <p><a class="italico" href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança' : 'Read the Privacy and Security Policy'}</a></p>
+      <div class="coluna">
+        <div><button type="button" class="botao" data-cadastro-login disabled>{pt ? 'Continuar com Google' : 'Continue with Google'}</button></div>
+        <p class="mensagem-piloto" role="status" aria-live="polite" data-login-status>{pt ? 'Preparando acesso seguro...' : 'Preparing secure sign-in...'}</p>
+      </div>
+      <p class="apoio">{pt ? 'Também pode solicitar informações sem criar uma conta:' : 'You can also ask for information without an account:'} <a href={link('contratar', idioma)}>{pt ? 'Entrar em contato' : 'Contact us'}</a></p>
+    </div>
+  </section>
+
+  <section class="conteudo secao resumo-conta" data-techedu-conta hidden aria-label={pt ? 'Conta autenticada' : 'Signed-in account'}>
+    <div class="conta-superior">
+      <div>
+        <p class="rotulo destaque">{pt ? 'Acesso autorizado · TechEdu' : 'Signed in · TechEdu'}</p>
+        <p class="saudacao">{pt ? 'Olá, ' : 'Hello, '}<strong data-cadastro-nome></strong></p>
+        <p class="apoio" data-cadastro-email></p>
+      </div>
+      <button class="botao-cancelar" type="button" data-cadastro-sair>{pt ? 'Sair da conta' : 'Sign out'}</button>
+    </div>
+  </section>
+  <section class="conteudo secao apresentacao" data-requer-login hidden>
     <div class="coluna">
       <p class="rotulo destaque">{texto.rotulo}</p>
-      <h1 class="titulo-pagina">{texto.titulo1} <em>{texto.titulo2}</em></h1>
+      <h2 class="titulo-pagina">{texto.titulo1} <em>{texto.titulo2}</em></h2>
       <p class="abertura">{texto.resumo}</p>
       <div class="linha">
         <a class="botao" href="#modalidades">{texto.explorar}</a>
@@ -78,7 +107,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </section>
 
-  <section class="conteudo secao" id="modalidades" aria-labelledby="modalidades-titulo">
+  <section class="conteudo secao" id="modalidades" aria-labelledby="modalidades-titulo" data-requer-login hidden>
     <div class="cabeca-secao">
       <p class="rotulo destaque">{texto.formatos}</p>
       <h2 id="modalidades-titulo">{texto.formatosTitulo}</h2>
@@ -107,7 +136,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </section>
 
-  <section class="conteudo secao painel-piloto" data-techedu-piloto data-idioma={idioma} hidden aria-labelledby="piloto-titulo">
+  <section class="conteudo secao painel-piloto" data-techedu-piloto data-idioma={idioma} data-requer-login hidden aria-labelledby="piloto-titulo">
     <div class="celula coluna">
       <p class="rotulo destaque">{pt ? 'Cadastro experimental · acesso de teste' : 'Early access · test registration'}</p>
       <h2 id="piloto-titulo">{pt ? 'Seus interesses no TechEdu' : 'Your interests in TechEdu'}</h2>
@@ -144,7 +173,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </dialog>
 
-  <section class="conteudo secao" aria-labelledby="caminho-titulo">
+  <section class="conteudo secao" aria-labelledby="caminho-titulo" data-requer-login hidden>
     <div class="cabeca-secao">
       <p class="rotulo destaque">{texto.caminhoRotulo}</p>
       <h2 id="caminho-titulo">{texto.caminhoTitulo}</h2>
@@ -154,7 +183,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </ol>
   </section>
 
-  <section class="conteudo secao" aria-labelledby="conversa-titulo">
+  <section class="conteudo secao" aria-labelledby="conversa-titulo" data-requer-login hidden>
     <div class="bloco-azul coluna convite">
       <h2 id="conversa-titulo">{texto.chamada}</h2>
       <p>{texto.descricaoFinal}</p>
