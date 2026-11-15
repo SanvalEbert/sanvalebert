@@ -5,19 +5,19 @@ interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
 const pt = idioma === 'pt';
 const textos = pt ? {
-  abrir: 'Conversar com San', fechar: 'Fechar conversa', titulo: 'San · guia do portal',
+  abrir: 'Pergunte ao San', chamada: 'Pesquisas, publicações e contato', fechar: 'Fechar conversa', titulo: 'San · guia do portal',
   descricao: 'Respostas a partir do conteúdo do site', pergunta: 'O que você procura?', enviar: 'Enviar',
-  boasVindas: 'Olá! Sou San, o guia virtual deste portal. Posso ajudar você a encontrar pesquisas, publicações, resultados dos estudantes e informações sobre palestras. O que gostaria de conhecer?',
-  limite: 'Nesta versão, consulto o catálogo do portal. Para outras informações, fale com Sanval pelo WhatsApp.',
+  boasVindas: 'Olá! Sou San, seu assistente virtual. Posso ajudar você a encontrar pesquisas, publicações, resultados de estudantes, palestras e formas de contato. O que gostaria de saber?',
+  limite: 'Respondo com base no portal. Quando a IA estiver indisponível, consulto o catálogo local. Para outras informações, use o WhatsApp.',
   desconhecido: 'Não encontrei essa informação no conteúdo do portal. Você pode explorar as publicações ou falar diretamente com Sanval.',
   voce: 'Você', limpar: 'Limpar conversa',
   contato: 'Falar com Sanval no WhatsApp', pesquisa: 'Pesquisa e publicações',
   respostaContato: 'O contato divulgado pelo professor Sanval Ebert neste portal é o WhatsApp: (71) 98555-8490. Clique no link abaixo para conversar diretamente com ele.',
 } : {
-  abrir: 'Chat with San', fechar: 'Close conversation', titulo: 'San · portal guide',
+  abrir: 'Ask San', chamada: 'Research, publications and contact', fechar: 'Close conversation', titulo: 'San · portal guide',
   descricao: 'Answers from this website’s content', pergunta: 'What are you looking for?', enviar: 'Send',
-  boasVindas: 'Hello! I’m San, this portal’s virtual guide. I can help you find research, publications, student achievements and information about talks. What would you like to explore?',
-  limite: 'In this version, I search the portal catalogue. For other information, contact Sanval on WhatsApp.',
+  boasVindas: 'Hello! I’m San, your virtual assistant. I can help you find research, publications, student achievements, talks and contact details. What would you like to know?',
+  limite: 'I answer from portal content, with local catalogue fallback when AI is unavailable. For other questions, use WhatsApp.',
   desconhecido: 'I couldn’t find that information in the portal content. You can explore the publications or contact Sanval directly.',
   voce: 'You', limpar: 'Clear conversation',
   contato: 'Contact Sanval on WhatsApp', pesquisa: 'Research and publications',
@@ -49,9 +49,10 @@ const entradas = [
 const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: link('pesquisa', idioma), pt });
 ---
 <div class="san" data-san data-config={config}>
-  <button class="san-abrir" data-san-abrir aria-haspopup="dialog" aria-controls="san-painel" aria-label={textos.abrir}>
-    <img src={endereco('images/san-avatar-3d.webp')} width="88" height="84" alt="" loading="lazy" />
-    <span>{textos.abrir}</span><span class="san-luz" aria-hidden="true"></span>
+  <button class="san-abrir" data-san-abrir type="button" aria-haspopup="dialog" aria-controls="san-painel" title={textos.abrir}>
+    <span class="san-avatar" aria-hidden="true"><img src={endereco('images/san-avatar-3d.webp')} width="64" height="64" alt="" loading="lazy" /></span>
+    <span class="san-cta"><strong>{textos.abrir}</strong><small>{textos.chamada}</small></span>
+    <span class="san-luz" aria-hidden="true"></span>
   </button>
   <dialog id="san-painel" aria-labelledby="san-titulo" aria-describedby="san-descricao">
     <header class="san-cabeca">
@@ -61,7 +62,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
     </header>
     <div class="san-historico" role="log" aria-live="polite" aria-relevant="additions" aria-label={pt ? 'Conversa com San' : 'Conversation with San'} data-san-historico></div>
     <div class="san-sugestoes" aria-label={pt ? 'Sugestões de perguntas' : 'Suggested questions'}>
-      {[pt ? 'Contato' : 'Contact', pt ? 'Pesquisas' : 'Research', pt ? 'Resultados' : 'Achievements', pt ? 'Palestras' : 'Talks'].map(s => <button type="button" data-san-sugestao>{s}</button>)}
+      {[pt ? 'Pesquisas' : 'Research', pt ? 'Publicações' : 'Publications', pt ? 'Palestras' : 'Talks', pt ? 'Contato' : 'Contact'].map(s => <button type="button" data-san-sugestao>{s}</button>)}
     </div>
     <form class="san-form" data-san-form>
       <label for="san-pergunta">{textos.pergunta}</label>
@@ -83,6 +84,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
     const campo = raiz.querySelector<HTMLInputElement>('input')!;
     const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const singular = (s: string) => s.length > 4 ? s.replace(/s$/, '') : s;
+    const historicoIA: { papel: 'usuario' | 'assistente'; texto: string }[] = [];
     const ignorar = new Set(['para','como','sobre','quero','saber','qual','quais','pode','voce','gostaria','conhecer','with','what','about','would','like','know','does','from','that','this','your','mais','fale','portal']);
     function mensagem(texto: string, usuario = false, fontes: {titulo:string;url:string}[] = []) {
       const bloco = document.createElement('div');
@@ -102,8 +104,9 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       // Keep the conversation bounded and in memory only.
       while (historico.childElementCount > 41) historico.firstElementChild?.remove();
       bloco.scrollIntoView({block:'nearest'});
+      return bloco;
     }
-    function responder(pergunta: string) {
+    async function responder(pergunta: string) {
       const texto = pergunta.trim().slice(0, 500);
       if (!texto) return;
       mensagem(texto, true);
@@ -125,40 +128,105 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       }).filter(r => r.score > 0).sort((a,b) => b.score - a.score).slice(0,3);
       if (!resultados.length) {
         mensagem(txt.desconhecido, false, [{titulo:txt.pesquisa, url:config.pesquisa}, {titulo:txt.contato, url:config.contatoWhatsApp}]);
-      } else {
-        mensagem(resultados[0].e.resumo, false, [...resultados.map(r => ({titulo:r.e.titulo,url:r.e.url})), {titulo:txt.contato,url:config.contatoWhatsApp}]);
+        return;
       }
+      const fontes = [...resultados.map(r => ({titulo:r.e.titulo,url:r.e.url})), {titulo:txt.contato,url:config.contatoWhatsApp}];
+      const respostaLocal = resultados[0].e.resumo;
+      const pendente = mensagem(config.pt ? 'Consultando as informações do portal…' : 'Checking portal information…');
+      let respostaFinal = respostaLocal;
+      try {
+        const controlador = new AbortController();
+        const tempo = setTimeout(() => controlador.abort(), 9000);
+        try {
+          const retorno = await fetch(`${import.meta.env.BASE_URL}api/chat`, {
+            method: 'POST',
+            signal: controlador.signal,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              pergunta: texto,
+              idioma: config.pt ? 'pt' : 'en',
+              referencias: resultados.map(r => ({titulo:r.e.titulo, resumo:r.e.resumo, url:r.e.url})),
+              historico: historicoIA.slice(-4),
+            }),
+          });
+          if (retorno.ok) {
+            const dados: {resposta?: string} = await retorno.json();
+            if (typeof dados.resposta === 'string' && dados.resposta.trim()) respostaFinal = dados.resposta.trim();
+          }
+        } finally {
+          clearTimeout(tempo);
+        }
+      } catch {
+        // Sem rede, credenciais ou serviço: usa o catálogo local, sem interromper a conversa.
+      }
+      pendente.remove();
+      mensagem(respostaFinal, false, fontes);
+      historicoIA.push({papel: 'usuario', texto}, {papel: 'assistente', texto: respostaFinal});
+      if (historicoIA.length > 6) historicoIA.splice(0, historicoIA.length - 6);
     }
     abrir.addEventListener('click', () => { painel.showModal(); if (!historico.childElementCount) mensagem(txt.boasVindas); campo.focus(); });
     raiz.querySelector('[data-san-fechar]')!.addEventListener('click', () => painel.close());
     painel.addEventListener('close', () => abrir.focus());
     raiz.querySelector('[data-san-form]')!.addEventListener('submit', e => { e.preventDefault(); responder(campo.value); campo.value = ''; campo.focus(); });
     raiz.querySelectorAll<HTMLButtonElement>('[data-san-sugestao]').forEach(b => b.addEventListener('click', () => responder(b.textContent || '')));
-    raiz.querySelector('[data-san-limpar]')!.addEventListener('click', () => { historico.replaceChildren(); mensagem(txt.boasVindas); campo.focus(); });
+    raiz.querySelector('[data-san-limpar]')!.addEventListener('click', () => { historico.replaceChildren(); historicoIA.length = 0; mensagem(txt.boasVindas); campo.focus(); });
   }
 </script>
 <style>
-  .san { position:fixed;left:16px;bottom:16px;z-index:8;font-family:var(--sans); }
+  .san { position:fixed;right:16px;bottom:16px;z-index:8;font-family:var(--sans); }
   .san button,.san input { font:inherit; }
   .san button { cursor:pointer;min-height:44px;border:1px solid #46617c;color:#eff6ff;background:#10243c;border-radius:12px;padding:8px 12px; }
   .san button:hover { background:#1b3b5c; }
   .san button:focus-visible,.san input:focus-visible { outline:3px solid #82e8f2;outline-offset:3px; }
-  .san-abrir { display:flex;align-items:center;gap:10px;box-shadow:0 0 24px #2452df40;font-size:14px!important; }
+  .san-abrir {
+    display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px);width:264px;
+    border-radius:999px!important;padding:5px 14px 5px 5px!important;
+    background:linear-gradient(120deg,#10243c,#0a1e35)!important;
+    border:1px solid rgba(130,232,242,.4)!important;
+    box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 18px rgba(36,82,223,.17);
+    text-align:left;transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .san-abrir:hover { transform:translateY(-2px);border-color:#82e8f2!important;box-shadow:0 15px 42px #0007,0 0 22px #2452df44; }
+  .san-avatar { width:58px;height:58px;flex:none;display:grid;place-items:center;overflow:hidden;border-radius:50%;background:radial-gradient(circle at 45% 30%,#284e72,#102037 76%);border:1px solid rgba(130,232,242,.4); }
+  .san-avatar img {width:60px;height:60px;object-fit:contain;display:block;}
+  .san-cta { display:flex;flex:1;flex-direction:column;gap:3px;min-width:0; }
+  .san-cta strong {font-size:14px;line-height:1.15;font-weight:700;letter-spacing:-.01em;color:#f2f7ff;}
+  .san-cta small {font-size:10px;line-height:1.3;color:#bfcee3;}
+  .san-luz {width:8px;height:8px;background:#82e8f2;border-radius:50%;box-shadow:0 0 10px #82e8f266;flex:none;}
   .san img { object-fit:contain;flex-shrink:0; }
-  .san-luz { width:7px;height:7px;background:#82e8f2;border-radius:50%; }
-  dialog { position:fixed;inset:auto auto 16px 16px;margin:0;padding:0;width:400px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);height:640px;color:#eff6ff;background:#091525;border:1px solid #46617c;border-radius:20px;box-shadow:0 20px 80px #0009; }
-  dialog[open] { display:flex;flex-direction:column; }
-  dialog::backdrop { background:#02081299; }
-  .san-cabeca { padding:16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #29435c; }
-  .san-cabeca div { flex:1; } .san-cabeca h2 { font:600 16px var(--sans);margin:0 0 5px; } .san-cabeca p { font-size:12px;color:#b3c2d8;margin:0; }
-  .san-fechar { font-size:24px!important;padding:0!important;min-width:44px; }
-  .san-historico { overflow:auto;flex:1;min-height:80px;padding:16px;overscroll-behavior:contain; }
-  .san-mensagem { padding:12px;background:#10243c;border-radius:12px;margin-bottom:12px;font-size:14px;line-height:1.55;overflow-wrap:anywhere; }
-  .san-mensagem strong { color:#82e8f2;font-size:12px; } .san-mensagem p { margin:6px 0 0; } .san-mensagem ul { margin:10px 0 0;padding-left:18px; } .san-mensagem li { margin:8px 0; } .san-mensagem a { color:#a9ecff; }
-  .san-usuario { background:#18334e;margin-left:24px; }
-  .san-sugestoes { display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px; } .san-sugestoes button { font-size:12px; }
-  .san-form { padding:0 16px; } .san-form label { display:block;font-size:12px;margin-bottom:7px; } .san-form div { display:flex;gap:8px; } .san-form input { min-width:0;flex:1;color:#eff6ff;background:#060c18;border:1px solid #67839d;border-radius:10px;padding:10px;font-size:16px; }
-  .san-rodape { padding:10px 16px;display:flex;align-items:center;gap:10px; } .san-rodape p { font-size:11px;line-height:1.5;color:#b3c2d8;margin:0;flex:1; } .san-rodape button { font-size:11px;max-width:95px; }
-  @media(max-width:540px) { .san-abrir span { display:none; } .san-abrir { padding:6px!important; } .san-abrir img { width:72px;height:auto; } dialog { bottom:8px;left:8px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px); } }
-  @media print { .san { display:none; } }
+  .san dialog {
+    position:fixed;inset:auto 16px 94px auto;margin:0;padding:0;
+    width:min(400px,calc(100vw - 32px));height:min(640px,calc(100dvh - 112px));
+    max-height:calc(100dvh - 112px);color:#eff6ff;background:#091525;
+    border:1px solid #46617c;border-radius:20px;box-shadow:0 20px 80px #0009;
+  }
+  .san dialog[open] {display:flex;flex-direction:column;}
+  .san dialog::backdrop {background:#02081299;}
+  .san-cabeca {padding:16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #29435c;}
+  .san-cabeca div {flex:1;} .san-cabeca h2 {font:600 16px var(--sans);margin:0 0 5px;} .san-cabeca p {font-size:12px;color:#b3c2d8;margin:0;}
+  .san-fechar {font-size:24px!important;padding:0!important;min-width:44px;}
+  .san-historico {overflow:auto;flex:1;min-height:80px;padding:16px;overscroll-behavior:contain;}
+  .san-mensagem {padding:12px;background:#10243c;border-radius:12px;margin-bottom:12px;font-size:14px;line-height:1.55;overflow-wrap:anywhere;}
+  .san-mensagem strong {color:#82e8f2;font-size:12px;} .san-mensagem p {margin:6px 0 0;} .san-mensagem ul {margin:10px 0 0;padding-left:18px;} .san-mensagem li {margin:8px 0;} .san-mensagem a {color:#a9ecff;}
+  .san-usuario {background:#18334e;margin-left:24px;}
+  .san-sugestoes {display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px;}
+  .san-sugestoes button {font-size:12px;border-radius:999px;}
+  .san-form {padding:0 16px;} .san-form label {display:block;font-size:12px;margin-bottom:7px;} .san-form div {display:flex;gap:8px;}
+  .san-form input {min-width:0;flex:1;color:#eff6ff;background:#060c18;border:1px solid #67839d;border-radius:10px;padding:10px;font-size:16px;}
+  .san-rodape {padding:10px 16px;display:flex;align-items:center;gap:10px;} .san-rodape p {font-size:11px;line-height:1.5;color:#b3c2d8;margin:0;flex:1;} .san-rodape button {font-size:11px;max-width:95px;}
+  @media(max-width:540px) {
+    .san-abrir {width:220px;}
+    .san-avatar {width:52px;height:52px;} .san-avatar img {width:54px;height:54px;}
+    .san-cta strong {font-size:13px;} .san-cta small {font-size:9px;}
+    .san dialog {right:8px;bottom:88px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);height:min(640px,calc(100dvh - 104px));max-height:calc(100dvh - 104px);}
+  }
+  @media(max-width:360px) {
+    .san-abrir {width:188px;gap:7px;padding-right:9px!important;}
+    .san-cta small {display:none;}
+  }
+  @media(max-height:530px) {
+    .san dialog {inset:8px!important;width:calc(100vw - 16px);max-width:calc(100vw - 16px);height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);}
+  }
+  @media(prefers-reduced-motion:reduce) {.san-abrir {transition:none;}}
+  @media print {.san {display:none;}}
 </style>

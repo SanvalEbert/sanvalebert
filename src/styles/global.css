@@ -404,7 +404,7 @@ a:hover {
 
 /* Botão de voltar ao topo */
 
-.navegacao-pagina { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+.navegacao-pagina { position: fixed; left: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
 .ao-topo {
   position: relative;
   width: 48px;

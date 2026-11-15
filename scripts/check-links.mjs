@@ -18,6 +18,9 @@ for (const arquivo of paginas(raiz)) {
   const html = readFileSync(arquivo, 'utf8');
   for (const [, alvo] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     if (/^(https?:|mailto:|tel:|#|data:)/.test(alvo)) continue;
+    // Rota especial injetada pela Vercel quando Web Analytics é habilitado;
+    // não existe no build estático local (dist).
+    if (alvo === '/_vercel/insights/script.js') continue;
     let caminho = alvo.split('#')[0].split('?')[0];
     if (caminho.startsWith('/')) {
       if (base && !caminho.startsWith(base + '/')) {
