@@ -2,6 +2,8 @@ import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 const paginas = [
+  { rota: '/contratar/', idioma: 'pt-BR' },
+  { rota: '/en/hire/', idioma: 'en' },
   { rota: '/', idioma: 'pt-BR' },
   { rota: '/palestras/', idioma: 'pt-BR' },
   { rota: '/estudantes/', idioma: 'pt-BR' },
@@ -85,4 +87,22 @@ test('os botões de contato têm destino', async ({ page }) => {
   for (const link of await page.locator('a.botao').all()) {
     await expect(link).toHaveAttribute('href', /^(https:\/\/|\/)/);
   }
+});
+
+test('navega até o rodapé e retorna ao topo', async ({ page }) => {
+  await abrir(page, '/');
+  await page.getByRole('link', { name: 'Ir ao fim da página', exact: true }).click();
+  await expect(page.locator('footer')).toBeInViewport();
+  await page.getByRole('link', { name: 'Voltar ao topo', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
+});
+
+test('apresentação leva aos perfis e à contratação', async ({ page }) => {
+  await abrir(page, '/');
+  await page.getByRole('navigation', { name: 'Menu principal' }).getByRole('link', { name: /Sobre/ }).click();
+  await expect(page.locator('#sobre')).toBeInViewport();
+  await expect(page.locator('#sobre').getByRole('link', { name: 'LinkedIn', exact: true })).toHaveAttribute('href', 'https://www.linkedin.com/in/sanval-ebert/');
+  await page.getByRole('link', { name: 'Contratar palestra ou formação', exact: true }).click();
+  await expect(page).toHaveURL(/\/contratar\/$/);
+  await expect(page.getByRole('link', { name: /Conversar sobre uma proposta/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/sanval-ebert/');
 });

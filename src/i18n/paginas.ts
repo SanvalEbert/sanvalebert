@@ -7,13 +7,13 @@ const pt = {
     titulo: 'Palestras e eventos · Sanval Ebert',
     descricao:
       'Palestras, mesas e workshops de Sanval Ebert sobre Inteligência Artificial na educação, uso seguro de IA e profissões do futuro.',
-    rotulo: '04 Palestras e eventos',
+    rotulo: 'Palestras e eventos',
     chamada: ['Leve a conversa sobre IA para o', 'seu evento.'],
     resumoRotulo: 'Resumo.',
     resumo:
       'Palestras, mesas e workshops para escolas, universidades, empresas e eventos de tecnologia, com base em pesquisa e em resultados reais de sala de aula.',
-    botao: 'Convidar para um evento',
-    temasRotulo: '1. Temas',
+    botao: 'Solicitar uma proposta',
+    temasRotulo: 'Temas',
     temasTitulo: 'Quatro conversas, quatro públicos',
     temas: [
       {
@@ -40,7 +40,7 @@ const pt = {
       },
     ],
     temaElo: 'Quero esta palestra',
-    videoRotulo: '2. Veja uma palestra',
+    videoRotulo: 'Veja uma palestra',
     videoTitulo: 'Inteligência Artificial, Inovação e Modelagem das Profissões do Presente e do Futuro',
     videoElo: 'Assistir no YouTube',
     historicoRotulo: 'Histórico',
@@ -79,7 +79,7 @@ const pt = {
     titulo: 'Resultados dos estudantes · Sanval Ebert',
     descricao:
       'Competições, prêmios e projetos de estudantes de Engenharia de Computação e de Ciência de Dados e IA da Universidade SENAI CIMATEC.',
-    rotulo: '03 Resultados dos estudantes',
+    rotulo: 'Resultados dos estudantes',
     chamada: ['O que os estudantes dos cursos que coordeno', 'já conquistaram.'],
     resumoRotulo: 'Resumo.',
     resumo:
@@ -93,7 +93,7 @@ const pt = {
     papelRotulo: 'Meu papel',
     papel: 'Orientador do time.',
     fig1: 'Premiação do Engage-Agent pelo 2º lugar mundial, em Amsterdã.',
-    outrosRotulo: '1. Também no HackaStone 2026',
+    outrosRotulo: 'Também no HackaStone 2026',
     outrosTitulo: 'Três equipes da universidade na final',
     outros: [
       {
@@ -134,13 +134,13 @@ const en: Textos = {
     titulo: 'Talks and events · Sanval Ebert',
     descricao:
       'Talks, panels and workshops by Sanval Ebert on Artificial Intelligence in education, safe use of AI and the future of work.',
-    rotulo: '04 Talks and events',
+    rotulo: 'Talks and events',
     chamada: ['Bring the AI conversation to', 'your event.'],
     resumoRotulo: 'Abstract.',
     resumo:
       'Talks, panels and workshops for schools, universities, companies and technology events, grounded in research and in real classroom results.',
-    botao: 'Invite me to an event',
-    temasRotulo: '1. Topics',
+    botao: 'Request a proposal',
+    temasRotulo: 'Topics',
     temasTitulo: 'Four conversations, four audiences',
     temas: [
       {
@@ -166,7 +166,7 @@ const en: Textos = {
       },
     ],
     temaElo: 'I want this talk',
-    videoRotulo: '2. Watch a talk',
+    videoRotulo: 'Watch a talk',
     videoTitulo:
       'Artificial Intelligence, Innovation and the Shaping of Present and Future Professions (in Portuguese)',
     videoElo: 'Watch on YouTube',
@@ -206,7 +206,7 @@ const en: Textos = {
     titulo: 'Student results · Sanval Ebert',
     descricao:
       'Competitions, awards and projects by Computer Engineering and Data Science and AI students at SENAI CIMATEC University.',
-    rotulo: '03 Student results',
+    rotulo: 'Student results',
     chamada: ['What students in the programs I coordinate', 'have already achieved.'],
     resumoRotulo: 'Abstract.',
     resumo:
@@ -220,7 +220,7 @@ const en: Textos = {
     papelRotulo: 'My role',
     papel: 'Team mentor.',
     fig1: 'Engage-Agent receiving the worldwide second-place award in Amsterdam.',
-    outrosRotulo: '1. Also at HackaStone 2026',
+    outrosRotulo: 'Also at HackaStone 2026',
     outrosTitulo: 'Three university teams in the final',
     outros: [
       {

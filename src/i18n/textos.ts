@@ -41,9 +41,9 @@ const pt = {
       'Pesquisador, coordenador e formador. Conecto educação e tecnologia em pesquisa, cursos e palestras.',
     palavrasChave:
       'Palavras-chave: IA na educação; agentes inteligentes; ambientes virtuais de aprendizagem; tecnologias imersivas.',
-    botaoPalestra: 'Quero uma palestra',
+    botaoPalestra: 'Contratar palestra ou formação',
     verTrajetoria: 'Ver trajetória',
-    fig1: 'Sanval Ebert, PhD. Coordenador na Universidade SENAI CIMATEC.',
+    fig1: 'Sanval Ebert, PhD. Pesquisador e coordenador na Universidade SENAI CIMATEC.',
     marcosRotulo: 'Marcos',
     marcos: [
       {
@@ -71,20 +71,20 @@ const pt = {
         pagina: 'sobre',
       },
     ],
-    sumarioRotulo: '1. Sumário',
+    sumarioRotulo: 'Sumário',
     sumarioTitulo: 'Três caminhos por este site',
     sumario: [
       { nome: 'Conhecer', destino: 'trajetória e pesquisa', pagina: 'sobre' },
       { nome: 'Aprender', destino: 'cursos e formações', pagina: 'cursos' },
       { nome: 'Contratar', destino: 'palestras e consultoria', pagina: 'palestras' },
     ],
-    destaqueRotulo: '2. Destaque recente',
+    destaqueRotulo: 'Destaque',
     destaqueTitulo: ['Da Bahia para Amsterdã: Engage-Agent é', '2º lugar mundial'],
     destaqueTexto:
       'Estudantes da Universidade SENAI CIMATEC levaram ao pódio do HackaStone 2026 um agente de IA que acompanha o percurso de cada estudante e avisa o professor a tempo de agir. Foram 51 universidades e 27 finalistas de 11 países.',
     destaqueElo: 'Ver resultados dos estudantes',
     fig2: 'Premiação do Engage-Agent: 2º lugar mundial no HackaStone 2026, em Amsterdã.',
-    palestrasRotulo: '3. Palestras',
+    palestrasRotulo: 'Palestras e formações',
     palestrasTitulo: 'Leve a conversa sobre IA para o seu evento',
     palestras: [
       {
@@ -103,7 +103,7 @@ const pt = {
         texto: 'Como a IA muda o trabalho e o que estudar.',
       },
     ],
-    palestrasBotao: 'Convidar para um evento',
+    palestrasBotao: 'Solicitar uma proposta',
     palestrasElo: 'Ver todos os temas e eventos',
     cursoRotulo: 'Em preparação · Curso',
     cursoTitulo: ['Inteligência Artificial para', 'Professores'],
@@ -156,9 +156,9 @@ const en: Textos = {
       'Researcher, program coordinator and educator. I connect education and technology through research, courses and talks.',
     palavrasChave:
       'Keywords: AI in education; intelligent agents; virtual learning environments; immersive technologies.',
-    botaoPalestra: 'Book a talk',
+    botaoPalestra: 'Book a talk or training',
     verTrajetoria: 'See my path',
-    fig1: 'Sanval Ebert, PhD. Program coordinator at SENAI CIMATEC University.',
+    fig1: 'Sanval Ebert, PhD. Researcher and program coordinator at SENAI CIMATEC University.',
     marcosRotulo: 'Milestones',
     marcos: [
       {
@@ -186,20 +186,20 @@ const en: Textos = {
         pagina: 'sobre',
       },
     ],
-    sumarioRotulo: '1. Contents',
+    sumarioRotulo: 'Contents',
     sumarioTitulo: 'Three ways through this site',
     sumario: [
       { nome: 'Discover', destino: 'path and research', pagina: 'sobre' },
       { nome: 'Learn', destino: 'courses and training', pagina: 'cursos' },
       { nome: 'Hire', destino: 'talks and consulting', pagina: 'palestras' },
     ],
-    destaqueRotulo: '2. Latest highlight',
+    destaqueRotulo: 'Highlight',
     destaqueTitulo: ['From Bahia to Amsterdam: Engage-Agent takes', '2nd place worldwide'],
     destaqueTexto:
       'Students from SENAI CIMATEC University reached the HackaStone 2026 podium with an AI agent that follows each student’s progress and alerts the teacher in time to act. There were 51 universities and 27 finalists from 11 countries.',
     destaqueElo: 'See student results',
     fig2: 'Engage-Agent award ceremony: 2nd place worldwide at HackaStone 2026, Amsterdam.',
-    palestrasRotulo: '3. Talks',
+    palestrasRotulo: 'Talks and training',
     palestrasTitulo: 'Bring the AI conversation to your event',
     palestras: [
       {
@@ -218,7 +218,7 @@ const en: Textos = {
         texto: 'How AI changes work and what to study.',
       },
     ],
-    palestrasBotao: 'Invite me to an event',
+    palestrasBotao: 'Request a proposal',
     palestrasElo: 'See all topics and events',
     cursoRotulo: 'In preparation · Course',
     cursoTitulo: ['Artificial Intelligence for', 'Teachers'],

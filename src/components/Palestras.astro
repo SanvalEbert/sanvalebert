@@ -2,7 +2,6 @@
 // Página Palestras e eventos, compartilhada pelas versões em português e em inglês.
 import Base from '../layouts/Base.astro';
 import { link, type Idioma } from '../data/site';
-import { t } from '../i18n/textos';
 import { tp } from '../i18n/paginas';
 
 interface Props {
@@ -10,7 +9,6 @@ interface Props {
 }
 
 const { idioma } = Astro.props;
-const txt = t(idioma);
 const p = tp(idioma).palestras;
 const contato = link('contratar', idioma);
 const canal = 'https://www.youtube.com/@SanvalEbert/videos';
@@ -21,7 +19,7 @@ const canal = 'https://www.youtube.com/@SanvalEbert/videos';
     <div class="coluna abre">
       <p class="rotulo destaque">{p.rotulo}</p>
       <h1 class="titulo-pagina">{p.chamada[0]} <em>{p.chamada[1]}</em></h1>
-      <p class="abertura"><span class="rotulo">{p.resumoRotulo}</span> {p.resumo}</p>
+      <p class="abertura">{p.resumo}</p>
       <div><a class="botao" href={contato}>{p.botao}</a></div>
     </div>
   </section>
@@ -57,7 +55,7 @@ const canal = 'https://www.youtube.com/@SanvalEbert/videos';
 
   <section class="conteudo secao" aria-labelledby="historico">
     <div class="cabeca-secao">
-      <p class="rotulo"><span class="destaque">{txt.site.tabela} 1</span> {p.historicoRotulo}</p>
+      <p class="rotulo"> {p.historicoRotulo}</p>
       <h2 id="historico">{p.historicoTitulo}</h2>
     </div>
     <ul class="registros">

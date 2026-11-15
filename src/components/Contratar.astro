@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import { contatoProvisorio, type Idioma } from '../data/site';
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props;
+const pt = idioma === 'pt';
+const titulo = pt ? 'Contratar palestras e formações · Sanval Ebert' : 'Book talks and training · Sanval Ebert';
+const descricao = pt ? 'Contrate palestras, minicursos e formação de professores sobre Inteligência Artificial, educação e tecnologia com Sanval Ebert.' : 'Book talks, short courses and teacher training on Artificial Intelligence, education and technology with Sanval Ebert.';
+const servicos = pt ? [
+  { nome: 'Palestras', texto: 'Inteligência Artificial, educação e tecnologias emergentes para o público do seu evento.' },
+  { nome: 'Minicursos e workshops', texto: 'Encontros práticos para explorar ferramentas e aplicações de IA na educação e no trabalho.' },
+  { nome: 'Formação de professores', texto: 'Formação para equipes docentes, conectando IA ao planejamento, à avaliação e ao acompanhamento dos estudantes.' },
+] : [
+  { nome: 'Talks', texto: 'Artificial Intelligence, education and emerging technologies for your event audience.' },
+  { nome: 'Short courses and workshops', texto: 'Practical sessions exploring AI tools and applications in education and work.' },
+  { nome: 'Teacher training', texto: 'Training for teaching teams connecting AI to planning, assessment and student follow-up.' },
+];
+---
+<Base idioma={idioma} pagina="contratar" titulo={titulo} descricao={descricao}>
+  <section class="conteudo secao coluna">
+    <h1 class="titulo-pagina">{pt ? 'Palestras e formações para' : 'Talks and training for'} <em>{pt ? 'sua instituição.' : 'your institution.'}</em></h1>
+    <p class="abertura">{pt ? 'Vamos conversar sobre o que seu público precisa aprender e construir uma proposta para seu evento ou sua equipe.' : 'Let us discuss what your audience needs to learn and shape a proposal for your event or team.'}</p>
+  </section>
+  <section class="conteudo secao" aria-labelledby="servicos">
+    <div class="cabeca-secao"><h2 id="servicos">{pt ? 'Como posso contribuir' : 'How I can help'}</h2></div>
+    <div class="grade">{servicos.map(s => <article class="celula"><h3>{s.nome}</h3><p>{s.texto}</p></article>)}</div>
+  </section>
+  <section class="conteudo secao coluna" aria-labelledby="proposta">
+    <h2 id="proposta">{pt ? 'Conte o que você está planejando' : 'Tell me what you are planning'}</h2>
+    <p>{pt ? 'Para começarmos, envie o tema de interesse, o público, a data prevista e se o encontro será presencial ou on-line. A conversa inicial acontece pelo LinkedIn.' : 'To get started, send the topic, audience, expected date and whether the session will be in person or online. Our first conversation takes place on LinkedIn.'}</p>
+    <div><a class="botao" href={contatoProvisorio}>{pt ? 'Conversar sobre uma proposta' : 'Discuss a proposal'} ↗</a></div>
+  </section>
+</Base>

@@ -3,7 +3,6 @@
 import Base from '../layouts/Base.astro';
 import { endereco, link, type Idioma } from '../data/site';
 import RegistrosAmsterdam from './RegistrosAmsterdam.astro';
-import { t } from '../i18n/textos';
 import { tp } from '../i18n/paginas';
 
 interface Props {
@@ -11,7 +10,6 @@ interface Props {
 }
 
 const { idioma } = Astro.props;
-const txt = t(idioma);
 const e = tp(idioma).estudantes;
 const contato = link('contratar', idioma);
 ---
@@ -21,14 +19,14 @@ const contato = link('contratar', idioma);
     <div class="coluna abre">
       <p class="rotulo destaque">{e.rotulo}</p>
       <h1 class="titulo-pagina">{e.chamada[0]} <em>{e.chamada[1]}</em></h1>
-      <p class="abertura"><span class="rotulo">{e.resumoRotulo}</span> {e.resumo}</p>
+      <p class="abertura">{e.resumo}</p>
     </div>
   </section>
 
   <section class="conteudo secao resultado" aria-labelledby="engage">
     <figure class="figura">
       <img class="foto-evento" src={endereco('images/engage-agent-amsterdam-2026.jpg')} width="1399" height="933" alt={idioma === 'pt' ? 'Premiação do Engage-Agent com o cheque de segundo lugar e as bandeiras do Brasil e do SENAI CIMATEC' : 'Engage-Agent award ceremony with the second-place cheque and the Brazilian and SENAI CIMATEC flags'} fetchpriority="high" />
-      <figcaption><span class="rotulo destaque">Fig. 1</span>{e.fig1}</figcaption>
+      <figcaption>{e.fig1}</figcaption>
     </figure>
     <div class="coluna">
       <p class="apoio rotulo">{e.destaqueRotulo}</p>
@@ -69,7 +67,7 @@ const contato = link('contratar', idioma);
   <section class="conteudo secao" aria-labelledby="indicadores">
     <div class="cabeca-secao">
       <p class="rotulo">
-        <span class="destaque">{txt.site.tabela} 1</span>
+
         {' '}{e.indicadoresRotulo}
       </p>
       <h2 id="indicadores">{e.indicadoresTitulo}</h2>

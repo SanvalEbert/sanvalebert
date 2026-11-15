@@ -1,22 +1,24 @@
 ---
-// Botão fixo que leva de volta ao início da página. Aparece depois de rolar a tela.
-interface Props {
-  rotulo: string;
-}
-const { rotulo } = Astro.props;
+interface Props { rotulo: string; rotuloFim: string }
+const { rotulo, rotuloFim } = Astro.props;
 ---
-
-<a class="ao-topo" href="#topo" aria-label={rotulo} title={rotulo} data-ao-topo>
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-    <path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="2"></path>
-  </svg>
-</a>
-
+<nav class="navegacao-pagina" aria-label={rotulo === 'Voltar ao topo' ? 'Navegação da página' : 'Page navigation'}>
+  <a class="ao-topo" href="#topo" aria-label={rotulo} title={rotulo} data-ao-topo>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="2" /></svg>
+  </a>
+  <a class="ao-topo visivel" href="#rodape" aria-label={rotuloFim} title={rotuloFim} data-ao-fim>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12M4 10l6 6 6-6" stroke="currentColor" stroke-width="2" /></svg>
+  </a>
+</nav>
 <script>
-  const botao = document.querySelector<HTMLAnchorElement>('[data-ao-topo]');
-  if (botao) {
-    const atualizar = () => botao.classList.toggle('visivel', window.scrollY > 600);
-    window.addEventListener('scroll', atualizar, { passive: true });
-    atualizar();
+  const topo = document.querySelector<HTMLAnchorElement>('[data-ao-topo]');
+  const fim = document.querySelector<HTMLAnchorElement>('[data-ao-fim]');
+  function atualizar() {
+    topo?.classList.toggle('visivel', window.scrollY > 600);
+    fim?.classList.toggle('visivel', window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 80);
   }
+  window.addEventListener('scroll', atualizar, { passive: true });
+  window.addEventListener('resize', atualizar);
+  window.addEventListener('load', atualizar);
+  atualizar();
 </script>

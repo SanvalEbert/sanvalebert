@@ -1,0 +1,20 @@
+---
+import { endereco, referencias } from '../data/site';
+interface Props { principais?: boolean }
+const { principais = false } = Astro.props;
+const icones: Record<string, string> = { LinkedIn: 'linkedin', Instagram: 'instagram', YouTube: 'youtube', ResearchGate: 'researchgate', 'Google Scholar': 'googlescholar' };
+const lista = principais ? referencias.filter(r => r.nome in icones) : referencias;
+---
+<ul class="perfis">
+  {lista.map(r => <li><a href={r.url} rel="me noopener">
+    {icones[r.nome] ? <img src={endereco('icons/' + icones[r.nome] + '.svg')} width="22" height="22" alt="" loading="lazy" /> : <span class="simbolo" aria-hidden="true">{r.nome === 'ORCID' ? 'iD' : 'L'}</span>}
+    <span>{r.nome}</span>
+  </a></li>)}
+</ul>
+<style>
+.perfis { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.perfis a { display: inline-flex; align-items: center; gap: 10px; padding: 10px 0; min-height: 44px; text-decoration: none; font-family: var(--mono); font-size: 13px; }
+.perfis img { filter: brightness(0) invert(1); flex-shrink: 0; }
+.perfis a:hover { text-decoration: underline; }
+.simbolo { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid currentColor; font-weight: 500; font-size: 14px; flex-shrink: 0; }
+</style>

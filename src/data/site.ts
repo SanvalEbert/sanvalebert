@@ -20,7 +20,7 @@ export const paginas = {
   palestras: { rota: { pt: 'palestras/', en: 'en/talks/' }, pronta: true },
   cursos: { rota: { pt: 'cursos/', en: 'en/courses/' }, pronta: false },
   radar: { rota: { pt: 'radar/', en: 'en/radar/' }, pronta: false },
-  contratar: { rota: { pt: 'contratar/', en: 'en/hire/' }, pronta: false },
+  contratar: { rota: { pt: 'contratar/', en: 'en/hire/' }, pronta: true },
 } as const;
 
 export type Pagina = keyof typeof paginas;
@@ -28,7 +28,7 @@ export type Pagina = keyof typeof paginas;
 /** Ordem e numeração do menu, iguais em todos os canais. */
 export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'palestras', 'cursos', 'radar'];
 
-/** Enquanto a página Contratar não existe, os botões de contato levam ao LinkedIn. */
+/** Canal de conversa usado na página Contratar enquanto não há formulário. */
 export const contatoProvisorio = 'https://www.linkedin.com/in/sanval-ebert/';
 
 export const registrosAmsterdam = {
@@ -55,6 +55,7 @@ export function endereco(rota: string): string {
 /** Endereço de uma página em um idioma, ou o contato provisório se ela ainda não existe. */
 export function link(pagina: Pagina, idioma: Idioma): string {
   const p = paginas[pagina];
+  if (pagina === 'sobre' && !p.pronta) return endereco(paginas.inicio.rota[idioma]) + '#sobre';
   if (!p.pronta && pagina === 'contratar') return contatoProvisorio;
   return endereco(p.rota[idioma]);
 }

@@ -3,6 +3,7 @@
 import Base from '../layouts/Base.astro';
 import { endereco, link, paginas, type Idioma, type Pagina } from '../data/site';
 import RegistrosAmsterdam from './RegistrosAmsterdam.astro';
+import Perfis from './Perfis.astro';
 import { t } from '../i18n/textos';
 
 interface Props {
@@ -15,15 +16,24 @@ const i = txt.inicio;
 const pronta = (p: string) => paginas[p as Pagina].pronta;
 const para = (p: string) => link(p as Pagina, idioma);
 const contato = link('contratar', idioma);
-const numero = (n: number) => String(n + 1).padStart(2, '0');
+const sobre = idioma === 'pt' ? {
+  titulo: 'Sobre mim',
+  apresentacao: 'Sou Sanval Ebert, pesquisador e professor. Conecto educação e tecnologia para apoiar quem ensina e ampliar as possibilidades de aprendizagem.',
+  atuacao: 'Na Universidade SENAI CIMATEC, coordeno os cursos de Engenharia de Computação e de Ciência de Dados e Inteligência Artificial. Minha pesquisa investiga a IA em ambientes virtuais de ensino e aprendizagem.',
+  perfis: 'Acompanhe meu trabalho',
+} : {
+  titulo: 'About me',
+  apresentacao: 'I am Sanval Ebert, a researcher and educator. I connect education and technology to support teachers and expand opportunities for learning.',
+  atuacao: 'At SENAI CIMATEC University, I coordinate the Computer Engineering and Data Science and Artificial Intelligence programs. My research explores AI in virtual teaching and learning environments.',
+  perfis: 'Follow my work',
+};
 ---
 
 <Base idioma={idioma} pagina="inicio" titulo={i.titulo} descricao={i.descricao}>
   <section class="conteudo secao abre">
     <div class="coluna texto">
       <h1>{i.chamada[0]} <em>{i.chamada[1]}</em></h1>
-      <p class="abertura"><span class="rotulo">{i.resumoRotulo}</span> {i.resumo}</p>
-      <p class="apoio palavras">{i.palavrasChave}</p>
+      <p class="abertura">{i.resumo}</p>
       <div class="linha">
         <a class="botao" href={contato}>{i.botaoPalestra}</a>
         {pronta('sobre') && <a class="italico" href={para('sobre')}>{i.verTrajetoria}</a>}
@@ -31,66 +41,22 @@ const numero = (n: number) => String(n + 1).padStart(2, '0');
     </div>
     <figure class="figura foto">
       <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={idioma === 'pt' ? 'Retrato de Sanval Ebert, com óculos e blazer preto' : 'Portrait of Sanval Ebert wearing glasses and a black blazer'} fetchpriority="high" />
-      <figcaption><span class="rotulo destaque">Fig. 1</span>{i.fig1}</figcaption>
+      <figcaption>{i.fig1}</figcaption>
     </figure>
   </section>
 
-  <section class="conteudo secao" aria-labelledby="marcos">
-    <h2 id="marcos" class="rotulo rotulo-tabela">
-      <span class="destaque">{idioma === 'pt' ? 'Tabela 1' : 'Table 1'}</span>{' '}{i.marcosRotulo}
-    </h2>
-    <div class="grade">
-      {
-        i.marcos.map((m) => (
-          <div class="celula">
-            <p class="valor">
-              {m.valor[0]} {m.valor[1] && <em>{m.valor[1]}</em>}
-            </p>
-            <p class="apoio">{m.texto}</p>
-            {pronta(m.pagina) && (
-              <a class="italico" href={para(m.pagina)}>
-                {m.elo}
-              </a>
-            )}
-          </div>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="conteudo secao" aria-labelledby="sumario">
-    <div class="cabeca-secao">
-      <p class="rotulo destaque">{i.sumarioRotulo}</p>
-      <h2 id="sumario">{i.sumarioTitulo}</h2>
-    </div>
-    <div class="sumario">
-      {
-        i.sumario.map((s, n) =>
-          pronta(s.pagina) ? (
-            <a href={para(s.pagina)}>
-              <span class="rotulo destaque">{numero(n)}</span>
-              <span class="nome">{s.nome}</span>
-              <span class="pontos" aria-hidden="true" />
-              <span class="destino">{s.destino}</span>
-            </a>
-          ) : (
-            <div class="item-inativo">
-              <span class="rotulo destaque">{numero(n)}</span>
-              <span class="nome">{s.nome}</span>
-              <span class="pontos" aria-hidden="true" />
-              <span class="destino">{s.destino}</span>
-              <span class="rotulo breve">{txt.site.emBreve}</span>
-            </div>
-          ),
-        )
-      }
+  <section id="sobre" class="conteudo secao sobre" aria-labelledby="sobre-titulo">
+    <div class="cabeca-secao"><h2 id="sobre-titulo">{sobre.titulo}</h2></div>
+    <div class="sobre-grade">
+      <div class="coluna"><p class="abertura">{sobre.apresentacao}</p><p>{sobre.atuacao}</p></div>
+      <div class="coluna"><h3>{sobre.perfis}</h3><Perfis principais /></div>
     </div>
   </section>
 
   <section class="conteudo secao destaque-recente" aria-labelledby="destaque">
     <figure class="figura">
       <img class="foto-evento" src={endereco('images/engage-agent-amsterdam-2026.jpg')} width="1399" height="933" alt={idioma === 'pt' ? 'Premiação do Engage-Agent com o cheque de segundo lugar e as bandeiras do Brasil e do SENAI CIMATEC' : 'Engage-Agent award ceremony with the second-place cheque and the Brazilian and SENAI CIMATEC flags'} loading="lazy" decoding="async" />
-      <figcaption><span class="rotulo destaque">Fig. 2</span>{i.fig2}</figcaption>
+      <figcaption>{i.fig2}</figcaption>
     </figure>
     <div class="coluna">
       <p class="rotulo destaque">{i.destaqueRotulo}</p>
@@ -166,48 +132,8 @@ const numero = (n: number) => String(n + 1).padStart(2, '0');
 
   .retrato { display: block; width: 100%; height: auto; }
 
-  .palavras {
-    max-width: 48em;
-  }
-
-  .rotulo-tabela {
-    font-weight: 400;
-    margin-bottom: 14px;
-  }
-
-  .item-inativo {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 18px 0;
-    border-top: 1px solid var(--fio);
-  }
-
-  .breve {
-    color: var(--nevoa);
-    white-space: nowrap;
-  }
-
-  @media (max-width: 640px) {
-    .item-inativo {
-      flex-wrap: wrap;
-      gap: 4px 12px;
-    }
-
-    .item-inativo :global(.pontos) {
-      display: none;
-    }
-
-    .item-inativo :global(.destino) {
-      flex-basis: 100%;
-      padding-left: 28px;
-    }
-
-    .item-inativo .breve {
-      margin-left: auto;
-      order: -0;
-    }
-  }
+  .sobre-grade { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; }
+  @media (max-width: 760px) { .sobre-grade { grid-template-columns: 1fr; } }
 
   .destaque-recente {
     display: grid;

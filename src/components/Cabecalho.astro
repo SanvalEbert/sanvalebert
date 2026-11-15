@@ -37,7 +37,7 @@ const numero = (i: number) => String(i + 1).padStart(2, '0');
   <nav class="menu rotulo" aria-label={txt.site.menuPrincipal}>
     {
       menu.map((item, i) =>
-        paginas[item].pronta ? (
+        (paginas[item].pronta || item === 'sobre') ? (
           <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>
             {numero(i)} {txt.menu[item]}
           </a>
