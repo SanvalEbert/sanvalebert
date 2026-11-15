@@ -1,0 +1,139 @@
+---
+// Página Resultados dos estudantes, compartilhada pelas versões em português e em inglês.
+import Base from '../layouts/Base.astro';
+import { link, type Idioma } from '../data/site';
+import { t } from '../i18n/textos';
+import { tp } from '../i18n/paginas';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma);
+const e = tp(idioma).estudantes;
+const contato = link('contratar', idioma);
+---
+
+<Base idioma={idioma} pagina="estudantes" titulo={e.titulo} descricao={e.descricao}>
+  <section class="conteudo secao">
+    <div class="coluna abre">
+      <p class="rotulo destaque">{e.rotulo}</p>
+      <h1 class="titulo-pagina">{e.chamada[0]} <em>{e.chamada[1]}</em></h1>
+      <p class="abertura"><span class="rotulo">{e.resumoRotulo}</span> {e.resumo}</p>
+    </div>
+  </section>
+
+  <section class="conteudo secao resultado" aria-labelledby="engage">
+    <figure class="figura">
+      <div class="espaco-foto rotulo" style="aspect-ratio: 4 / 3">{txt.site.fotoEmBreve}</div>
+      <figcaption><span class="rotulo destaque">Fig. 1</span>{e.fig1}</figcaption>
+    </figure>
+    <div class="coluna">
+      <p class="apoio rotulo">{e.destaqueRotulo}</p>
+      <h2 id="engage">{e.destaqueTitulo[0]} <em>{e.destaqueTitulo[1]}</em></h2>
+      <p>{e.destaqueTexto}</p>
+      <dl class="ficha">
+        <div>
+          <dt class="rotulo destaque">{e.timeRotulo}</dt>
+          <dd>{e.time}</dd>
+        </div>
+        <div>
+          <dt class="rotulo destaque">{e.papelRotulo}</dt>
+          <dd>{e.papel}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="outros">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{e.outrosRotulo}</p>
+      <h2 id="outros">{e.outrosTitulo}</h2>
+    </div>
+    <div class="grade grade-larga">
+      {
+        e.outros.map((o) => (
+          <article class="celula">
+            <p class="apoio rotulo">{o.rotulo}</p>
+            <h3 class="projeto">{o.titulo}</h3>
+            <p>{o.texto}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="indicadores">
+    <div class="cabeca-secao">
+      <p class="rotulo">
+        <span class="destaque">{txt.site.tabela} 1</span>
+        {' '}{e.indicadoresRotulo}
+      </p>
+      <h2 id="indicadores">{e.indicadoresTitulo}</h2>
+    </div>
+    <div class="grade grade-media">
+      {
+        e.indicadores.map((n) => (
+          <div class="celula">
+            <p class="numero">{n.valor}</p>
+            <p>{n.texto}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="final">
+    <div class="bloco-azul chamada-final">
+      <div>
+        <h2 id="final">{e.finalTitulo[0]} <i>{e.finalTitulo[1]}</i></h2>
+        <p>{e.finalTexto}</p>
+      </div>
+      <a class="botao botao-noite" href={contato}>{e.finalBotao}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .abre {
+    gap: 24px;
+    max-width: 960px;
+  }
+
+  .resultado {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+    align-items: start;
+  }
+
+  .ficha {
+    margin: 0;
+    padding: 14px 0;
+    border-top: 1px solid var(--fio);
+    border-bottom: 1px solid var(--fio);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ficha dd {
+    margin: 0;
+  }
+
+  .projeto {
+    font-size: 28px;
+    line-height: 1.12;
+  }
+
+  .grade-media {
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  }
+
+  .numero {
+    font-size: 56px;
+    line-height: 1;
+    font-weight: 500;
+  }
+</style>

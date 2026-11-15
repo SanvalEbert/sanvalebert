@@ -8,7 +8,7 @@ Português como idioma principal, com versão em inglês em `/en/`.
 ```bash
 npm install
 npm run dev      # servidor local
-npm test         # tipos, build e verificação de links
+npm test         # tipos, build, links, navegação e acessibilidade
 ```
 
 ## Onde fica cada coisa

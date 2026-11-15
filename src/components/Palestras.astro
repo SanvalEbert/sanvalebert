@@ -1,0 +1,108 @@
+---
+// Página Palestras e eventos, compartilhada pelas versões em português e em inglês.
+import Base from '../layouts/Base.astro';
+import { link, type Idioma } from '../data/site';
+import { t } from '../i18n/textos';
+import { tp } from '../i18n/paginas';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma);
+const p = tp(idioma).palestras;
+const contato = link('contratar', idioma);
+const canal = 'https://www.youtube.com/@SanvalEbert/videos';
+---
+
+<Base idioma={idioma} pagina="palestras" titulo={p.titulo} descricao={p.descricao}>
+  <section class="conteudo secao">
+    <div class="coluna abre">
+      <p class="rotulo destaque">{p.rotulo}</p>
+      <h1 class="titulo-pagina">{p.chamada[0]} <em>{p.chamada[1]}</em></h1>
+      <p class="abertura"><span class="rotulo">{p.resumoRotulo}</span> {p.resumo}</p>
+      <div><a class="botao" href={contato}>{p.botao}</a></div>
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="temas">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{p.temasRotulo}</p>
+      <h2 id="temas">{p.temasTitulo}</h2>
+    </div>
+    <div class="grade grade-larga">
+      {
+        p.temas.map((tema) => (
+          <article class="celula">
+            <p class="apoio rotulo">{tema.publico}</p>
+            <h3 class="tema">{tema.titulo}</h3>
+            <p>{tema.texto}</p>
+            <a class="italico" href={contato}>
+              {p.temaElo}<span class="so-leitor">: {tema.titulo}</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="video">
+    <div class="coluna">
+      <p class="rotulo destaque">{p.videoRotulo}</p>
+      <h2 id="video">{p.videoTitulo}</h2>
+      <a class="italico" href={canal}>{p.videoElo}</a>
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="historico">
+    <div class="cabeca-secao">
+      <p class="rotulo"><span class="destaque">{txt.site.tabela} 1</span> {p.historicoRotulo}</p>
+      <h2 id="historico">{p.historicoTitulo}</h2>
+    </div>
+    <ul class="registros">
+      {
+        p.historico.map((e) => (
+          <li>
+            <span class="rotulo destaque quando">{e.quando}</span>
+            <div class="oque">
+              <p class="nome">{e.nome}</p>
+              <p class="apoio">{e.detalhe}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="final">
+    <div class="bloco-azul chamada-final">
+      <div>
+        <h2 id="final">{p.finalTitulo[0]} <i>{p.finalTitulo[1]}</i></h2>
+        <p>{p.finalTexto}</p>
+      </div>
+      <a class="botao botao-noite" href={contato}>{p.botao}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .abre {
+    gap: 24px;
+    max-width: 900px;
+  }
+
+  .tema {
+    font-size: 28px;
+    line-height: 1.12;
+  }
+
+  .so-leitor {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

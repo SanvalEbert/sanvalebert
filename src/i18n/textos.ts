@@ -18,6 +18,8 @@ const pt = {
     referencias: 'Referências',
     menuPrincipal: 'Menu principal',
     fotoEmBreve: 'Foto em breve',
+    voltarAoTopo: 'Voltar ao topo',
+    tabela: 'Tabela',
   },
   menu: {
     inicio: 'Início',
@@ -131,6 +133,8 @@ const en: Textos = {
     referencias: 'References',
     menuPrincipal: 'Main menu',
     fotoEmBreve: 'Photo coming soon',
+    voltarAoTopo: 'Back to top',
+    tabela: 'Table',
   },
   menu: {
     inicio: 'Home',

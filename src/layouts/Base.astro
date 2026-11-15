@@ -7,6 +7,8 @@ import '../styles/global.css';
 
 import Cabecalho from '../components/Cabecalho.astro';
 import Rodape from '../components/Rodape.astro';
+import AoTopo from '../components/AoTopo.astro';
+import VLibras from '../components/VLibras.astro';
 import { codigoHtml, endereco, idiomas, paginas, type Idioma, type Pagina } from '../data/site';
 import { t } from '../i18n/textos';
 
@@ -45,12 +47,14 @@ const canonico = absoluto(paginas[pagina].rota[idioma]);
     <meta name="theme-color" content="#0a0f1f" />
     <link rel="icon" type="image/svg+xml" href={endereco('favicon.svg')} />
   </head>
-  <body>
+  <body id="topo">
     <a class="pular" href="#conteudo">{txt.site.pular}</a>
     <Cabecalho idioma={idioma} pagina={pagina} />
     <main id="conteudo">
       <slot />
     </main>
     <Rodape idioma={idioma} />
+    <AoTopo rotulo={txt.site.voltarAoTopo} />
+    {idioma === 'pt' && <VLibras />}
   </body>
 </html>

@@ -15,5 +15,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Tipos, build e links
+      - name: Instalar o navegador dos testes
+        run: npx playwright install --with-deps chromium
+      - name: Tipos, build, links, navegação e acessibilidade
         run: npm test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: resultado-dos-testes
+          path: test-results/
+          retention-days: 7

@@ -1,0 +1,43 @@
+# Prévia de desenvolvimento no GitHub Pages.
+# Serve para avaliação enquanto o site está em construção; a hospedagem definitiva
+# está descrita em docs/arquitetura.md.
+name: Publicar prévia
+
+on:
+  push:
+    branches: [main, feat/base-e-inicio]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: previa
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/configure-pages@v5
+      - name: Gerar o site e conferir os links
+        env:
+          SITE_URL: https://sanvalebert.github.io
+          BASE_PATH: /sanvalebert
+        run: npm run check && npm run build && npm run check:links
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: publicacao
+        uses: actions/deploy-pages@v4

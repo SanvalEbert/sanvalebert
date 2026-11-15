@@ -311,3 +311,107 @@ a:hover {
     padding-left: 28px;
   }
 }
+
+/* Tabela de registros (eventos, resultados) */
+
+.registros {
+  border-top: 2px solid var(--azul);
+  border-bottom: 1px solid var(--papel);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.registros li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-top: 1px solid var(--fio);
+}
+
+.registros li:first-child {
+  border-top: 0;
+}
+
+.registros .quando {
+  flex: 0 0 160px;
+}
+
+.registros .oque {
+  flex: 1 1 320px;
+}
+
+.registros .nome {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.grade-larga {
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+  gap: 40px 32px;
+}
+
+.chamada-final {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.chamada-final > div {
+  flex: 1 1 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bloco-azul i {
+  font-weight: 400;
+}
+
+.titulo-pagina {
+  font-size: clamp(40px, 5.2vw, 72px);
+  line-height: 1;
+}
+
+/* Botão de voltar ao topo */
+
+.ao-topo {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--azul);
+  color: var(--branco);
+  border: 1px solid var(--papel);
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
+  z-index: 5;
+}
+
+.ao-topo.visivel {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ao-topo:hover {
+  color: var(--branco);
+  background: #2a5bf0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ao-topo {
+    transition: none;
+  }
+}

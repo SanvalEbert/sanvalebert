@@ -1,0 +1,22 @@
+---
+// Botão fixo que leva de volta ao início da página. Aparece depois de rolar a tela.
+interface Props {
+  rotulo: string;
+}
+const { rotulo } = Astro.props;
+---
+
+<a class="ao-topo" href="#topo" aria-label={rotulo} title={rotulo} data-ao-topo>
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="2"></path>
+  </svg>
+</a>
+
+<script>
+  const botao = document.querySelector<HTMLAnchorElement>('[data-ao-topo]');
+  if (botao) {
+    const atualizar = () => botao.classList.toggle('visivel', window.scrollY > 600);
+    window.addEventListener('scroll', atualizar, { passive: true });
+    atualizar();
+  }
+</script>
