@@ -105,7 +105,7 @@ const pt = {
       },
     ],
     palestrasBotao: 'Solicitar uma proposta',
-    palestrasElo: 'Ver todos os temas e eventos',
+    palestrasElo: 'Explorar serviços e formações',
     cursoRotulo: 'Em preparação · Curso',
     cursoTitulo: ['Inteligência Artificial para', 'Professores'],
     cursoTexto:
@@ -221,7 +221,7 @@ const en: Textos = {
       },
     ],
     palestrasBotao: 'Request a proposal',
-    palestrasElo: 'See all topics and events',
+    palestrasElo: 'Explore services and training',
     cursoRotulo: 'In preparation · Course',
     cursoTitulo: ['Artificial Intelligence for', 'Teachers'],
     cursoTexto:
