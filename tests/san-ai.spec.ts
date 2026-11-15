@@ -12,7 +12,7 @@ test('San consulta a IA quando a API está disponível', async ({ page }) => {
     });
   });
   await page.goto('/');
-  await page.getByRole('button', {name:'Conversar com San',exact:true}).click();
+  await page.getByRole('button', {name:'Pergunte ao San',exact:true}).click();
   await page.getByLabel('O que você procura?').fill('Quais são as pesquisas em inteligência artificial?');
   await page.getByRole('button', {name:'Enviar',exact:true}).click();
   await expect(page.getByRole('log')).toContainText('Sanval investiga o uso de inteligência artificial');
@@ -25,7 +25,7 @@ test('San usa o catálogo se a IA não estiver configurada', async ({ page }) =>
     body: JSON.stringify({erro:'ai_not_configured'}),
   }));
   await page.goto('/');
-  await page.getByRole('button', {name:'Conversar com San',exact:true}).click();
+  await page.getByRole('button', {name:'Pergunte ao San',exact:true}).click();
   await page.getByRole('button', {name:'Pesquisas',exact:true}).click();
   await expect(page.getByRole('log')).toContainText('As pesquisas do portal abordam');
 });
