@@ -214,7 +214,7 @@ test('Serviços mantém idioma, modalidades e navegação em inglês', async ({ 
   await expect(page).toHaveURL(/\/en\/services\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('education and technology.');
   await expect(page.locator('.grade-servicos article')).toHaveCount(4);
-  await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Services' })).toHaveAttribute('aria-current', 'page');
+  await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Tech Services' })).toHaveAttribute('aria-disabled', 'true');
 });
 test('política de privacidade está acessível pelo rodapé nas duas línguas', async ({ page }) => {
   await abrir(page, '/servicos/');
