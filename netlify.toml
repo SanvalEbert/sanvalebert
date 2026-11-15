@@ -1,8 +1,0 @@
-# Publicação no Netlify: cada envio à main publica o site,
-# e cada pull request ganha um endereço de prévia.
-[build]
-  command = "npm run build"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "22"

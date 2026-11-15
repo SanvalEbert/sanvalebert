@@ -17,7 +17,7 @@ export default defineConfig({
     { name: 'celular', use: { ...devices['Pixel 7'] } },
   ],
   webServer: {
-    command: 'python3 -m http.server 4321 --directory dist',
+    command: 'node node_modules/astro/bin/astro.mjs preview --host 127.0.0.1 --port 4321',
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     stdout: 'ignore',

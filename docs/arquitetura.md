@@ -8,19 +8,21 @@ Site de conteúdo, com páginas estáticas por padrão. Páginas que precisam de
 (login, área do estudante, pagamento) podem ser ligadas uma a uma com
 `export const prerender = false`, sem reescrever o resto.
 
-## 2. Hospedagem: Netlify
+## 2. Hospedagem: Vercel
 
-Critérios: o site vai vender cursos e palestras (uso comercial), vai precisar de
-funções de servidor e deve ter prévia a cada alteração enquanto está em desenvolvimento.
+Decisão atualizada em 15/11/2026: concentrar o portal na Vercel, onde o proprietário
+já mantém outra aplicação. O código permanece no GitHub. O portal será um projeto
+separado, sem alterar a aplicação professor-ia.
 
-| Opção | Servidor | Uso comercial no plano gratuito | Prévia por alteração |
-| --- | --- | --- | --- |
-| GitHub Pages | Não, só arquivos estáticos | Não | Não |
-| Vercel | Sim | Não (exige o plano Pro) | Sim |
-| Netlify | Sim | Sim | Sim |
-| Cloudflare | Sim | Sim | Sim |
+Nesta fase todas as páginas são estáticas: a Vercel publica `dist` sem adaptador.
+Quando houver páginas de servidor, adicionar `@astrojs/vercel` e os serviços necessários.
+O plano da conta deve ser compatível com o uso comercial antes do lançamento definitivo.
 
-O código não depende do Netlify: trocar de hospedagem é trocar o adaptador em
+O GitHub Pages foi usado como prévia durante a construção. A configuração da
+Netlify foi removida para manter um único destino de publicação. Planos, preços
+e limites devem ser conferidos na conta da Vercel, sem contratar upgrades automaticamente.
+
+O código não depende da hospedagem: quando necessário, trocar o adaptador em
 `astro.config.mjs` (há adaptadores oficiais para Vercel, Netlify, Cloudflare e Node).
 
 ## 3. Áreas previstas, ainda não construídas
