@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { contatoWhatsApp, link, type Idioma } from '../data/site';
+import { contatoWhatsApp, endereco, link, type Idioma } from '../data/site';
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
@@ -98,11 +98,51 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
               {servico.detalhes}
             </a>
             {servico.id === 'palestras' && <a class="italico" href={urlInteresse(servico.nome)}>{pt ? 'Tenho interesse' : 'I am interested'}</a>}
+            <button type="button" class="botao botao-piloto" hidden data-cadastro-modalidade-link={servico.id} data-nome-servico={servico.nome}>
+              {pt ? 'Registrar interesse com Google · teste' : 'Register interest with Google · test'}
+            </button>
           </div>
         </article>
       ))}
     </div>
   </section>
+
+  <section class="conteudo secao painel-piloto" data-techedu-piloto data-idioma={idioma} hidden aria-labelledby="piloto-titulo">
+    <div class="celula coluna">
+      <p class="rotulo destaque">{pt ? 'Cadastro experimental · acesso de teste' : 'Early access · test registration'}</p>
+      <h2 id="piloto-titulo">{pt ? 'Seus interesses no TechEdu' : 'Your interests in TechEdu'}</h2>
+      <p>{pt
+        ? 'Apenas para participantes de teste autorizados pelo Google. Para registrar interesse, selecione uma modalidade acima. O Google identifica nome e e-mail; registramos somente seu identificador, a modalidade e a data. Sem CPF, telefone ou mensagens promocionais.'
+        : 'For Google-authorized test participants only. Choose a service above to register interest. Google identifies your name and email; we store only your identifier, selected service and date. No national ID, phone number or promotional messages.'}</p>
+      <p class="mensagem-piloto" data-cadastro-status role="status" aria-live="polite"></p>
+      <div data-cadastro-painel hidden class="conta-piloto">
+        <p><strong>{pt ? 'Conta Google conectada:' : 'Connected Google account:'}</strong> <span data-cadastro-email></span></p>
+        <h3>{pt ? 'Registros de interesse' : 'Interest records'}</h3>
+        <ul class="lista-interesses" data-cadastro-lista></ul>
+        <button class="botao-texto-privacidade" data-cadastro-sair type="button">{pt ? 'Sair da conta' : 'Sign out'}</button>
+      </div>
+      <p class="aviso-piloto">{pt
+        ? 'Esta funcionalidade ainda está em validação. O catálogo continua público e o contato comercial permanece disponível pelo WhatsApp.'
+        : 'This feature is under validation. The catalog remains public and WhatsApp is still available for enquiries.'}
+      <a href={link('privacidade', idioma)}>{pt ? 'Política de Privacidade e Segurança' : 'Privacy and Security Policy'}</a></p>
+    </div>
+  </section>
+
+  <dialog class="modal-cadastro" data-cadastro-dialogo aria-labelledby="modal-cadastro-titulo">
+    <div class="coluna corpo-modal">
+      <p class="rotulo destaque">{pt ? 'TechEdu · cadastro mínimo' : 'TechEdu · minimal registration'}</p>
+      <h2 id="modal-cadastro-titulo">{pt ? 'Registrar interesse com Google' : 'Register interest with Google'}</h2>
+      <p><strong>{pt ? 'Serviço:' : 'Service:'}</strong> <span data-cadastro-modalidade></span></p>
+      <p>{pt
+        ? 'Ao continuar, você autoriza a identificação pelo Google (nome, e-mail e identificador da conta) e solicita que seja registrado seu interesse nesta modalidade, com a data. Não acessamos Gmail, Drive ou contatos e não enviamos marketing automaticamente.'
+        : 'By continuing, you sign in with Google (name, email and account ID) and request registration of your interest in this service, including the date. We do not access Gmail, Drive or contacts, and do not send marketing automatically.'}</p>
+      <a class="italico" href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança' : 'Read the Privacy and Security Policy'}</a>
+      <div class="linha botoes-modal">
+        <button type="button" class="botao" data-cadastro-continuar>{pt ? 'Continuar com Google' : 'Continue with Google'}</button>
+        <button type="button" class="botao-cancelar" data-cadastro-cancelar>{pt ? 'Cancelar' : 'Cancel'}</button>
+      </div>
+    </div>
+  </dialog>
 
   <section class="conteudo secao" aria-labelledby="caminho-titulo">
     <div class="cabeca-secao">
@@ -122,6 +162,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
       <p class="privacidade">{texto.transparencia} <a href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança.' : 'Read the Privacy and Security Policy.'}</a></p>
     </div>
   </section>
+  <script is:inline type="module" src={endereco('js/techedu-interesses.mjs')}></script>
 </Base>
 
 <style>
@@ -145,6 +186,24 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
   .convite h2 {max-width:17ch;}
   .convite p {max-width:60ch;}
   .privacidade {font-size:12px;color:var(--nevoa);line-height:1.5;margin-top:6px;}
+  .botao-piloto[hidden], .painel-piloto[hidden], .conta-piloto[hidden] {display:none!important;}
+  .botao-piloto {border-color:rgba(130,232,242,.35);background:rgba(24,53,85,.65);color:var(--ciano);}
+  .painel-piloto .celula {max-width:980px;display:flex;flex-direction:column;gap:18px;}
+  .conta-piloto {display:flex;flex-direction:column;gap:15px;}
+  .lista-interesses {list-style:none;padding:0;margin:0;display:grid;gap:10px;}
+  .lista-interesses li {display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;border:1px solid var(--fio);border-radius:10px;padding:12px 16px;}
+  .botao-texto-privacidade {cursor:pointer;background:transparent;color:var(--ciano);text-decoration:underline;text-underline-offset:4px;border:0;font:inherit;padding:8px;}
+  .botao-texto-privacidade:hover,.botao-texto-privacidade:focus-visible {color:#fff;}
+  .mensagem-piloto {font-weight:600;color:var(--ciano);min-height:1.2em;}
+  .aviso-piloto {font-size:13px;color:var(--nevoa);}
+  .modal-cadastro {color:var(--texto);background:#071729;border:1px solid rgba(130,232,242,.55);border-radius:20px;padding:0;max-width:min(620px,calc(100vw - 28px));box-shadow:0 28px 96px rgba(0,0,0,.75);}
+  .modal-cadastro::backdrop {background:rgba(1,6,15,.8);backdrop-filter:blur(5px);}
+  .corpo-modal {padding:clamp(22px,4vw,36px);gap:20px;}
+  .corpo-modal h2 {font-size:clamp(24px,3vw,32px);}
+  .corpo-modal p {line-height:1.7;}
+  .botoes-modal {margin-top:8px;}
+  .botao-cancelar {font:inherit;color:var(--nevoa);background:transparent;border:1px solid var(--fio);border-radius:10px;cursor:pointer;padding:12px 18px;}
+  .botao-cancelar:hover {color:white;border-color:var(--ciano);}
   @media(max-width:860px){.etapas{grid-template-columns:1fr;}.grade-servicos{grid-template-columns:1fr;}}
   @media(max-width:560px){.servico{min-height:auto;}.etapa{padding:18px;}.apresentacao{padding-top:42px;}}
 </style>
