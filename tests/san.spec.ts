@@ -60,3 +60,35 @@ test('San responde em inglês nas páginas em inglês', async ({ page }) => {
   await page.getByRole('button', { name: 'Talks', exact: true }).click();
   await expect(page.getByRole('log')).toContainText('contact Sanval on WhatsApp');
 });
+
+for (const pergunta of [
+  'Eu queria o contato do professor Saval',
+  'Qual é o telefone do professor Sanval?',
+  'Como posso falar com ele?',
+  'Me passa o número dele',
+  'Tem WhatsApp?',
+  'Gostaria de conversar com o professor',
+]) {
+  test(`contato direto: ${pergunta}`, async ({ page }) => {
+    await page.getByLabel('O que você procura?').fill(pergunta);
+    await page.getByRole('button', { name: 'Enviar', exact: true }).click();
+    const resposta = page.getByRole('log').locator('.san-mensagem').last();
+    await expect(resposta).toContainText('(71) 98555-8490');
+    await expect(resposta.getByRole('link', { name: 'Falar com Sanval no WhatsApp' })).toHaveAttribute('href', 'https://wa.me/5571985558490');
+    await expect(resposta.getByRole('link')).toHaveCount(1);
+  });
+}
+
+test('contato em inglês mostra o número internacional', async ({ page }) => {
+  await page.goto('/en/');
+  await page.getByRole('button', { name: 'Chat with San', exact: true }).click();
+  await page.getByLabel('What are you looking for?').fill('How can I contact professor Saval?');
+  await page.getByRole('button', { name: 'Send', exact: true }).click();
+  await expect(page.getByRole('log')).toContainText('+55 71 98555-8490');
+});
+
+test('falar sobre pesquisa continua procurando conteúdos', async ({ page }) => {
+  await page.getByLabel('O que você procura?').fill('Quero falar sobre pesquisa');
+  await page.getByRole('button', { name: 'Enviar', exact: true }).click();
+  await expect(page.getByRole('log').locator('.san-mensagem').last()).toContainText('As pesquisas do portal abordam');
+});

@@ -12,6 +12,7 @@ const textos = pt ? {
   desconhecido: 'Não encontrei essa informação no conteúdo do portal. Você pode explorar as publicações ou falar diretamente com Sanval.',
   voce: 'Você', limpar: 'Limpar conversa',
   contato: 'Falar com Sanval no WhatsApp', pesquisa: 'Pesquisa e publicações',
+  respostaContato: 'O contato divulgado pelo professor Sanval Ebert neste portal é o WhatsApp: (71) 98555-8490. Clique no link abaixo para conversar diretamente com ele.',
 } : {
   abrir: 'Chat with San', fechar: 'Close conversation', titulo: 'San · portal guide',
   descricao: 'Answers from this website’s content', pergunta: 'What are you looking for?', enviar: 'Send',
@@ -20,6 +21,7 @@ const textos = pt ? {
   desconhecido: 'I couldn’t find that information in the portal content. You can explore the publications or contact Sanval directly.',
   voce: 'You', limpar: 'Clear conversation',
   contato: 'Contact Sanval on WhatsApp', pesquisa: 'Research and publications',
+  respostaContato: 'Professor Sanval Ebert’s contact listed on this portal is WhatsApp: +55 71 98555-8490. Use the link below to contact him directly.',
 };
 const entradas = [
   {
@@ -59,7 +61,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
     </header>
     <div class="san-historico" role="log" aria-live="polite" aria-relevant="additions" aria-label={pt ? 'Conversa com San' : 'Conversation with San'} data-san-historico></div>
     <div class="san-sugestoes" aria-label={pt ? 'Sugestões de perguntas' : 'Suggested questions'}>
-      {[pt ? 'Pesquisas' : 'Research', pt ? 'Resultados' : 'Achievements', pt ? 'Palestras' : 'Talks'].map(s => <button type="button" data-san-sugestao>{s}</button>)}
+      {[pt ? 'Contato' : 'Contact', pt ? 'Pesquisas' : 'Research', pt ? 'Resultados' : 'Achievements', pt ? 'Palestras' : 'Talks'].map(s => <button type="button" data-san-sugestao>{s}</button>)}
     </div>
     <form class="san-form" data-san-form>
       <label for="san-pergunta">{textos.pergunta}</label>
@@ -106,6 +108,12 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       if (!texto) return;
       mensagem(texto, true);
       const n = normalizar(texto);
+      // Contact requests take priority over biography and publication matches.
+      // They do not require spelling the professor's name correctly.
+      if (/\b(contato|contact|telefone|phone|telephone|celular|whatsapp|whats|zap|numero|number|email|e-mail|reach)\b/.test(n) || /\b(falar|conversar)\s+(diretamente\s+)?com\b|\b(talk|speak)\s+(to|with)\b/.test(n)) {
+        mensagem(txt.respostaContato, false, [{titulo:txt.contato, url:config.contatoWhatsApp}]);
+        return;
+      }
       if (/^(oi|ola|hello|hi|bom dia|boa tarde|boa noite)[!.\s]*$/.test(n)) { mensagem(txt.boasVindas); return; }
       if (/^(obrigad[oa]|thanks|thank you)[!.\s]*$/.test(n)) { mensagem(config.pt ? 'Por nada! O que mais gostaria de explorar?' : 'You’re welcome! What else would you like to explore?'); return; }
       const tokens = [...new Set(n.split(/[^a-z0-9]+/).filter(t => (t.length > 2 || t === 'ia' || t === 'ai') && !ignorar.has(t)).map(singular))];
