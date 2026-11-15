@@ -182,98 +182,104 @@ test('cabeçalho preserva identidade e idioma em inglês', async ({ page }) => {
   await expect(identidade.locator('.descricao')).toHaveText('Education, research and technology');
 });
 
-test('Serviços exibe quatro modalidades e preserva a página de palestras', async ({ page }) => {
+
+test('Serviços começa com autenticação Google e não exibe modalidades sem sessão', async ({ page }) => {
+  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => route.fulfill({
+    status:200,contentType:'application/javascript',headers:{'access-control-allow-origin':'*'},
+    body:'export function createClient(){return {auth:{getSession:async()=>({data:{session:null},error:null}),getUser:async()=>({data:{user:null},error:null}),signInWithOAuth:async x=>{window.__authParams=x;return {error:null}}}}}',
+  }));
   await abrir(page, '/servicos/');
-  const cards = page.locator('.grade-servicos article');
+  await expect(page.locator('[data-servicos-portao]')).toBeVisible();
+  await expect(page.getByRole('heading', { level:1 })).toContainText('Entre com Google');
+  await expect(page.locator('[data-cadastro-login]')).toBeEnabled();
+  await expect(page.locator('[data-techedu-conta]')).toBeHidden();
+  await expect(page.locator('[data-requer-login]:visible')).toHaveCount(0);
+  await expect(page.locator('button[data-cadastro-modalidade-link]:visible')).toHaveCount(0);
+  await expect(page.getByRole('link', { name:'Leia a Política de Privacidade e Segurança' })).toHaveAttribute('href','/privacidade/');
+  await page.locator('[data-cadastro-login]').click();
+  await expect.poll(()=>page.evaluate(()=>(window as any).__authParams?.provider)).toBe('google');
+  const params = await page.evaluate(()=>(window as any).__authParams.options);
+  expect(params.redirectTo).toBe('https://techedu.sanvalebert.com.br/servicos/');
+  expect(params.scopes).toBe('email profile');
+});
+
+test('Serviços mostra nome e quatro modalidades após autenticação simulada', async ({ page }) => {
+  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => route.fulfill({
+    status:200,contentType:'application/javascript',headers:{'access-control-allow-origin':'*'},
+    body:'export function createClient(){return {auth:{getSession:async()=>({data:{session:{access_token:"test"}},error:null}),getUser:async()=>({data:{user:{id:"11111111-1111-4111-8111-111111111111",email:"teste@example.com",user_metadata:{full_name:"Participante de teste"}}},error:null}),signOut:async()=>({error:null})},from(){return {select:()=>({order:async()=>({data:[],error:null})})}}}}',
+  }));
+  await abrir(page, '/servicos/');
+  await expect(page.locator('[data-servicos-portao]')).toBeHidden();
+  await expect(page.locator('[data-techedu-conta]')).toBeVisible();
+  await expect(page.locator('[data-cadastro-nome]')).toHaveText('Participante de teste');
+  await expect(page.locator('[data-cadastro-email]')).toHaveText('teste@example.com');
+  await expect(page.locator('[data-requer-login]:visible')).toHaveCount(5);
+  const cards=page.locator('.grade-servicos article');
   await expect(cards).toHaveCount(4);
-  for (const nome of ['Palestras', 'Treinamentos', 'Minicursos', 'Workshops']) {
-    await expect(cards.getByRole('heading', { name: nome, exact: true })).toHaveCount(1);
+  for(const nome of ['Palestras','Treinamentos','Minicursos','Workshops']) {
+    await expect(cards.getByRole('heading',{name:nome,exact:true})).toHaveCount(1);
   }
-  await cards.first().getByRole('link', { name: 'Conhecer temas e palestras' }).click();
+  await cards.first().getByRole('link', {name:'Conhecer temas e palestras'}).click();
   await expect(page).toHaveURL(/\/palestras\/$/);
 });
 
-test('interesse é contato explícito e não formulário de coleta de dados', async ({ page }) => {
+test('Serviços mantém o portão Google em inglês', async ({ page }) => {
+  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => route.fulfill({
+    status:200,contentType:'application/javascript',headers:{'access-control-allow-origin':'*'},
+    body:'export function createClient(){return {auth:{getSession:async()=>({data:{session:null},error:null})}}}',
+  }));
   await abrir(page, '/servicos/');
-  const interesse = page.getByRole('link', { name: 'Tenho interesse em minicurso' });
-  await expect(interesse).toHaveAttribute('href', /^https:\/\/wa\.me\/5571985558490\?text=/);
-  await expect(page.locator('input[type="email"], input[type="password"]')).toHaveCount(0);
-  await expect(page.locator('main')).toContainText('não coleta seus dados de cadastro automaticamente');
+  await page.getByRole('link',{name:'English'}).click();
+  await expect(page).toHaveURL(/\/en\/services\/$/);
+  await expect(page.getByRole('heading',{level:1})).toContainText('Sign in with Google');
+  await expect(page.locator('[data-requer-login]:visible')).toHaveCount(0);
+  await expect(page.getByRole('navigation',{name:'Main menu'}).getByRole('link',{name:'Services'})).toHaveAttribute('aria-current','page');
 });
 
-test('Serviços mantém idioma, modalidades e navegação em inglês', async ({ page }) => {
-  await abrir(page, '/servicos/');
-  await page.getByRole('link', { name: 'English' }).click();
-  await expect(page).toHaveURL(/\/en\/services\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('education and technology.');
-  await expect(page.locator('.grade-servicos article')).toHaveCount(4);
-  await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Services' })).toHaveAttribute('aria-current', 'page');
-});
 test('política de privacidade está acessível pelo rodapé nas duas línguas', async ({ page }) => {
   await abrir(page, '/servicos/');
-  await page.locator('footer').getByRole('link', { name: 'Privacidade e Segurança' }).click();
+  await page.locator('footer').getByRole('link',{name:'Privacidade e Segurança'}).click();
   await expect(page).toHaveURL(/\/privacidade\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Seus dados');
-  await expect(page.locator('main')).toContainText('não exige login nem cadastro');
-  await expect(page.locator('main')).toContainText('O Google');
-  await page.getByRole('link', { name: 'English' }).click();
+  await expect(page.getByRole('heading',{level:1})).toContainText('Seus dados');
+  await expect(page.locator('main')).toContainText('Google');
+  await page.getByRole('link',{name:'English'}).click();
   await expect(page).toHaveURL(/\/en\/privacy\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Your data');
-  await expect(page.locator('footer').getByRole('link', { name: 'Privacy and Security' })).toBeVisible();
+  await expect(page.getByRole('heading',{level:1})).toContainText('Your data');
+  await expect(page.locator('footer').getByRole('link',{name:'Privacy and Security'})).toBeVisible();
 });
 
-test('catálogo informa privacidade antes do futuro cadastro Google', async ({ page }) => {
-  await abrir(page, '/servicos/');
-  await expect(page.locator('main').getByRole('link', { name: 'Leia a Política de Privacidade e Segurança.' })).toHaveAttribute('href', '/privacidade/');
-  await expect(page.locator('input[type="email"], input[type="password"]')).toHaveCount(0);
-});
-
-
-test('a captação Google é restrita ao piloto e informa dados mínimos antes do login', async ({ page }) => {
-  let chamados = 0;
-  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => {
-    chamados++;
-    return route.fulfill({
-      status:200,contentType:'application/javascript',
-      headers:{'access-control-allow-origin':'*'},
-      body:'export function createClient(){return {auth:{getSession:async()=>({data:{session:null},error:null}),getUser:async()=>({data:{user:null},error:null}),signInWithOAuth:async()=>({error:null})}}}',
-    });
-  });
-  await abrir(page, '/servicos/');
-  await expect(page.locator('[data-techedu-piloto]')).toBeHidden();
-  await expect(page.locator('button[data-cadastro-modalidade-link]:visible')).toHaveCount(0);
-  expect(chamados).toBe(0);
-  await abrir(page, '/servicos/?cadastro=teste');
-  await expect(page.locator('[data-techedu-piloto]')).toBeVisible();
-  await expect(page.locator('button[data-cadastro-modalidade-link]:visible')).toHaveCount(4);
-  await page.locator('button[data-cadastro-modalidade-link="minicursos"]').click();
-  const dialogo = page.locator('[data-cadastro-dialogo]');
-  await expect(dialogo).toBeVisible();
-  await expect(dialogo).toContainText('Minicursos');
-  await expect(dialogo).toContainText('nome, e-mail');
-  await expect(dialogo.getByRole('link', { name:'Leia a Política de Privacidade e Segurança' })).toHaveAttribute('href','/privacidade/');
-  await dialogo.getByRole('button', { name:'Cancelar' }).click();
-  await expect(dialogo).toBeHidden();
-});
-
-test('piloto inclui e exclui interesse de usuário autenticado simulado', async ({ page }) => {
+test('modal de registro mostra finalidade e acesso à privacidade', async ({ page }) => {
   await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => route.fulfill({
-    status:200,contentType:'application/javascript',
-    headers:{'access-control-allow-origin':'*'},
+    status:200,contentType:'application/javascript',headers:{'access-control-allow-origin':'*'},
+    body:'export function createClient(){return {auth:{getSession:async()=>({data:{session:{access_token:"test"}},error:null}),getUser:async()=>({data:{user:{id:"11111111-1111-4111-8111-111111111111",email:"teste@example.com",user_metadata:{full_name:"Participante de teste"}}},error:null})},from(){return {select:()=>({order:async()=>({data:[],error:null})})}}}}',
+  }));
+  await abrir(page, '/servicos/');
+  await page.locator('button[data-cadastro-modalidade-link="minicursos"]').click();
+  const modal=page.locator('[data-cadastro-dialogo]');
+  await expect(modal).toBeVisible();
+  await expect(modal).toContainText('Minicursos');
+  await expect(modal).toContainText('nome, e-mail');
+  await expect(modal.getByRole('link',{name:'Leia a Política de Privacidade e Segurança'})).toHaveAttribute('href','/privacidade/');
+  await modal.getByRole('button',{name:'Cancelar'}).click();
+  await expect(modal).toBeHidden();
+});
+
+test('usuário autenticado pode registrar, excluir interesses e sair', async ({ page }) => {
+  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => route.fulfill({
+    status:200,contentType:'application/javascript',headers:{'access-control-allow-origin':'*'},
     body:'export function createClient(){let entries=[];const user={id:"11111111-1111-4111-8111-111111111111",email:"teste@example.com",user_metadata:{full_name:"Participante de teste"}};return {auth:{getSession:async()=>({data:{session:{access_token:"test"}},error:null}),getUser:async()=>({data:{user},error:null}),signOut:async()=>({error:null})},from(table){if(table!=="interests")throw Error("Wrong table");return {select:()=>({order:async()=>({data:entries,error:null})}),insert:async input=>{entries.push({id:"22222222-2222-4222-8222-222222222222",service_key:input.service_key,created_at:"2026-11-15T18:00:00Z"});return {error:null}},delete:()=>({eq:async (_column,value)=>{entries=entries.filter(e=>e.id!==value);return {error:null}}})}}}}',
   }));
-  await abrir(page, '/servicos/?cadastro=teste');
-  await expect(page.locator('[data-cadastro-email]')).toContainText('teste@example.com');
+  await abrir(page, '/servicos/');
+  await expect(page.locator('[data-cadastro-nome]')).toHaveText('Participante de teste');
   await page.locator('button[data-cadastro-modalidade-link="workshops"]').click();
-  const dialogo = page.locator('[data-cadastro-dialogo]');
-  await expect(dialogo.getByRole('button', { name:'Confirmar interesse' })).toBeVisible();
-  await dialogo.getByRole('button', { name:'Confirmar interesse' }).click();
+  await page.locator('[data-cadastro-dialogo]').getByRole('button',{name:'Confirmar interesse'}).click();
   await expect(page.locator('[data-cadastro-status]')).toContainText('sucesso');
   await expect(page.locator('[data-cadastro-lista]')).toContainText('Workshops');
   page.once('dialog', d=>d.accept());
-  await page.getByRole('button', { name:'Excluir este interesse' }).click();
+  await page.getByRole('button',{name:'Excluir este interesse'}).click();
   await expect(page.locator('[data-cadastro-status]')).toContainText('excluído');
   await expect(page.locator('[data-cadastro-lista]')).toContainText('ainda não registrou');
-  await page.getByRole('button', { name:'Sair da conta' }).click();
-  await expect(page.locator('[data-cadastro-painel]')).toBeHidden();
+  await page.getByRole('button',{name:'Sair da conta'}).click();
+  await expect(page.locator('[data-servicos-portao]')).toBeVisible();
+  await expect(page.locator('[data-requer-login]:visible')).toHaveCount(0);
 });

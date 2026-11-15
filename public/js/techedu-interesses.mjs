@@ -7,7 +7,6 @@ const PROJETO = 'https://rkmhpgyybawtmaeyvyva.supabase.co';
 const CHAVE_PUBLICA = 'sb_publishable_mgDT9-Gx3gz-0IozYGRTiA_Evsg15sG';
 const RETORNO = 'https://techedu.sanvalebert.com.br/servicos/';
 const PENDENTE = 'techedu:servico-pendente:v1';
-const PILOTO = 'techedu:piloto:v1';
 const MODALIDADES = new Set(['palestras', 'treinamentos', 'minicursos', 'workshops']);
 const raiz = document.querySelector('[data-techedu-piloto]');
 
@@ -19,6 +18,8 @@ if (raiz && window.isSecureContext) {
     erroLogin: 'Não foi possível concluir o login Google. Verifique se sua conta está na lista de usuários de teste e tente novamente.',
     obrigatorio: 'Selecione um serviço para prosseguir.',
     carregando: 'Conferindo sua sessão...',
+    entrarGoogle: 'Abrindo autenticação Google...',
+    erroSegredo: 'O Google não concluiu o acesso. Verifique o Client Secret nas configurações do Supabase.',
     salvando: 'Registrando seu interesse...',
     salvo: 'Interesse registrado com sucesso. Obrigado!',
     jaExiste: 'Você já registrou interesse nesta modalidade.',
@@ -36,6 +37,8 @@ if (raiz && window.isSecureContext) {
     erroLogin: 'Google sign-in could not be completed. Check whether your account is listed as a test user and try again.',
     obrigatorio: 'Choose a service to continue.',
     carregando: 'Checking your session...',
+    entrarGoogle: 'Opening Google sign-in...',
+    erroSegredo: 'Google sign-in was not completed. Check the Client Secret in Supabase settings.',
     salvando: 'Recording your interest...',
     salvo: 'Your interest was successfully recorded. Thank you!',
     jaExiste: 'You have already registered interest in this service.',
@@ -60,10 +63,16 @@ if (raiz && window.isSecureContext) {
     },
   });
   const painel = raiz.querySelector('[data-cadastro-painel]');
-  const email = raiz.querySelector('[data-cadastro-email]');
+  const portao = document.querySelector('[data-servicos-portao]');
+  const resumoConta = document.querySelector('[data-techedu-conta]');
+  const nome = document.querySelector('[data-cadastro-nome]');
+  const email = document.querySelector('[data-cadastro-email]');
+  const btnLogin = document.querySelector('[data-cadastro-login]');
+  const loginStatus = document.querySelector('[data-login-status]');
+  const protegido = [...document.querySelectorAll('[data-requer-login]')];
   const lista = raiz.querySelector('[data-cadastro-lista]');
   const status = raiz.querySelector('[data-cadastro-status]');
-  const saida = raiz.querySelector('[data-cadastro-sair]');
+  const saida = document.querySelector('[data-cadastro-sair]');
   const modal = document.querySelector('[data-cadastro-dialogo]');
   const modalidade = modal?.querySelector('[data-cadastro-modalidade]');
   const continuar = modal?.querySelector('[data-cadastro-continuar]');
@@ -77,25 +86,15 @@ if (raiz && window.isSecureContext) {
   let ocupado = false;
 
   function informar(mensagem) {
-    status.textContent = mensagem || '';
-  }
-
-  function exibirPiloto() {
-    const busca = new URLSearchParams(window.location.search);
-    const habilitado = busca.get('cadastro') === 'teste' ||
-      busca.has('code') || busca.has('error') ||
-      window.sessionStorage.getItem(PILOTO) === '1';
-    if (!habilitado) return false;
-    window.sessionStorage.setItem(PILOTO, '1');
-    raiz.hidden = false;
-    links.forEach(btn => { btn.hidden = false; });
-    return true;
+    const texto = mensagem || '';
+    status.textContent = texto;
+    loginStatus.textContent = texto;
   }
 
   function textoModal() {
     if (!modalidade || !continuar) return;
     modalidade.textContent = servicos[selecionado] || selecionado || '';
-    continuar.textContent = usuario ? texto.confirmar : texto.entrar;
+    continuar.textContent = texto.confirmar;
   }
 
   function ocultarDialogo() {
@@ -120,11 +119,18 @@ if (raiz && window.isSecureContext) {
   }
 
   function mostrarConta(user) {
-    painel.hidden = !user;
+    // A visualização só é liberada após confirmação da sessão no Supabase.
+    const conectado = Boolean(user);
+    portao.hidden = conectado;
+    resumoConta.hidden = !conectado;
+    protegido.forEach(bloco => { bloco.hidden = !conectado; });
+    painel.hidden = !conectado;
+    links.forEach(btn => { btn.hidden = !conectado; });
     if (user) {
-      const nome = user.user_metadata?.full_name || user.user_metadata?.name || '';
-      email.textContent = [nome, user.email || ''].filter(Boolean).join(' · ');
+      nome.textContent = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || (pt ? 'Participante' : 'Participant');
+      email.textContent = user.email || '';
     } else {
+      nome.textContent = '';
       email.textContent = '';
       lista.replaceChildren();
     }
@@ -179,30 +185,33 @@ if (raiz && window.isSecureContext) {
     await carregarInteresses();
   }
 
-  async function iniciarGoogle() {
-    if (!MODALIDADES.has(selecionado) || ocupado) return;
+  async function iniciarLogin() {
+    if (ocupado) return;
     ocupado = true;
-    continuar.disabled = true;
+    btnLogin.disabled = true;
+    informar(texto.entrarGoogle);
     try {
-      if (usuario) {
-        await registrarInteresse(selecionado);
-        ocultarDialogo();
-        return;
-      }
-      // O usuário escolheu explicitamente a modalidade e prosseguimento com Google.
-      window.sessionStorage.setItem(PILOTO, '1');
-      window.sessionStorage.setItem(PENDENTE, selecionado);
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: RETORNO,
-          scopes: 'email profile',
-        },
+        options: { redirectTo: RETORNO, scopes: 'email profile' },
       });
       if (error) throw error;
     } catch {
-      window.sessionStorage.removeItem(PENDENTE);
       informar(texto.erroLogin);
+      btnLogin.disabled = false;
+      ocupado = false;
+    }
+  }
+
+  async function iniciarGoogle() {
+    if (!usuario || !MODALIDADES.has(selecionado) || ocupado) return;
+    ocupado = true;
+    continuar.disabled = true;
+    try {
+      await registrarInteresse(selecionado);
+      ocultarDialogo();
+    } catch {
+      informar(texto.falha);
       ocultarDialogo();
     } finally {
       continuar.disabled = false;
@@ -211,31 +220,37 @@ if (raiz && window.isSecureContext) {
   }
 
   async function iniciar() {
-    if (!exibirPiloto()) return; // visitas públicas continuam pelo WhatsApp
     const params = new URLSearchParams(window.location.search);
-    if (params.has('error')) {
-      informar(texto.erroLogin);
-      window.history.replaceState(null, '', window.location.pathname + '?cadastro=teste');
-      window.sessionStorage.removeItem(PENDENTE);
-    }
+    const erroOAuth = params.has('error');
+    const descricaoErro = (params.get('error_description') || '').toLowerCase();
+    const mensagemErro = descricaoErro.includes('invalid_client') || descricaoErro.includes('client secret')
+      ? texto.erroSegredo : texto.erroLogin;
     try {
       informar(texto.carregando);
       usuario = await conferirUsuario();
       mostrarConta(usuario);
-      if (!usuario) {
-        informar(params.has('error') ? texto.erroLogin : '');
-        return;
-      }
-      const pendente = window.sessionStorage.getItem(PENDENTE);
-      window.sessionStorage.removeItem(PENDENTE);
-      if (MODALIDADES.has(pendente)) {
-        await registrarInteresse(pendente);
+      if (usuario) {
+        const pendente = window.sessionStorage.getItem(PENDENTE);
+        window.sessionStorage.removeItem(PENDENTE);
+        if (MODALIDADES.has(pendente)) {
+          await registrarInteresse(pendente);
+        } else {
+          informar('');
+          await carregarInteresses();
+        }
       } else {
-        informar('');
-        await carregarInteresses();
+        btnLogin.disabled = false;
+        informar(erroOAuth ? mensagemErro : '');
       }
     } catch {
-      informar(texto.falha);
+      mostrarConta(null);
+      btnLogin.disabled = false;
+      informar(erroOAuth ? mensagemErro : texto.falha);
+    } finally {
+      // A URL do retorno não deve expor parâmetros de erro/código em links compartilhados.
+      if (erroOAuth || params.has('code') || params.has('cadastro')) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
     }
   }
 
@@ -243,6 +258,7 @@ if (raiz && window.isSecureContext) {
     btn.addEventListener('click', () => mostrarDialogo(btn.getAttribute('data-cadastro-modalidade-link')));
   });
   continuar?.addEventListener('click', iniciarGoogle);
+  btnLogin?.addEventListener('click', iniciarLogin);
   btnCancelar?.addEventListener('click', ocultarDialogo);
   lista?.addEventListener('click', async event => {
     const alvo = event.target.closest('button[data-cadastro-excluir]');
@@ -268,6 +284,7 @@ if (raiz && window.isSecureContext) {
       usuario = null;
       window.sessionStorage.removeItem(PENDENTE);
       mostrarConta(null);
+      btnLogin.disabled = false;
       informar(texto.desconectado);
     } catch {
       informar(texto.falha);

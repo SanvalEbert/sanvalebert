@@ -31,8 +31,8 @@ const texto = pt ? {
     { numero:'03', nome:'Receba uma proposta', texto:'Alinhamos objetivos, carga horária, formato e disponibilidade.' },
   ],
   chamada: 'Vamos construir uma experiência de aprendizagem?',
-  descricaoFinal: 'Conte sua necessidade. O primeiro contato será feito pelo WhatsApp; o cadastro de interessados com Google será disponibilizado em uma próxima etapa.',
-  transparencia: 'Nesta fase, o site não coleta seus dados de cadastro automaticamente ao clicar em “Tenho interesse”. Você decide o que enviar no WhatsApp.',
+  descricaoFinal: 'Após acessar com Google, escolha o serviço e registre seu interesse. Para receber uma proposta personalizada, você também pode conversar diretamente pelo WhatsApp.',
+  transparencia: 'O cadastro de interesse utiliza sua conta Google e armazena somente o identificador técnico, a modalidade e a data. Consulte a política para conhecer seus direitos.',
 } : {
   titulo: 'Learning services and experiences · Sanval Ebert',
   descricao: 'Talks, training, short courses and workshops on AI, education and emerging technologies with Sanval Ebert.',
@@ -59,17 +59,46 @@ const texto = pt ? {
     { numero:'03', nome:'Receive a proposal', texto:'We align learning goals, workload, delivery format and availability.' },
   ],
   chamada: 'Shall we design a learning experience?',
-  descricaoFinal: 'Tell us what you need. Initial contact is through WhatsApp; interest registration with Google will be offered in a later phase.',
-  transparencia: 'At this stage, clicking “I am interested” does not automatically register your personal details on this website. You choose what to share on WhatsApp.',
+  descricaoFinal: 'After signing in with Google, select a service to register your interest. You can also request a tailored proposal through WhatsApp.',
+  transparencia: 'Interest registration uses your Google account and stores only a technical identifier, service and date. Read the policy to learn about your rights.',
 };
 const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURIComponent(pt ? `Olá, Sanval! Tenho interesse em ${assunto.toLowerCase()} pelo TechEdu. Gostaria de conversar sobre formatos e disponibilidade.` : `Hello Sanval! I am interested in ${assunto.toLowerCase()} via TechEdu. I would like to discuss options and availability.`)}`;
 ---
 
 <Base idioma={idioma} pagina="servicos" titulo={texto.titulo} descricao={texto.descricao}>
-  <section class="conteudo secao apresentacao">
+  <section class="conteudo secao portao-login" data-servicos-portao aria-labelledby="portao-titulo">
+    <div class="coluna portao-conteudo">
+      <p class="rotulo destaque">{pt ? 'TechEdu · Portal de Serviços' : 'TechEdu · Services Portal'}</p>
+      <h1 id="portao-titulo">{pt ? 'Entre com Google para acessar' : 'Sign in with Google to access'} <em>{pt ? 'nossos serviços.' : 'our services.'}</em></h1>
+      <p class="abertura">{pt
+        ? 'Após entrar, você poderá conhecer palestras, treinamentos, minicursos e workshops e registrar seu interesse.'
+        : 'After signing in, you can explore talks, training, short courses and workshops and register your interest.'}</p>
+      <p class="aviso-acesso">{pt
+        ? 'Usaremos a identificação básica da sua conta Google (nome, e-mail e identificador técnico). O registro de interesse guarda somente o identificador, a modalidade e a data. Não acessamos seu Gmail, Drive ou contatos.'
+        : 'We use basic Google identity (name, email and account identifier). Your interest record only stores your identifier, service and date. We do not access Gmail, Drive or contacts.'}</p>
+      <p><a class="italico" href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança' : 'Read the Privacy and Security Policy'}</a></p>
+      <div class="coluna">
+        <div><button type="button" class="botao" data-cadastro-login disabled>{pt ? 'Continuar com Google' : 'Continue with Google'}</button></div>
+        <p class="mensagem-piloto" role="status" aria-live="polite" data-login-status>{pt ? 'Preparando acesso seguro...' : 'Preparing secure sign-in...'}</p>
+      </div>
+      <p class="apoio">{pt ? 'Também pode solicitar informações sem criar uma conta:' : 'You can also ask for information without an account:'} <a href={link('contratar', idioma)}>{pt ? 'Entrar em contato' : 'Contact us'}</a></p>
+    </div>
+  </section>
+
+  <section class="conteudo secao resumo-conta" data-techedu-conta hidden aria-label={pt ? 'Conta autenticada' : 'Signed-in account'}>
+    <div class="conta-superior">
+      <div>
+        <p class="rotulo destaque">{pt ? 'Acesso autorizado · TechEdu' : 'Signed in · TechEdu'}</p>
+        <p class="saudacao">{pt ? 'Olá, ' : 'Hello, '}<strong data-cadastro-nome></strong></p>
+        <p class="apoio" data-cadastro-email></p>
+      </div>
+      <button class="botao-cancelar" type="button" data-cadastro-sair>{pt ? 'Sair da conta' : 'Sign out'}</button>
+    </div>
+  </section>
+  <section class="conteudo secao apresentacao" data-requer-login hidden>
     <div class="coluna">
       <p class="rotulo destaque">{texto.rotulo}</p>
-      <h1 class="titulo-pagina">{texto.titulo1} <em>{texto.titulo2}</em></h1>
+      <h2 class="titulo-pagina">{texto.titulo1} <em>{texto.titulo2}</em></h2>
       <p class="abertura">{texto.resumo}</p>
       <div class="linha">
         <a class="botao" href="#modalidades">{texto.explorar}</a>
@@ -78,7 +107,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </section>
 
-  <section class="conteudo secao" id="modalidades" aria-labelledby="modalidades-titulo">
+  <section class="conteudo secao" id="modalidades" aria-labelledby="modalidades-titulo" data-requer-login hidden>
     <div class="cabeca-secao">
       <p class="rotulo destaque">{texto.formatos}</p>
       <h2 id="modalidades-titulo">{texto.formatosTitulo}</h2>
@@ -99,7 +128,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
             </a>
             {servico.id === 'palestras' && <a class="italico" href={urlInteresse(servico.nome)}>{pt ? 'Tenho interesse' : 'I am interested'}</a>}
             <button type="button" class="botao botao-piloto" hidden data-cadastro-modalidade-link={servico.id} data-nome-servico={servico.nome}>
-              {pt ? 'Registrar interesse com Google · teste' : 'Register interest with Google · test'}
+              {pt ? 'Registrar interesse' : 'Register interest'}
             </button>
           </div>
         </article>
@@ -107,23 +136,21 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </section>
 
-  <section class="conteudo secao painel-piloto" data-techedu-piloto data-idioma={idioma} hidden aria-labelledby="piloto-titulo">
+  <section class="conteudo secao painel-piloto" data-techedu-piloto data-idioma={idioma} data-requer-login hidden aria-labelledby="piloto-titulo">
     <div class="celula coluna">
-      <p class="rotulo destaque">{pt ? 'Cadastro experimental · acesso de teste' : 'Early access · test registration'}</p>
+      <p class="rotulo destaque">{pt ? 'Área do participante' : 'Participant area'}</p>
       <h2 id="piloto-titulo">{pt ? 'Seus interesses no TechEdu' : 'Your interests in TechEdu'}</h2>
       <p>{pt
-        ? 'Apenas para participantes de teste autorizados pelo Google. Para registrar interesse, selecione uma modalidade acima. O Google identifica nome e e-mail; registramos somente seu identificador, a modalidade e a data. Sem CPF, telefone ou mensagens promocionais.'
-        : 'For Google-authorized test participants only. Choose a service above to register interest. Google identifies your name and email; we store only your identifier, selected service and date. No national ID, phone number or promotional messages.'}</p>
+        ? 'Seus interesses ficam vinculados à sua conta Google. Consulte e exclua seus registros quando desejar. Sem CPF, telefone ou mensagens promocionais.'
+        : 'Your interests are linked to your Google account. View and delete your records at any time. No national ID, phone number or promotional messages.'}</p>
       <p class="mensagem-piloto" data-cadastro-status role="status" aria-live="polite"></p>
       <div data-cadastro-painel hidden class="conta-piloto">
-        <p><strong>{pt ? 'Conta Google conectada:' : 'Connected Google account:'}</strong> <span data-cadastro-email></span></p>
         <h3>{pt ? 'Registros de interesse' : 'Interest records'}</h3>
         <ul class="lista-interesses" data-cadastro-lista></ul>
-        <button class="botao-texto-privacidade" data-cadastro-sair type="button">{pt ? 'Sair da conta' : 'Sign out'}</button>
       </div>
       <p class="aviso-piloto">{pt
-        ? 'Esta funcionalidade ainda está em validação. O catálogo continua público e o contato comercial permanece disponível pelo WhatsApp.'
-        : 'This feature is under validation. The catalog remains public and WhatsApp is still available for enquiries.'}
+        ? 'Se precisar excluir sua identidade do provedor de autenticação, entre em contato pelo canal de privacidade.'
+        : 'To request removal of your identity from the authentication provider, use the privacy contact channel.'}
       <a href={link('privacidade', idioma)}>{pt ? 'Política de Privacidade e Segurança' : 'Privacy and Security Policy'}</a></p>
     </div>
   </section>
@@ -144,7 +171,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </dialog>
 
-  <section class="conteudo secao" aria-labelledby="caminho-titulo">
+  <section class="conteudo secao" aria-labelledby="caminho-titulo" data-requer-login hidden>
     <div class="cabeca-secao">
       <p class="rotulo destaque">{texto.caminhoRotulo}</p>
       <h2 id="caminho-titulo">{texto.caminhoTitulo}</h2>
@@ -154,7 +181,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </ol>
   </section>
 
-  <section class="conteudo secao" aria-labelledby="conversa-titulo">
+  <section class="conteudo secao" aria-labelledby="conversa-titulo" data-requer-login hidden>
     <div class="bloco-azul coluna convite">
       <h2 id="conversa-titulo">{texto.chamada}</h2>
       <p>{texto.descricaoFinal}</p>
@@ -163,20 +190,13 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
     </div>
   </section>
   <script is:inline data-interest-module={endereco('js/techedu-interesses.mjs')}>
-    /* Carrega a integração somente quando o visitante abre o piloto explicitamente. */
+    /* A rota /servicos/ sempre começa com uma tela pública de autenticação. */
     (() => {
       const origem = document.currentScript;
-      const parametros = new URLSearchParams(location.search);
-      let teste = parametros.get('cadastro') === 'teste' || parametros.has('code') || parametros.has('error');
-      try { teste ||= sessionStorage.getItem('techedu:piloto:v1') === '1'; } catch {}
-      if (teste) {
-        import(origem.dataset.interestModule).catch(() => {
-          const aviso = document.querySelector('[data-cadastro-status]');
-          const painel = document.querySelector('[data-techedu-piloto]');
-          if (painel) painel.hidden = false;
-          if (aviso) aviso.textContent = 'Não foi possível carregar o cadastro. Tente novamente mais tarde.';
-        });
-      }
+      import(origem.dataset.interestModule).catch(() => {
+        const aviso = document.querySelector('[data-login-status]');
+        if (aviso) aviso.textContent = 'Não foi possível carregar a autenticação. Tente novamente mais tarde ou utilize o contato.';
+      });
     })();
   </script>
 </Base>
@@ -184,7 +204,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
 <style>
   .apresentacao {padding-top:clamp(48px,7vw,100px);padding-bottom:clamp(48px,7vw,88px);background:radial-gradient(ellipse at 85% 15%,rgba(36,82,223,.13),transparent 65%);}
   .apresentacao .coluna {gap:24px;max-width:910px;}
-  .apresentacao h1 {max-width:19ch;}
+  .apresentacao h2 {font-size:clamp(36px,5vw,68px);max-width:19ch;}
   .grade-servicos {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;}
   .servico {min-height:335px;display:flex;flex-direction:column;gap:13px;}
   .cabecalho-servico {display:flex;justify-content:space-between;gap:16px;align-items:center;}
@@ -202,7 +222,15 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
   .convite h2 {max-width:17ch;}
   .convite p {max-width:60ch;}
   .privacidade {font-size:12px;color:var(--nevoa);line-height:1.5;margin-top:6px;}
-  .botao-piloto[hidden], .painel-piloto[hidden], .conta-piloto[hidden] {display:none!important;}
+  [data-requer-login][hidden], [data-servicos-portao][hidden], [data-techedu-conta][hidden], .botao-piloto[hidden], .conta-piloto[hidden] {display:none!important;}
+  .portao-login {min-height:65vh;display:flex;align-items:center;background:radial-gradient(ellipse at 82% 26%,rgba(36,82,223,.19),transparent 65%);}
+  .portao-conteudo {gap:22px;max-width:830px;padding:clamp(24px,5vw,70px) 0;}
+  .portao-login h1 {font-size:clamp(39px,5.5vw,72px);max-width:16ch;}
+  .aviso-acesso {max-width:68ch;color:var(--nevoa);font-size:15px;line-height:1.8;}
+  .conta-superior {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
+  .saudacao {font-size:clamp(22px,2.2vw,30px);margin:5px 0;}
+  .resumo-conta {padding-top:24px;padding-bottom:24px;background:rgba(16,37,58,.48);}
+  .resumo-conta .apoio {overflow-wrap:anywhere;}
   .botao-piloto {border-color:rgba(130,232,242,.35);background:rgba(24,53,85,.65);color:var(--ciano);}
   .painel-piloto .celula {max-width:980px;display:flex;flex-direction:column;gap:18px;}
   .conta-piloto {display:flex;flex-direction:column;gap:15px;}
