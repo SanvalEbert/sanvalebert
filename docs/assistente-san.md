@@ -27,7 +27,7 @@ O componente `src/components/San.astro` é exibido em todas as páginas do porta
 ## Controles e ressalvas
 
 - Origem de navegador deve coincidir com a hospedagem.
-- Tamanho de requisição e referências limitado, timeout de 12 segundos no provedor e de 9 segundos no cliente.
+- Tamanho de requisição e referências limitado, timeout de 8 segundos no provedor e de 9 segundos no cliente.
 - Limite inicial de 12 consultas por minuto e por IP **em cada instância**. Não é um rate limit global contra abuso distribuído; para produção com mais tráfego, configurar proteção e rate limit persistente na borda/Vercel WAF.
 - O teto de `max_output_tokens` reduz o custo por chamada, **não estabelece limite rígido de gastos mensais**. Acompanhe o faturamento e defina alertas ou limites disponíveis em sua conta.
 - A base de conhecimento é o catálogo do site, não a internet em tempo real. Para melhorar a cobertura, adicione conteúdo factual às páginas e ao catálogo antes de esperar novas respostas.
