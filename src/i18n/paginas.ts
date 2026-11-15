@@ -231,7 +231,7 @@ const en: Textos = {
       {
         rotulo: 'International Collaboration Cup',
         titulo: 'SafeHeight',
-        texto: 'Prof. Ingrid Winkler’s team, in partnership with the University of Florida.',
+        texto: "Prof. Ingrid Winkler's team, in partnership with the University of Florida.",
       },
     ],
     indicadoresRotulo: 'Indicators',

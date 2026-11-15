@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "buildCommand": "npm run check && npm run build && npm run check:links",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": true
+}
