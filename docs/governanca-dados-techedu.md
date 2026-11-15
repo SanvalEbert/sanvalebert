@@ -6,6 +6,16 @@
 
 Esta política estabelece os controles que deverão ser **efetivamente implementados e verificados** antes de coletar cadastros. Não deve ser apresentada como prova de que o banco ou o login já estão em produção.
 
+## Estado atual do piloto (novembro de 2026)
+
+- O projeto **TechEdu**, criado em \`sa-east-1\`, utiliza exclusivamente a tabela \`public.interests\`; outros projetos Supabase não foram alterados.
+- O cadastro Google foi declarado configurado pelo responsável, e o site contém uma integração **experimental** acessível mediante \`?cadastro=teste\`, com \`@supabase/supabase-js@2.119.0\`, PKCE e sessão restrita à aba (\`sessionStorage\`).
+- O piloto oferece consulta e exclusão dos próprios interesses. Ainda não há área administrativa e o Google Cloud poderá limitar autenticação aos usuários de teste listados.
+- O site padrão mantém contato comercial via WhatsApp. A abertura geral depende de teste real ponta a ponta, revisão da retenção e confirmação de publicação/consentimento no Google Auth Platform.
+- A chave inserida no cliente é \`sb_publishable_\` e não concede poderes de administrador. Segredos do Google OAuth ficam exclusivamente no Google/Supabase; não devem aparecer no repositório.
+- Os registros de interesse guardam somente identificador, modalidade e data. Os dados de identidade (nome, e-mail e possíveis metadados básicos) são tratados separadamente pelo Supabase Auth/Google.
+- O piloto não coleta consentimento para marketing e não envia mensagens promocionais.
+
 ## 1. Princípios
 
 - **Privacidade por padrão:** catálogo público sem cadastro obrigatório; identificar o visitante somente quando manifestar interesse ou se inscrever.
