@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import { contatoWhatsApp, link, type Idioma } from '../data/site';
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props;
+const pt = idioma === 'pt';
+const texto = pt ? {
+  titulo: 'Serviços e experiências de aprendizagem · Sanval Ebert',
+  descricao: 'Palestras, treinamentos, minicursos e workshops em IA, educação e tecnologias emergentes com Sanval Ebert.',
+  rotulo: 'TechEdu · Serviços',
+  titulo1: 'Experiências que conectam',
+  titulo2: 'educação e tecnologia.',
+  resumo: 'Palestras, formações e atividades práticas para professores, equipes, instituições e organizações que desejam compreender e aplicar a Inteligência Artificial.',
+  explorar: 'Explorar modalidades',
+  contato: 'Solicitar uma proposta',
+  formatos: 'Modalidades',
+  formatosTitulo: 'Escolha a experiência que faz sentido para você',
+  publico: 'Públicos',
+  artigos: [
+    { id:'palestras', numero:'01', nome:'Palestras', publico:'Eventos, escolas, universidades e organizações', texto:'Conversas inspiradoras e fundamentadas em pesquisa sobre IA, inovação, cibersegurança, educação e profissões.', detalhes:'Conhecer temas e palestras', interesse:'Quero uma palestra' },
+    { id:'treinamentos', numero:'02', nome:'Treinamentos', publico:'Equipes docentes, gestores e empresas', texto:'Percursos de capacitação planejados para objetivos institucionais, com aplicações de IA no trabalho, na docência e na gestão.', detalhes:'Tenho interesse em treinamento', interesse:'Quero um treinamento' },
+    { id:'minicursos', numero:'03', nome:'Minicursos', publico:'Profissionais, educadores e estudantes', texto:'Formações concentradas, orientadas a competências, para introduzir conceitos e experimentar ferramentas de forma prática.', detalhes:'Tenho interesse em minicurso', interesse:'Quero um minicurso' },
+    { id:'workshops', numero:'04', nome:'Workshops', publico:'Equipes, eventos e comunidades de prática', texto:'Oficinas colaborativas com atividades, desafios e construção de soluções para problemas reais de ensino e aprendizagem.', detalhes:'Tenho interesse em workshop', interesse:'Quero um workshop' },
+  ],
+  caminhoRotulo: 'Como funciona',
+  caminhoTitulo: 'Da ideia à experiência',
+  etapas: [
+    { numero:'01', nome:'Escolha uma modalidade', texto:'Conheça os formatos e selecione aquele que atende à sua necessidade.' },
+    { numero:'02', nome:'Compartilhe seu interesse', texto:'Informe o público, o tema, a modalidade e a data estimada, se houver.' },
+    { numero:'03', nome:'Receba uma proposta', texto:'Alinhamos objetivos, carga horária, formato e disponibilidade.' },
+  ],
+  chamada: 'Vamos construir uma experiência de aprendizagem?',
+  descricaoFinal: 'Conte sua necessidade. O primeiro contato será feito pelo WhatsApp; o cadastro de interessados com Google será disponibilizado em uma próxima etapa.',
+  transparencia: 'Nesta fase, o site não coleta seus dados de cadastro automaticamente ao clicar em “Tenho interesse”. Você decide o que enviar no WhatsApp.',
+} : {
+  titulo: 'Learning services and experiences · Sanval Ebert',
+  descricao: 'Talks, training, short courses and workshops on AI, education and emerging technologies with Sanval Ebert.',
+  rotulo: 'TechEdu · Services',
+  titulo1: 'Learning experiences connecting',
+  titulo2: 'education and technology.',
+  resumo: 'Talks, training and practical activities for educators, teams, institutions and organizations seeking to understand and apply Artificial Intelligence.',
+  explorar: 'Explore formats',
+  contato: 'Request a proposal',
+  formatos: 'Formats',
+  formatosTitulo: 'Choose the learning experience for you',
+  publico: 'Audiences',
+  artigos: [
+    { id:'palestras', numero:'01', nome:'Talks', publico:'Events, schools, universities and organizations', texto:'Research-grounded conversations about AI, innovation, cybersecurity, education and careers.', detalhes:'Explore topics and talks', interesse:'I am interested in a talk' },
+    { id:'treinamentos', numero:'02', nome:'Training', publico:'Educators, managers and companies', texto:'Customized learning journeys for institutional goals, applying AI to work, teaching and management.', detalhes:'I am interested in training', interesse:'I am interested in training' },
+    { id:'minicursos', numero:'03', nome:'Short courses', publico:'Professionals, educators and students', texto:'Focused competency-based learning with practical exercises and an introduction to tools and concepts.', detalhes:'I am interested in a short course', interesse:'I am interested in a short course' },
+    { id:'workshops', numero:'04', nome:'Workshops', publico:'Teams, events and learning communities', texto:'Collaborative hands-on activities, challenges and solutions for real learning and teaching problems.', detalhes:'I am interested in a workshop', interesse:'I am interested in a workshop' },
+  ],
+  caminhoRotulo: 'How it works',
+  caminhoTitulo: 'From an idea to a learning experience',
+  etapas: [
+    { numero:'01', nome:'Choose a format', texto:'Explore the options and select what meets your needs.' },
+    { numero:'02', nome:'Tell us what you need', texto:'Share your audience, topic, format and expected date, if known.' },
+    { numero:'03', nome:'Receive a proposal', texto:'We align learning goals, workload, delivery format and availability.' },
+  ],
+  chamada: 'Shall we design a learning experience?',
+  descricaoFinal: 'Tell us what you need. Initial contact is through WhatsApp; interest registration with Google will be offered in a later phase.',
+  transparencia: 'At this stage, clicking “I am interested” does not automatically register your personal details on this website. You choose what to share on WhatsApp.',
+};
+const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURIComponent(pt ? `Olá, Sanval! Tenho interesse em ${assunto.toLowerCase()} pelo TechEdu. Gostaria de conversar sobre formatos e disponibilidade.` : `Hello Sanval! I am interested in ${assunto.toLowerCase()} via TechEdu. I would like to discuss options and availability.`)}`;
+---
+
+<Base idioma={idioma} pagina="servicos" titulo={texto.titulo} descricao={texto.descricao}>
+  <section class="conteudo secao apresentacao">
+    <div class="coluna">
+      <p class="rotulo destaque">{texto.rotulo}</p>
+      <h1 class="titulo-pagina">{texto.titulo1} <em>{texto.titulo2}</em></h1>
+      <p class="abertura">{texto.resumo}</p>
+      <div class="linha">
+        <a class="botao" href="#modalidades">{texto.explorar}</a>
+        <a class="italico" href={link('contratar', idioma)}>{texto.contato}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="conteudo secao" id="modalidades" aria-labelledby="modalidades-titulo">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{texto.formatos}</p>
+      <h2 id="modalidades-titulo">{texto.formatosTitulo}</h2>
+    </div>
+    <div class="grade-servicos">
+      {texto.artigos.map(servico => (
+        <article class="celula servico" id={servico.id}>
+          <div class="cabecalho-servico">
+            <span class="numero" aria-hidden="true">{servico.numero}</span>
+            <span class="rotulo destaque">{texto.publico}</span>
+          </div>
+          <h3>{servico.nome}</h3>
+          <p class="apoio">{servico.publico}</p>
+          <p class="descricao-servico">{servico.texto}</p>
+          <div class="acoes-servico">
+            <a class="botao" href={servico.id === 'palestras' ? link('palestras', idioma) : urlInteresse(servico.nome)}>
+              {servico.detalhes}
+            </a>
+            {servico.id === 'palestras' && <a class="italico" href={urlInteresse(servico.nome)}>{pt ? 'Tenho interesse' : 'I am interested'}</a>}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="caminho-titulo">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{texto.caminhoRotulo}</p>
+      <h2 id="caminho-titulo">{texto.caminhoTitulo}</h2>
+    </div>
+    <ol class="etapas">
+      {texto.etapas.map(etapa => <li class="etapa"><span class="numero">{etapa.numero}</span><div><h3>{etapa.nome}</h3><p>{etapa.texto}</p></div></li>)}
+    </ol>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="conversa-titulo">
+    <div class="bloco-azul coluna convite">
+      <h2 id="conversa-titulo">{texto.chamada}</h2>
+      <p>{texto.descricaoFinal}</p>
+      <div><a class="botao botao-noite" href={link('contratar', idioma)}>{texto.contato}</a></div>
+      <p class="privacidade">{texto.transparencia}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apresentacao {padding-top:clamp(48px,7vw,100px);padding-bottom:clamp(48px,7vw,88px);background:radial-gradient(ellipse at 85% 15%,rgba(36,82,223,.13),transparent 65%);}
+  .apresentacao .coluna {gap:24px;max-width:910px;}
+  .apresentacao h1 {max-width:19ch;}
+  .grade-servicos {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;}
+  .servico {min-height:335px;display:flex;flex-direction:column;gap:13px;}
+  .cabecalho-servico {display:flex;justify-content:space-between;gap:16px;align-items:center;}
+  .numero {font-family:var(--mono);color:var(--ciano);font-size:14px;font-weight:500;}
+  .servico h3 {font-size:clamp(24px,2.4vw,31px);}
+  .descricao-servico {flex:1;line-height:1.65;}
+  .acoes-servico {display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;}
+  .acoes-servico .botao {font-size:12px;}
+  .etapas {padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;list-style:none;}
+  .etapa {padding:24px;background:rgba(18,35,59,.65);border:1px solid var(--fio);border-radius:16px;display:flex;gap:18px;}
+  .etapa .numero {font-size:18px;}
+  .etapa h3 {font-size:21px;margin-bottom:12px;}
+  .etapa p {color:var(--nevoa);font-size:15px;}
+  .convite {gap:18px;}
+  .convite h2 {max-width:17ch;}
+  .convite p {max-width:60ch;}
+  .privacidade {font-size:12px;color:var(--nevoa);line-height:1.5;margin-top:6px;}
+  @media(max-width:860px){.etapas{grid-template-columns:1fr;}.grade-servicos{grid-template-columns:1fr;}}
+  @media(max-width:560px){.servico{min-height:auto;}.etapa{padding:18px;}.apresentacao{padding-top:42px;}}
+</style>

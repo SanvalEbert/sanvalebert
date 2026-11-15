@@ -8,6 +8,8 @@ const paginas = [
   { rota: '/en/hire/', idioma: 'en' },
   { rota: '/', idioma: 'pt-BR' },
   { rota: '/palestras/', idioma: 'pt-BR' },
+  { rota: '/servicos/', idioma: 'pt-BR' },
+  { rota: '/en/services/', idioma: 'en' },
   { rota: '/estudantes/', idioma: 'pt-BR' },
   { rota: '/en/', idioma: 'en' },
   { rota: '/en/talks/', idioma: 'en' },
@@ -62,9 +64,9 @@ test('o botão de idioma leva à mesma página no outro idioma e volta', async (
 test('o menu leva às páginas prontas', async ({ page }) => {
   await abrir(page, '/');
   const menu = page.getByRole('navigation', { name: 'Menu principal' });
-  await menu.getByRole('link', { name: /Palestras/ }).click();
-  await expect(page).toHaveURL(/\/palestras\/$/);
-  await expect(menu.getByRole('link', { name: /Palestras/ })).toHaveAttribute('aria-current', 'page');
+  await menu.getByRole('link', { name: 'Serviços', exact: true }).click();
+  await expect(page).toHaveURL(/\/servicos\/$/);
+  await expect(menu.getByRole('link', { name: 'Serviços', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 
 test('o botão de voltar ao topo aparece ao rolar e leva ao início', async ({ page }) => {
@@ -176,4 +178,32 @@ test('cabeçalho preserva identidade e idioma em inglês', async ({ page }) => {
   await expect(identidade.locator('.monograma')).toHaveCount(0);
   await expect(identidade.locator('.nome')).toHaveText('Sanval Ebert');
   await expect(identidade.locator('.descricao')).toHaveText('Education, research and technology');
+});
+
+test('Serviços exibe quatro modalidades e preserva a página de palestras', async ({ page }) => {
+  await abrir(page, '/servicos/');
+  const cards = page.locator('.grade-servicos article');
+  await expect(cards).toHaveCount(4);
+  for (const nome of ['Palestras', 'Treinamentos', 'Minicursos', 'Workshops']) {
+    await expect(cards.getByRole('heading', { name: nome, exact: true })).toHaveCount(1);
+  }
+  await cards.first().getByRole('link', { name: 'Conhecer temas e palestras' }).click();
+  await expect(page).toHaveURL(/\/palestras\/$/);
+});
+
+test('interesse é contato explícito e não formulário de coleta de dados', async ({ page }) => {
+  await abrir(page, '/servicos/');
+  const interesse = page.getByRole('link', { name: 'Tenho interesse em minicurso' });
+  await expect(interesse).toHaveAttribute('href', /^https:\/\/wa\.me\/5571985558490\?text=/);
+  await expect(page.locator('input[type="email"], input[type="password"]')).toHaveCount(0);
+  await expect(page.locator('main')).toContainText('não coleta seus dados de cadastro automaticamente');
+});
+
+test('Serviços mantém idioma, modalidades e navegação em inglês', async ({ page }) => {
+  await abrir(page, '/servicos/');
+  await page.getByRole('link', { name: 'English' }).click();
+  await expect(page).toHaveURL(/\/en\/services\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('education and technology.');
+  await expect(page.locator('.grade-servicos article')).toHaveCount(4);
+  await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Services' })).toHaveAttribute('aria-current', 'page');
 });
