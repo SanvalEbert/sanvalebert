@@ -162,7 +162,23 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
       <p class="privacidade">{texto.transparencia} <a href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança.' : 'Read the Privacy and Security Policy.'}</a></p>
     </div>
   </section>
-  <script is:inline type="module" src={endereco('js/techedu-interesses.mjs')}></script>
+  <script is:inline data-interest-module={endereco('js/techedu-interesses.mjs')}>
+    /* Carrega a integração somente quando o visitante abre o piloto explicitamente. */
+    (() => {
+      const origem = document.currentScript;
+      const parametros = new URLSearchParams(location.search);
+      let teste = parametros.get('cadastro') === 'teste' || parametros.has('code') || parametros.has('error');
+      try { teste ||= sessionStorage.getItem('techedu:piloto:v1') === '1'; } catch {}
+      if (teste) {
+        import(origem.dataset.interestModule).catch(() => {
+          const aviso = document.querySelector('[data-cadastro-status]');
+          const painel = document.querySelector('[data-techedu-piloto]');
+          if (painel) painel.hidden = false;
+          if (aviso) aviso.textContent = 'Não foi possível carregar o cadastro. Tente novamente mais tarde.';
+        });
+      }
+    })();
+  </script>
 </Base>
 
 <style>
