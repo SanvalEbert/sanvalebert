@@ -103,6 +103,9 @@ test('apresentação leva aos perfis e à contratação', async ({ page }) => {
   await abrir(page, '/');
   await page.getByRole('navigation', { name: 'Menu principal' }).getByRole('link', { name: /Sobre/ }).click();
   await expect(page.locator('#sobre')).toBeInViewport();
+  await expect(page.locator('#sobre')).toContainText('CPC 5');
+  await expect(page.locator('#sobre')).toContainText('IGC 5');
+  await expect(page.locator('#sobre')).toContainText('4º do Brasil');
   await expect(page.locator('#sobre').getByRole('link', { name: 'LinkedIn', exact: true })).toHaveAttribute('href', 'https://www.linkedin.com/in/sanval-ebert/');
   await page.getByRole('link', { name: 'Contratar palestra ou formação', exact: true }).click();
   await expect(page).toHaveURL(/\/contratar\/$/);
@@ -133,9 +136,12 @@ test('Pesquisa mantém o contexto ao trocar de idioma e identifica a fonte da m�
  await expect(page.locator('[data-publicacao]')).toHaveCount(13);
 });
 
-test('Estudantes apresenta conquistas sem oferta comercial no conteúdo e rodapé', async ({ page }) => {
+test('Resultados apresenta conquistas sem oferta comercial no conteúdo e rodapé', async ({ page }) => {
  await abrir(page, '/estudantes/');
- await expect(page.getByRole('heading',{level:1})).toContainText('estudantes e egressos');
+ await expect(page.getByRole('heading',{level:1})).toContainText('educação, pesquisa e tecnologia.');
+ await expect(page.getByRole('navigation', { name: 'Menu principal' }).getByRole('link', { name: 'Resultados', exact: true })).toHaveAttribute('aria-current', 'page');
+ await expect(page.locator('main')).not.toContainText('CPC 5');
+ await expect(page.locator('main')).not.toContainText('IGC 5');
  await expect(page.locator('main a[href="/contratar/"], footer a[href="/contratar/"]')).toHaveCount(0);
  await expect(page.getByRole('heading',{name:'Três equipes da universidade na final'})).toBeVisible();
 });

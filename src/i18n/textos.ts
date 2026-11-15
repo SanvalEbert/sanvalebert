@@ -25,7 +25,7 @@ const pt = {
     inicio: 'Início',
     sobre: 'Sobre',
     pesquisa: 'Pesquisa',
-    estudantes: 'Estudantes',
+    estudantes: 'Resultados',
     palestras: 'Palestras',
     cursos: 'Cursos',
     radar: 'Radar',
@@ -34,11 +34,11 @@ const pt = {
   inicio: {
     titulo: 'Sanval Ebert · Inteligência Artificial para quem ensina',
     descricao:
-      'Pesquisador, coordenador e formador. Sanval Ebert conecta educação e tecnologia em pesquisa, cursos e palestras sobre Inteligência Artificial.',
+      'Pesquisador, coordenador e professor. Sanval Ebert conecta educação e tecnologia em pesquisa, cursos e palestras sobre Inteligência Artificial.',
     chamada: ['Inteligência Artificial para', 'quem ensina.'],
     resumoRotulo: 'Resumo.',
     resumo:
-      'Pesquisador, coordenador e formador. Conecto educação e tecnologia em pesquisa, cursos e palestras.',
+      'Pesquisador, coordenador e professor. Conecto educação e tecnologia em pesquisa, cursos e palestras.',
     palavrasChave:
       'Palavras-chave: IA na educação; agentes inteligentes; ambientes virtuais de aprendizagem; tecnologias imersivas.',
     botaoPalestra: 'Contratar palestra ou formação',
@@ -140,7 +140,7 @@ const en: Textos = {
     inicio: 'Home',
     sobre: 'About',
     pesquisa: 'Research',
-    estudantes: 'Students',
+    estudantes: 'Results',
     palestras: 'Talks',
     cursos: 'Courses',
     radar: 'Radar',
@@ -149,11 +149,11 @@ const en: Textos = {
   inicio: {
     titulo: 'Sanval Ebert · Artificial Intelligence for those who teach',
     descricao:
-      'Researcher, program coordinator and educator. Sanval Ebert connects education and technology through research, courses and talks on Artificial Intelligence.',
+      'Researcher, program coordinator and professor. Sanval Ebert connects education and technology through research, courses and talks on Artificial Intelligence.',
     chamada: ['Artificial Intelligence for', 'those who teach.'],
     resumoRotulo: 'Abstract.',
     resumo:
-      'Researcher, program coordinator and educator. I connect education and technology through research, courses and talks.',
+      'Researcher, program coordinator and professor. I connect education and technology through research, courses and talks.',
     palavrasChave:
       'Keywords: AI in education; intelligent agents; virtual learning environments; immersive technologies.',
     botaoPalestra: 'Book a talk or training',

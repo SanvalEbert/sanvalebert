@@ -76,14 +76,14 @@ const pt = {
     finalTexto: 'Conte a data, o público e o tema.',
   },
   estudantes: {
-    titulo: 'Resultados dos estudantes · Sanval Ebert',
+    titulo: 'Resultados · Sanval Ebert',
     descricao:
-      'Competições, prêmios e projetos de estudantes e egressos de Engenharia de Computação e de Ciência de Dados e IA da Universidade SENAI CIMATEC.',
-    rotulo: 'Resultados dos estudantes',
-    chamada: ['Conquistas dos estudantes e egressos', 'dos cursos que coordeno.'],
+      'Projetos, reconhecimentos e conquistas que fazem parte da minha atuação em educação, pesquisa e tecnologia, incluindo os resultados de estudantes e egressos dos cursos que coordeno.',
+    rotulo: 'Resultados',
+    chamada: ['Conquistas que conectam', 'educação, pesquisa e tecnologia.'],
     resumoRotulo: 'Resumo.',
     resumo:
-      'Competições, prêmios e projetos de estudantes e egressos de Engenharia de Computação e de Ciência de Dados e IA da Universidade SENAI CIMATEC.',
+      'Projetos, reconhecimentos e conquistas que fazem parte da minha atuação em educação, pesquisa e tecnologia, incluindo os resultados de estudantes e egressos dos cursos que coordeno.',
     destaqueRotulo: 'HackaStone 2026 · Amsterdã · Agentes de IA para a educação',
     destaqueTitulo: ['Engage-Agent:', '2º lugar mundial'],
     destaqueTexto:
@@ -108,13 +108,8 @@ const pt = {
       },
     ],
     indicadoresRotulo: 'Indicadores',
-    indicadoresTitulo: 'O curso em números',
+    indicadoresTitulo: 'Experiências em números',
     indicadores: [
-      {
-        valor: 'CPC 5',
-        texto: 'Engenharia de Computação, no ciclo de indicadores divulgado em 2025.',
-      },
-      { valor: 'IGC 5', texto: 'Universidade SENAI CIMATEC.' },
       {
         valor: '507',
         texto:
@@ -203,14 +198,14 @@ const en: Textos = {
     finalTexto: 'Tell me the date, the audience and the topic.',
   },
   estudantes: {
-    titulo: 'Student results · Sanval Ebert',
+    titulo: 'Results · Sanval Ebert',
     descricao:
-      'Competitions, awards and projects by Computer Engineering and Data Science and AI students and graduates at SENAI CIMATEC University.',
-    rotulo: 'Student results',
-    chamada: ['Achievements of students and graduates', 'from the programs I coordinate.'],
+      'Projects, recognition and achievements from my work in education, research and technology, including the results of students and graduates from the programs I coordinate.',
+    rotulo: 'Results',
+    chamada: ['Achievements connecting', 'education, research and technology.'],
     resumoRotulo: 'Abstract.',
     resumo:
-      'Competitions, awards and projects by Computer Engineering and Data Science and AI students and graduates at SENAI CIMATEC University.',
+      'Projects, recognition and achievements from my work in education, research and technology, including the results of students and graduates from the programs I coordinate.',
     destaqueRotulo: 'HackaStone 2026 · Amsterdam · AI agents for education',
     destaqueTitulo: ['Engage-Agent:', '2nd place worldwide'],
     destaqueTexto:
@@ -235,17 +230,8 @@ const en: Textos = {
       },
     ],
     indicadoresRotulo: 'Indicators',
-    indicadoresTitulo: 'The program in numbers',
+    indicadoresTitulo: 'Experiences in numbers',
     indicadores: [
-      {
-        valor: 'CPC 5',
-        texto:
-          'Computer Engineering, top score in Brazil’s national program quality index, released in 2025.',
-      },
-      {
-        valor: 'IGC 5',
-        texto: 'SENAI CIMATEC University, top score in the national institutional index.',
-      },
       {
         valor: '507',
         texto: 'participants at the 5th Computing Week, with 47 volunteers and more than 40 activities.',
