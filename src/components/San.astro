@@ -49,7 +49,7 @@ const entradas = [
 const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: link('pesquisa', idioma), pt });
 ---
 <div class="san" data-san data-config={config}>
-  <button class="san-abrir" data-san-abrir type="button" aria-haspopup="dialog" aria-controls="san-painel" aria-label={textos.abrir} title={textos.abrir}>
+  <button class="san-abrir" data-san-abrir type="button" aria-haspopup="dialog" aria-controls="san-painel" title={textos.abrir}>
     <span class="san-avatar" aria-hidden="true"><img src={endereco('images/san-avatar-3d.webp')} width="64" height="64" alt="" loading="lazy" /></span>
     <span class="san-cta"><strong>{textos.abrir}</strong><small>{textos.chamada}</small></span>
     <span class="san-luz" aria-hidden="true"></span>
