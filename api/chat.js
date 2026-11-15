@@ -106,7 +106,7 @@ Você é um assistente virtual, não o próprio professor. Não inclua links nov
 os links oficiais serão mostrados separadamente pela interface.`;
 
   const controlador = new AbortController();
-  const tempo = setTimeout(() => controlador.abort(), 12_000);
+  const tempo = setTimeout(() => controlador.abort(), 8_000);
   try {
     const respostaOpenAI = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
