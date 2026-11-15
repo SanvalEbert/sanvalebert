@@ -18,6 +18,7 @@ export const paginas = {
   pesquisa: { rota: { pt: 'pesquisa/', en: 'en/research/' }, pronta: true },
   estudantes: { rota: { pt: 'estudantes/', en: 'en/students/' }, pronta: true },
   palestras: { rota: { pt: 'palestras/', en: 'en/talks/' }, pronta: true },
+  servicos: { rota: { pt: 'servicos/', en: 'en/services/' }, pronta: true },
   cursos: { rota: { pt: 'cursos/', en: 'en/courses/' }, pronta: false },
   radar: { rota: { pt: 'radar/', en: 'en/radar/' }, pronta: false },
   contratar: { rota: { pt: 'contratar/', en: 'en/hire/' }, pronta: true },
@@ -26,7 +27,7 @@ export const paginas = {
 export type Pagina = keyof typeof paginas;
 
 /** Ordem e numeração do menu, iguais em todos os canais. */
-export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'palestras', 'cursos', 'radar'];
+export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'servicos'];
 
 /** WhatsApp para propostas de palestras, eventos e formações. */
 export const contatoWhatsApp = 'https://wa.me/5571985558490';
