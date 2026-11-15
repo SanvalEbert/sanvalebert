@@ -227,3 +227,53 @@ test('catálogo informa privacidade antes do futuro cadastro Google', async ({ p
   await expect(page.locator('main').getByRole('link', { name: 'Leia a Política de Privacidade e Segurança.' })).toHaveAttribute('href', '/privacidade/');
   await expect(page.locator('input[type="email"], input[type="password"]')).toHaveCount(0);
 });
+
+
+test('a captação Google é restrita ao piloto e informa dados mínimos antes do login', async ({ page }) => {
+  let chamados = 0;
+  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => {
+    chamados++;
+    return route.fulfill({
+      status:200,contentType:'application/javascript',
+      headers:{'access-control-allow-origin':'*'},
+      body:'export function createClient(){return {auth:{getSession:async()=>({data:{session:null},error:null}),getUser:async()=>({data:{user:null},error:null}),signInWithOAuth:async()=>({error:null})}}}',
+    });
+  });
+  await abrir(page, '/servicos/');
+  await expect(page.locator('[data-techedu-piloto]')).toBeHidden();
+  await expect(page.locator('button[data-cadastro-modalidade-link]:visible')).toHaveCount(0);
+  expect(chamados).toBe(0);
+  await abrir(page, '/servicos/?cadastro=teste');
+  await expect(page.locator('[data-techedu-piloto]')).toBeVisible();
+  await expect(page.locator('button[data-cadastro-modalidade-link]:visible')).toHaveCount(4);
+  await page.locator('button[data-cadastro-modalidade-link="minicursos"]').click();
+  const dialogo = page.locator('[data-cadastro-dialogo]');
+  await expect(dialogo).toBeVisible();
+  await expect(dialogo).toContainText('Minicursos');
+  await expect(dialogo).toContainText('nome, e-mail');
+  await expect(dialogo.getByRole('link', { name:'Leia a Política de Privacidade e Segurança' })).toHaveAttribute('href','/privacidade/');
+  await dialogo.getByRole('button', { name:'Cancelar' }).click();
+  await expect(dialogo).toBeHidden();
+});
+
+test('piloto inclui e exclui interesse de usuário autenticado simulado', async ({ page }) => {
+  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm', route => route.fulfill({
+    status:200,contentType:'application/javascript',
+    headers:{'access-control-allow-origin':'*'},
+    body:'export function createClient(){let entries=[];const user={id:"11111111-1111-4111-8111-111111111111",email:"teste@example.com",user_metadata:{full_name:"Participante de teste"}};return {auth:{getSession:async()=>({data:{session:{access_token:"test"}},error:null}),getUser:async()=>({data:{user},error:null}),signOut:async()=>({error:null})},from(table){if(table!=="interests")throw Error("Wrong table");return {select:()=>({order:async()=>({data:entries,error:null})}),insert:async input=>{entries.push({id:"22222222-2222-4222-8222-222222222222",service_key:input.service_key,created_at:"2026-11-15T18:00:00Z"});return {error:null}},delete:()=>({eq:async (_column,value)=>{entries=entries.filter(e=>e.id!==value);return {error:null}}})}}}}',
+  }));
+  await abrir(page, '/servicos/?cadastro=teste');
+  await expect(page.locator('[data-cadastro-email]')).toContainText('teste@example.com');
+  await page.locator('button[data-cadastro-modalidade-link="workshops"]').click();
+  const dialogo = page.locator('[data-cadastro-dialogo]');
+  await expect(dialogo.getByRole('button', { name:'Confirmar interesse' })).toBeVisible();
+  await dialogo.getByRole('button', { name:'Confirmar interesse' }).click();
+  await expect(page.locator('[data-cadastro-status]')).toContainText('sucesso');
+  await expect(page.locator('[data-cadastro-lista]')).toContainText('Workshops');
+  page.once('dialog', d=>d.accept());
+  await page.getByRole('button', { name:'Excluir este interesse' }).click();
+  await expect(page.locator('[data-cadastro-status]')).toContainText('excluído');
+  await expect(page.locator('[data-cadastro-lista]')).toContainText('ainda não registrou');
+  await page.getByRole('button', { name:'Sair da conta' }).click();
+  await expect(page.locator('[data-cadastro-painel]')).toBeHidden();
+});
