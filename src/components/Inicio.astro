@@ -13,7 +13,6 @@ interface Props {
 const { idioma } = Astro.props;
 const txt = t(idioma);
 const i = txt.inicio;
-const perfil = i.fig1.split(' | ');
 const pronta = (p: string) => paginas[p as Pagina].pronta;
 const para = (p: string) => link(p as Pagina, idioma);
 const contato = link('contratar', idioma);
@@ -42,11 +41,7 @@ const sobre = idioma === 'pt' ? {
     </div>
     <figure class="figura foto">
       <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={idioma === 'pt' ? 'Retrato de Sanval Ebert, com óculos e blazer preto' : 'Portrait of Sanval Ebert wearing glasses and a black blazer'} fetchpriority="high" />
-      <figcaption class="perfil-profissional">
-        <strong>{perfil.slice(0, 2).join(' · ')}</strong>
-        {perfil.slice(2, 5).map(item => <span>{item}</span>)}
-        <span class="academias">{perfil.slice(5).join(' · ')}</span>
-      </figcaption>
+      <figcaption class="perfil-profissional">{i.fig1}</figcaption>
     </figure>
   </section>
 
@@ -144,9 +139,7 @@ const sobre = idioma === 'pt' ? {
   }
 
   .retrato { display: block; width: 100%; height: auto; }
-  .perfil-profissional { display: flex; flex-direction: column; gap: 8px; padding: 6px 2px 2px; }
-  .perfil-profissional strong { color: var(--papel); font-weight: 600; }
-  .perfil-profissional .academias { color: var(--ciano); border-top: 1px solid var(--fio); padding-top: 10px; margin-top: 2px; }
+  .perfil-profissional { padding: 6px 2px 2px; line-height: 1.7; }
 
   .indicadores-sobre { margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
   .indicador-valor { font-size: clamp(30px, 4vw, 46px); line-height: 1.15; color: var(--azul-claro); }
