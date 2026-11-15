@@ -31,7 +31,7 @@ const texto = pt ? {
     { numero:'03', nome:'Receba uma proposta', texto:'Alinhamos objetivos, carga horária, formato e disponibilidade.' },
   ],
   chamada: 'Vamos construir uma experiência de aprendizagem?',
-  descricaoFinal: 'Conte sua necessidade. O primeiro contato será feito pelo WhatsApp; o cadastro de interessados com Google será disponibilizado em uma próxima etapa.',
+  descricaoFinal: 'Após acessar com Google, escolha o serviço e registre seu interesse. Para receber uma proposta personalizada, você também pode conversar diretamente pelo WhatsApp.',
   transparencia: 'O cadastro de interesse utiliza sua conta Google e armazena somente o identificador técnico, a modalidade e a data. Consulte a política para conhecer seus direitos.',
 } : {
   titulo: 'Learning services and experiences · Sanval Ebert',
@@ -59,7 +59,7 @@ const texto = pt ? {
     { numero:'03', nome:'Receive a proposal', texto:'We align learning goals, workload, delivery format and availability.' },
   ],
   chamada: 'Shall we design a learning experience?',
-  descricaoFinal: 'Tell us what you need. Initial contact is through WhatsApp; interest registration with Google will be offered in a later phase.',
+  descricaoFinal: 'After signing in with Google, select a service to register your interest. You can also request a tailored proposal through WhatsApp.',
   transparencia: 'Interest registration uses your Google account and stores only a technical identifier, service and date. Read the policy to learn about your rights.',
 };
 const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURIComponent(pt ? `Olá, Sanval! Tenho interesse em ${assunto.toLowerCase()} pelo TechEdu. Gostaria de conversar sobre formatos e disponibilidade.` : `Hello Sanval! I am interested in ${assunto.toLowerCase()} via TechEdu. I would like to discuss options and availability.`)}`;
