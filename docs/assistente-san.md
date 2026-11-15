@@ -53,3 +53,17 @@ Valide na URL de preview, antes de integrar à `main`:
 5. Se a rota de IA retornar 503/502, verificar o status de faturamento/permissões da OpenAI e os logs da função na Vercel, sem expor a chave.
 
 O registro de testes automatizados simula o provedor, portanto não substitui o teste real com a chave de API configurada.
+
+## UX final: convite do San
+
+O launcher fixo agora fica no canto inferior direito, com avatar 3D em moldura circular e convite **“Pergunte ao San”** / **“Ask San”**. No desktop, a descrição curta diz “Pesquisas, publicações e contato”. Os controles de navegação da página ficam do lado esquerdo para evitar sobreposição. Em telas pequenas o convite se adapta e o diálogo de conversa cabe no viewport. Sem animações obrigatórias para quem prefere movimento reduzido.
+
+## Estatísticas privadas de visitantes (Vercel Web Analytics)
+
+- O layout comum inclui o script Vercel `/_vercel/insights/script.js` para registrar visualizações e visitantes de modo agregado, sem contador público.
+- **É necessário habilitar Web Analytics** no projeto `sanvalebert` na Vercel: projeto → **Analytics → Enable**. A ativação acrescenta rotas de coleta na implantação **seguinte**, portanto faça novo deploy após habilitar.
+- No painel Web Analytics, consultar **Visitors**, **Page Views**, **Countries**, **Referrers** e **Pages**. A origem geográfica representa país/região agregados, não identificação pessoal ou endereço exato.
+- Não são instalados cookies de rastreamento pela integração. O visitante único é uma estimativa e a identificação de visitas não persiste entre dias.
+- No plano Hobby há até 50.000 eventos/mês e relatório mensal, conforme https://vercel.com/docs/analytics/limits-and-pricing. O recurso é separado dos custos da API OpenAI.
+- Se o painel permanecer vazio, verificar se está habilitado e se a implantação posterior está publicada. Em Network, confirmar o carregamento do script e os eventos na rota de coleta.
+
