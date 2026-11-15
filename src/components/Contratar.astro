@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { contatoProvisorio, type Idioma } from '../data/site';
+import { contatoWhatsApp, type Idioma } from '../data/site';
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
 const pt = idioma === 'pt';
@@ -27,7 +27,7 @@ const servicos = pt ? [
   </section>
   <section class="conteudo secao coluna" aria-labelledby="proposta">
     <h2 id="proposta">{pt ? 'Conte o que você está planejando' : 'Tell me what you are planning'}</h2>
-    <p>{pt ? 'Para começarmos, envie o tema de interesse, o público, a data prevista e se o encontro será presencial ou on-line. A conversa inicial acontece pelo LinkedIn.' : 'To get started, send the topic, audience, expected date and whether the session will be in person or online. Our first conversation takes place on LinkedIn.'}</p>
-    <div><a class="botao" href={contatoProvisorio}>{pt ? 'Conversar sobre uma proposta' : 'Discuss a proposal'} ↗</a></div>
+    <p>{pt ? 'Para começarmos, envie o tema de interesse, o público, a data prevista e se o encontro será presencial ou on-line. A conversa inicial acontece pelo WhatsApp.' : 'To get started, send the topic, audience, expected date and whether the session will be in person or online. Our first conversation takes place on WhatsApp.'}</p>
+    <div><a class="botao" href={contatoWhatsApp}>{pt ? 'Conversar sobre uma proposta' : 'Discuss a proposal'} ↗</a></div>
   </section>
 </Base>

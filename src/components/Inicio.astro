@@ -1,7 +1,7 @@
 ---
 // Página inicial, compartilhada pelas versões em português e em inglês.
 import Base from '../layouts/Base.astro';
-import { endereco, link, paginas, type Idioma, type Pagina } from '../data/site';
+import { contatoWhatsApp, endereco, link, paginas, type Idioma, type Pagina } from '../data/site';
 import RegistrosAmsterdam from './RegistrosAmsterdam.astro';
 import Perfis from './Perfis.astro';
 import { t } from '../i18n/textos';
@@ -89,7 +89,7 @@ const sobre = idioma === 'pt' ? {
       }
     </div>
     <div class="linha depois">
-      <a class="botao" href={contato}>{i.palestrasBotao}</a>
+      <a class="botao" href={contatoWhatsApp}>{i.palestrasBotao}</a>
       {
         pronta('palestras') && (
           <a class="italico" href={para('palestras')}>

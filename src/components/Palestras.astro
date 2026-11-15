@@ -1,7 +1,7 @@
 ---
 // Página Palestras e eventos, compartilhada pelas versões em português e em inglês.
 import Base from '../layouts/Base.astro';
-import { link, type Idioma } from '../data/site';
+import { contatoWhatsApp, type Idioma } from '../data/site';
 import { tp } from '../i18n/paginas';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 const { idioma } = Astro.props;
 const p = tp(idioma).palestras;
-const contato = link('contratar', idioma);
+const contato = contatoWhatsApp;
 const canal = 'https://www.youtube.com/@SanvalEbert/videos';
 ---
 

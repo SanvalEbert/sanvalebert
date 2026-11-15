@@ -86,8 +86,13 @@ test('o VLibras está nas páginas em português e fora das páginas em inglês'
 
 test('os botões de contato têm destino', async ({ page }) => {
   await abrir(page, '/');
+  await expect(page.getByRole('link', { name: 'Solicitar uma proposta', exact: true })).toHaveAttribute('href', 'https://wa.me/5571985558490');
   for (const link of await page.locator('a.botao').all()) {
     await expect(link).toHaveAttribute('href', /^(https:\/\/|\/)/);
+  }
+  await abrir(page, '/palestras/');
+  for (const proposta of await page.getByRole('link', { name: 'Solicitar uma proposta', exact: true }).all()) {
+    await expect(proposta).toHaveAttribute('href', 'https://wa.me/5571985558490');
   }
 });
 
@@ -109,7 +114,8 @@ test('apresentação leva aos perfis e à contratação', async ({ page }) => {
   await expect(page.locator('#sobre').getByRole('link', { name: 'LinkedIn', exact: true })).toHaveAttribute('href', 'https://www.linkedin.com/in/sanval-ebert/');
   await page.getByRole('link', { name: 'Contratar palestra ou formação', exact: true }).click();
   await expect(page).toHaveURL(/\/contratar\/$/);
-  await expect(page.getByRole('link', { name: /Conversar sobre uma proposta/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/sanval-ebert/');
+  await expect(page.getByRole('link', { name: /Conversar sobre uma proposta/ })).toHaveAttribute('href', 'https://wa.me/5571985558490');
+  await expect(page.locator('main')).toContainText('WhatsApp');
 });
 
 test('Pesquisa permite encontrar publicações por assunto e área', async ({ page }) => {

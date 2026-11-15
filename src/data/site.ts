@@ -28,8 +28,8 @@ export type Pagina = keyof typeof paginas;
 /** Ordem e numeração do menu, iguais em todos os canais. */
 export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'palestras', 'cursos', 'radar'];
 
-/** Canal de conversa usado na página Contratar enquanto não há formulário. */
-export const contatoProvisorio = 'https://www.linkedin.com/in/sanval-ebert/';
+/** WhatsApp para propostas de palestras, eventos e formações. */
+export const contatoWhatsApp = 'https://wa.me/5571985558490';
 
 export const registrosAmsterdam = {
   instagram: 'https://www.instagram.com/p/DfsskpaiBcC/?img_index=1',
@@ -56,6 +56,6 @@ export function endereco(rota: string): string {
 export function link(pagina: Pagina, idioma: Idioma): string {
   const p = paginas[pagina];
   if (pagina === 'sobre' && !p.pronta) return endereco(paginas.inicio.rota[idioma]) + '#sobre';
-  if (!p.pronta && pagina === 'contratar') return contatoProvisorio;
+  if (!p.pronta && pagina === 'contratar') return contatoWhatsApp;
   return endereco(p.rota[idioma]);
 }
