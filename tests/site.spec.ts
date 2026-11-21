@@ -107,7 +107,16 @@ test('a página inicial não oferece contratação', async ({ page }) => {
 test('destaques ficam em carrossel com links para as redes', async ({ page }) => {
   await abrir(page, '/');
   const carrossel = page.getByRole('region', { name: 'Destaques' });
-  await expect(carrossel.locator('.faixa > li').first()).toContainText('Engage-Agent');
+  const slides = carrossel.locator('.faixa > li');
+  await expect(slides).toHaveCount(2);
+  await expect(slides.nth(0)).toContainText('BATV');
+  await expect(slides.nth(1)).toContainText('Engage-Agent');
+  for (const img of await carrossel.locator('img').all()) await expect(img).toHaveAttribute('alt', /.+/);
+  if ((page.viewportSize()?.width ?? 0) > 540) {
+    await carrossel.getByRole('button', { name: 'Próximo' }).click();
+    await expect(carrossel.locator('[data-atual]')).toHaveText('2');
+    await expect(carrossel.getByRole('button', { name: 'Próximo' })).toBeDisabled();
+  }
   await expect(carrossel.getByRole('link', { name: /Ver no Instagram/ }).first()).toHaveAttribute('href', /instagram\.com/);
   await expect(carrossel.getByRole('link', { name: /Ler no LinkedIn/ }).first()).toHaveAttribute('href', /linkedin\.com/);
 });

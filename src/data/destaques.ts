@@ -21,19 +21,27 @@ export interface Destaque {
 
 const todos: Destaque[] = [
   {
-    id: 'novo-destaque',
-    rascunho: true,
-    quando: { pt: '2026', en: '2026' },
+    id: 'batv-tv-bahia',
+    quando: { pt: 'BATV · TV Bahia · Novembro de 2026', en: 'BATV · TV Bahia · November 2026' },
     titulo: {
-      pt: 'Título do novo destaque (aguardando o texto do post)',
-      en: 'New highlight title (waiting for the post text)',
+      pt: 'No BATV: o que um PDF com texto invisível ensina sobre usar IA',
+      en: 'On BATV: what a PDF with invisible text teaches about using AI',
     },
     texto: {
-      pt: 'Resumo do novo destaque: o que aconteceu, onde e quem participou.',
-      en: 'Summary of the new highlight: what happened, where and who took part.',
+      pt: 'Comentei na TV Bahia o caso de um documento com uma camada de texto escondida que tentou induzir a IA do Tribunal de Justiça da Bahia a soltar um acusado de homicídio. A área técnica identificou a manobra, conhecida como prompt injection, e o habeas corpus foi negado. A conversa foi sobre inovar com IA e, ao mesmo tempo, desenvolver pessoas e governança que garantam a segurança.',
+      en: 'On TV Bahia, I discussed the case of a document with a hidden text layer that tried to steer the Bahia Court of Justice’s AI into releasing a murder suspect. The court’s technical team caught the trick, known as prompt injection, and the habeas corpus was denied. We talked about innovating with AI while developing people and governance that keep it safe.',
+    },
+    imagem: {
+      arquivo: 'images/batv-tv-bahia-2026.jpg',
+      largura: 936,
+      altura: 542,
+      alt: {
+        pt: 'Sanval Ebert em entrevista ao BATV, da TV Bahia, em frente ao Centro de Supercomputação do SENAI CIMATEC',
+        en: 'Sanval Ebert interviewed on TV Bahia’s BATV in front of the SENAI CIMATEC Supercomputing Center',
+      },
     },
     links: [
-      { rotulo: { pt: 'Ver no Instagram', en: 'See it on Instagram' }, url: 'https://www.instagram.com/p/Df0mFx_jdid/?img_index=1' },
+      { rotulo: { pt: 'Ver no Instagram', en: 'See it on Instagram' }, url: 'https://www.instagram.com/p/Df0mFx_jdid/' },
       { rotulo: { pt: 'Ler no LinkedIn', en: 'Read it on LinkedIn' }, url: 'https://www.linkedin.com/feed/update/urn:li:activity:7528252470699986944/' },
     ],
   },
