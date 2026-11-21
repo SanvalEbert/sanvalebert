@@ -112,6 +112,8 @@ test('destaques ficam em carrossel com links para as redes', async ({ page }) =>
   await expect(slides.nth(0)).toContainText('BATV');
   await expect(slides.nth(1)).toContainText('Engage-Agent');
   for (const img of await carrossel.locator('img').all()) await expect(img).toHaveAttribute('alt', /.+/);
+  await expect(carrossel.getByRole('link', { name: /Ver no Instagram/ }).first()).toHaveAttribute('href', /instagram\.com/);
+  await expect(carrossel.getByRole('link', { name: /Ler no LinkedIn/ }).first()).toHaveAttribute('href', /linkedin\.com/);
   if ((page.viewportSize()?.width ?? 0) > 540) {
     const pausa = carrossel.getByRole('button', { name: 'Pausar a passagem automática' });
     await pausa.click();
@@ -136,16 +138,27 @@ test('carrossel de destaques passa sozinho e respeita quem pede menos movimento'
   await abrir(page, '/');
   await page.clock.runFor(15000);
   await expect(page.getByRole('region', { name: 'Destaques' }).locator('[data-atual]')).toHaveText('1');
-  await expect(page.getByRole('button', { name: 'Pausar a passagem automática' })).toBeHidden();
-  await expect(carrossel.getByRole('link', { name: /Ver no Instagram/ }).first()).toHaveAttribute('href', /instagram\.com/);
-  await expect(carrossel.getByRole('link', { name: /Ler no LinkedIn/ }).first()).toHaveAttribute('href', /linkedin\.com/);
+  await expect(page.getByRole('region', { name: 'Destaques' }).getByRole('button', { name: 'Pausar a passagem automática' })).toBeHidden();
+});
+
+test('dicas e treinamentos passam sozinhas em carrossel, com setas para voltar', async ({ page }) => {
+  await page.clock.install();
+  await abrir(page, '/');
+  const carrossel = page.getByRole('region', { name: 'Dicas e treinamentos' });
+  await page.mouse.move(0, 0);
+  await expect(carrossel.locator('[data-atual]')).toHaveText('1');
+  await page.clock.runFor(6500);
+  await expect(carrossel.locator('[data-atual]')).toHaveText('2');
+  await carrossel.getByRole('button', { name: 'Anterior' }).click();
+  await expect(carrossel.locator('[data-atual]')).toHaveText('1');
+  await expect(carrossel.getByRole('button', { name: 'Pausar a passagem automática' })).toBeVisible();
 });
 
 test('dicas e treinamentos mostram os quatro cartões com botão de acesso', async ({ page }) => {
   for (const [rota, titulo, botao] of [['/', 'Dicas e treinamentos', 'Acessar'], ['/en/', 'Tips and training', 'Visit']]) {
     await abrir(page, rota);
     const secao = page.locator('section', { has: page.getByRole('heading', { level: 2, name: titulo }) });
-    const cartoes = secao.locator('.recomendacoes article');
+    const cartoes = secao.locator('[data-carrossel] article');
     await expect(cartoes).toHaveCount(4);
     for (const cartao of await cartoes.all()) {
       await expect(cartao).toBeVisible();
