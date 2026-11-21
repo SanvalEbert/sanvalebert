@@ -1,8 +1,10 @@
 ---
 // Página inicial, compartilhada pelas versões em português e em inglês.
 import Base from '../layouts/Base.astro';
-import { contatoWhatsApp, endereco, link, paginas, type Idioma, type Pagina } from '../data/site';
-import RegistrosAmsterdam from './RegistrosAmsterdam.astro';
+import { endereco, link, paginas, type Idioma, type Pagina } from '../data/site';
+import { destaques } from '../data/destaques';
+import { categorias, noticias } from '../data/noticias';
+import Carrossel from './Carrossel.astro';
 import Perfis from './Perfis.astro';
 import { t } from '../i18n/textos';
 
@@ -13,10 +15,12 @@ interface Props {
 const { idioma } = Astro.props;
 const txt = t(idioma);
 const i = txt.inicio;
+const pt = idioma === 'pt';
 const pronta = (p: string) => paginas[p as Pagina].pronta;
 const para = (p: string) => link(p as Pagina, idioma);
-const contato = link('contratar', idioma);
-const sobre = idioma === 'pt' ? {
+const dataCurta = (d: string) =>
+  new Date(d + 'T12:00:00').toLocaleDateString(pt ? 'pt-BR' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const sobre = pt ? {
   titulo: 'Sobre mim',
   apresentacao: 'Sou docente e pesquisador. Conecto educação e tecnologia para apoiar quem ensina e ampliar as possibilidades de aprendizagem.',
   atuacao: 'Na Universidade SENAI CIMATEC, coordeno os cursos de Engenharia de Computação e de Ciência de Dados e Inteligência Artificial. Meus estudos transitam entre inteligência artificial, tecnologias emergentes e educação.',
@@ -34,14 +38,11 @@ const sobre = idioma === 'pt' ? {
     <div class="coluna texto">
       <h1>{i.chamada[0]} <em>{i.chamada[1]}</em></h1>
       <p class="abertura">{i.resumo}</p>
-      <div class="linha">
-        <a class="botao" href={contato}>{i.botaoPalestra}</a>
-        {pronta('sobre') && <a class="italico" href={para('sobre')}>{i.verTrajetoria}</a>}
-      </div>
+      {pronta('sobre') && <div class="linha"><a class="italico" href={para('sobre')}>{i.verTrajetoria}</a></div>}
     </div>
     <figure class="figura foto">
-      <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={idioma === 'pt' ? 'Retrato de Sanval Ebert, com óculos e blazer preto' : 'Portrait of Sanval Ebert wearing glasses and a black blazer'} fetchpriority="high" />
-      <figcaption class="perfil-profissional">{i.fig1}</figcaption>
+      <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={pt ? 'Retrato de Sanval Ebert, com óculos e blazer preto' : 'Portrait of Sanval Ebert wearing glasses and a black blazer'} fetchpriority="high" />
+      <figcaption class="perfil-profissional">{i.credenciais.join(' | ')}</figcaption>
     </figure>
   </section>
 
@@ -53,56 +54,67 @@ const sobre = idioma === 'pt' ? {
     </div>
   </section>
 
-  <section class="conteudo secao destaque-recente" aria-labelledby="destaque">
-    <figure class="figura">
-      <img class="foto-evento" src={endereco('images/engage-agent-amsterdam-2026.jpg')} width="1399" height="933" alt={idioma === 'pt' ? 'Premiação do Engage-Agent com o cheque de segundo lugar e as bandeiras do Brasil e do SENAI CIMATEC' : 'Engage-Agent award ceremony with the second-place cheque and the Brazilian and SENAI CIMATEC flags'} loading="lazy" decoding="async" />
-      <figcaption>{i.fig2}</figcaption>
-    </figure>
-    <div class="coluna">
-      <p class="rotulo destaque">{i.destaqueRotulo}</p>
-      <h2 id="destaque">{i.destaqueTitulo[0]} <em>{i.destaqueTitulo[1]}</em></h2>
-      <p>{i.destaqueTexto}</p>
-      <RegistrosAmsterdam idioma={idioma} />
-
-    </div>
-  </section>
-
-  <section class="conteudo secao" aria-labelledby="palestras">
+  <section class="conteudo secao" aria-labelledby="destaques">
     <div class="cabeca-secao">
-      <p class="rotulo destaque">{i.palestrasRotulo}</p>
-      <h2 id="palestras">{i.palestrasTitulo}</h2>
+      <p class="rotulo destaque">{i.destaquesRotulo}</p>
+      <h2 id="destaques">{i.destaquesTitulo}</h2>
     </div>
-    <div class="grade">
-      {
-        i.palestras.map((p) => (
-          <div class="celula">
-            <p class="apoio rotulo">{p.publico}</p>
-            <h3>{p.titulo}</h3>
-            <p>{p.texto}</p>
+    <Carrossel idioma={idioma} rotulo={i.destaquesRotulo}>
+      {destaques.map((d, n) => (
+        <li class="slide-destaque" aria-roledescription={pt ? 'item' : 'slide'} aria-label={`${n + 1} / ${destaques.length}`}>
+          <figure class="figura">
+            {d.imagem
+              ? <img class="foto-evento" src={endereco(d.imagem.arquivo)} width={d.imagem.largura} height={d.imagem.altura} alt={d.imagem.alt[idioma]} loading={n === 0 ? 'eager' : 'lazy'} decoding="async" />
+              : <div class="espaco-foto sem-foto" aria-hidden="true">{txt.site.fotoEmBreve}</div>}
+            {d.legenda && <figcaption>{d.legenda[idioma]}</figcaption>}
+          </figure>
+          <div class="coluna">
+            <p class="rotulo destaque">{d.quando[idioma]}</p>
+            <h3 class="titulo-destaque">{d.titulo[idioma]}</h3>
+            <p>{d.texto[idioma]}</p>
+            <div class="linha links">
+              {d.links.map((l) => <a class="italico" href={l.url} rel="noopener">{l.rotulo[idioma]}<span class="so-leitor">: {d.titulo[idioma]}</span> <span aria-hidden="true">↗</span></a>)}
+            </div>
           </div>
-        ))
-      }
-    </div>
-    <div class="linha depois">
-      <a class="botao" href={contatoWhatsApp}>{i.palestrasBotao}</a>
-      {
-        pronta('servicos') && (
-          <a class="italico" href={para('servicos')}>
-            {i.palestrasElo}
-          </a>
-        )
-      }
-    </div>
+        </li>
+      ))}
+    </Carrossel>
   </section>
 
-  <section class="conteudo secao" aria-labelledby="curso">
-    <div class="bloco-azul coluna">
-      <p class="rotulo">{i.cursoRotulo}</p>
-      <h2 id="curso">{i.cursoTitulo[0]} <i>{i.cursoTitulo[1]}</i></h2>
-      <p class="curso-texto">{i.cursoTexto}</p>
-      <div><a class="botao botao-noite" href={contato}>{i.cursoBotao}</a></div>
-    </div>
-  </section>
+  {noticias.length > 0 && (
+    <section class="conteudo secao" aria-labelledby="noticias">
+      <div class="cabeca-secao">
+        <p class="rotulo destaque">{i.noticiasRotulo}</p>
+        <h2 id="noticias">{i.noticiasTitulo}</h2>
+        <p class="apoio nota">{i.noticiasTexto}</p>
+      </div>
+      <ul class="recomendacoes">
+        {noticias.map((n) => (
+          <li class="recomendacao">
+            <article class="cartao" aria-labelledby={`rec-${n.url.replace(/\W+/g, '-')}`}>
+              <div class="cartao-topo">
+                <span class="selo" aria-hidden="true">{n.fonte.split(' ').map((p) => p[0]).join('').slice(0, 3)}</span>
+                <span class="apoio">{n.fonte}</span>
+              </div>
+              <p class="rotulo destaque">{categorias[n.categoria][idioma]}</p>
+              <h3 id={`rec-${n.url.replace(/\W+/g, '-')}`}>{n.titulo[idioma]}</h3>
+              <p class="cartao-resumo">{n.resumo[idioma]}</p>
+              {n.etiquetas && (
+                <ul class="etiquetas" aria-label={pt ? 'Características' : 'Features'}>
+                  {n.etiquetas.map((e) => <li>{e[idioma]}</li>)}
+                </ul>
+              )}
+              {n.data && <p class="apoio"><time datetime={n.data}>{dataCurta(n.data)}</time></p>}
+              <a class="botao acessar" href={n.url} rel="noopener" target="_blank">
+                {i.noticiasElo}<span class="so-leitor"> {n.titulo[idioma]} ({pt ? 'abre em nova aba' : 'opens in a new tab'})</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 </Base>
 
 <style>
@@ -139,22 +151,80 @@ const sobre = idioma === 'pt' ? {
   .sobre-grade { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; }
   @media (max-width: 760px) { .sobre-grade { grid-template-columns: 1fr; } }
 
-  .destaque-recente {
+  .slide-destaque {
     display: grid;
     gap: 40px;
     grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
     align-items: start;
   }
+  .sem-foto { aspect-ratio: 3 / 2; border-radius: 16px; border-color: rgba(139,188,255,.3); }
+  .titulo-destaque { font-size: clamp(26px, 2.6vw, 34px); line-height: 1.15; }
+  .links { gap: 4px 24px; }
 
-  .depois {
-    margin-top: 28px;
-  }
+  .nota { max-width: 40em; }
 
-  .curso-texto {
-    max-width: 40em;
+  .recomendacoes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   }
+  .recomendacao { display: flex; }
+  .cartao {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: clamp(22px, 2.4vw, 30px);
+    border: 1px solid var(--fio);
+    border-radius: 20px;
+    background: linear-gradient(160deg, rgba(20, 40, 68, .95), rgba(9, 19, 35, .97));
+    box-shadow: inset 0 1px 0 rgba(130, 232, 242, .12), 0 18px 40px rgba(0, 0, 0, .18);
+    overflow: hidden;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .cartao::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, var(--azul), var(--ciano));
+    opacity: .8;
+  }
+  .cartao-topo { display: flex; align-items: center; gap: 12px; }
+  .selo {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(36, 82, 223, .22);
+    border: 1px solid rgba(139, 188, 255, .35);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ciano);
+    letter-spacing: .04em;
+  }
+  .cartao h3 { font-size: clamp(23px, 2vw, 27px); }
+  .cartao-resumo { color: #d4dfed; font-size: 16px; line-height: 1.6; }
+  .etiquetas { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .etiquetas li {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(130, 232, 242, .3);
+    color: var(--nevoa);
+  }
+  .acessar { margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; }
+  @media (hover: hover) {
+    .cartao:hover { transform: translateY(-4px); border-color: rgba(130, 232, 242, .45); box-shadow: inset 0 1px 0 rgba(130, 232, 242, .16), 0 24px 56px rgba(0, 0, 0, .28); }
+  }
+  .cartao:focus-within { border-color: rgba(130, 232, 242, .6); }
 
-  .bloco-azul i {
-    font-weight: 400;
-  }
+  .so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 </style>

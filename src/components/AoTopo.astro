@@ -26,10 +26,11 @@ const { rotulo, rotuloFim } = Astro.props;
 </script>
 
 <style>
-  .navegacao-pagina .ao-topo { width: auto; min-width: 84px; gap: 8px; padding: 10px 12px; }
-  .texto-nav { font-family: var(--mono); font-size: 11px; }
-  @media(max-width:480px) {
-    .navegacao-pagina .ao-topo { width: 48px; min-width: 48px; padding: 10px; }
-    .texto-nav { display: none; }
+  /* Atalhos compactos, só com ícone, para ocupar o corredor esquerdo sem cobrir o texto. */
+  .navegacao-pagina .ao-topo { width: 44px; height: 44px; padding: 0; }
+  .texto-nav { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media(max-width:540px) {
+    .navegacao-pagina { left: 10px; bottom: 10px; }
+    .navegacao-pagina [data-ao-fim] { display: none; }
   }
 </style>

@@ -495,3 +495,8 @@ input:focus-visible, select:focus-visible { outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Corredor lateral do assistente San: em telas médias, o conteúdo deixa livre a faixa da direita. */
+@media (min-width: 541px) and (max-width: 1400px) {
+  main .conteudo, footer.conteudo { padding-right: max(var(--margem), 112px); padding-left: max(var(--margem), 76px); }
+}

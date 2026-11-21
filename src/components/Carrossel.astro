@@ -1,0 +1,112 @@
+---
+// Carrossel simples: uma faixa com rolagem horizontal e botões de anterior e próximo.
+// Funciona sem JavaScript (rolagem com o dedo ou o trackpad); o script só liga os botões.
+// Os itens chegam pelo slot, cada um dentro de um <li>.
+import type { Idioma } from '../data/site';
+
+interface Props {
+  idioma: Idioma;
+  rotulo: string;
+  /** 'cheio' mostra um item por vez; 'cartoes' mostra vários lado a lado. */
+  modo?: 'cheio' | 'cartoes';
+}
+
+const { idioma, rotulo, modo = 'cheio' } = Astro.props;
+const pt = idioma === 'pt';
+---
+
+<div class={`carrossel ${modo}`} role="region" aria-roledescription={pt ? 'carrossel' : 'carousel'} aria-label={rotulo} data-carrossel>
+  <ul class="faixa" tabindex="0">
+    <slot />
+  </ul>
+  <div class="controles" hidden>
+    <button type="button" data-anterior aria-label={pt ? 'Anterior' : 'Previous'}><span aria-hidden="true">←</span></button>
+    <p class="contagem" aria-live="polite"><span data-atual>1</span> / <span data-total>1</span></p>
+    <button type="button" data-proximo aria-label={pt ? 'Próximo' : 'Next'}><span aria-hidden="true">→</span></button>
+  </div>
+</div>
+
+<script>
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-carrossel]')) {
+    const faixa = raiz.querySelector<HTMLElement>('.faixa')!;
+    const itens = [...faixa.children] as HTMLElement[];
+    const controles = raiz.querySelector<HTMLElement>('.controles')!;
+    const anterior = raiz.querySelector<HTMLButtonElement>('[data-anterior]')!;
+    const proximo = raiz.querySelector<HTMLButtonElement>('[data-proximo]')!;
+    const atual = raiz.querySelector<HTMLElement>('[data-atual]')!;
+    raiz.querySelector<HTMLElement>('[data-total]')!.textContent = String(itens.length);
+
+    const indice = () => {
+      const x = faixa.scrollLeft;
+      let melhor = 0;
+      itens.forEach((item, i) => {
+        if (Math.abs(item.offsetLeft - faixa.offsetLeft - x) < Math.abs(itens[melhor].offsetLeft - faixa.offsetLeft - x)) melhor = i;
+      });
+      return melhor;
+    };
+    const fim = () => faixa.scrollLeft + faixa.clientWidth >= faixa.scrollWidth - 4;
+    const atualizar = () => {
+      controles.hidden = faixa.scrollWidth <= faixa.clientWidth + 4;
+      const i = fim() ? itens.length - 1 : indice();
+      atual.textContent = String(i + 1);
+      anterior.disabled = faixa.scrollLeft <= 4;
+      proximo.disabled = fim();
+    };
+    const ir = (passo: number) => {
+      const alvo = itens[Math.max(0, Math.min(itens.length - 1, indice() + passo))];
+      faixa.scrollTo({ left: alvo.offsetLeft - faixa.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    };
+    anterior.addEventListener('click', () => ir(-1));
+    proximo.addEventListener('click', () => ir(1));
+    faixa.addEventListener('scroll', () => requestAnimationFrame(atualizar), { passive: true });
+    new ResizeObserver(atualizar).observe(faixa);
+    atualizar();
+  }
+</script>
+
+<style>
+  .faixa {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 4px;
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--vao, 32px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    position: relative;
+    scrollbar-width: none;
+  }
+  .faixa::-webkit-scrollbar { display: none; }
+  .faixa:focus-visible { outline-offset: 6px; }
+  .faixa > :global(li) { scroll-snap-align: start; min-width: 0; }
+
+  .cheio .faixa { grid-auto-columns: 100%; }
+  .cartoes .faixa { --vao: 24px; grid-auto-columns: calc((100% - 2 * var(--vao)) / 3); }
+  @media (max-width: 900px) { .cartoes .faixa { grid-auto-columns: calc((100% - var(--vao)) / 2); } }
+  @media (max-width: 600px) { .cartoes .faixa { grid-auto-columns: 82%; } }
+
+  .controles {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .controles[hidden] { display: none; }
+  .controles button {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(130, 232, 242, .45);
+    border-radius: 50%;
+    background: var(--painel);
+    color: var(--papel);
+    font: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .controles button:hover:not(:disabled) { border-color: var(--ciano); background: #12284a; }
+  .controles button:disabled { opacity: .35; cursor: default; }
+  .contagem { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; color: var(--nevoa); min-width: 3.5em; text-align: center; }
+</style>

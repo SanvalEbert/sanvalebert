@@ -20,7 +20,6 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' ||
   </nav>
   <div class="acoes">
    <a class="idioma" href={endereco(paginas[pagina].rota[outro])} lang={codigoHtml[outro]} hreflang={codigoHtml[outro]} title={txt.site.outroIdiomaAviso}>{txt.site.outroIdioma}</a>
-   <a class="contratar" href={link('contratar', idioma)} aria-current={pagina === 'contratar' ? 'page' : undefined}>{txt.site.contratar}<span aria-hidden="true"> ↗</span></a>
   </div>
  </div>
 </header>
@@ -37,8 +36,7 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' ||
 .menu .item-indisponivel{color:var(--nevoa);opacity:.58;cursor:not-allowed;user-select:none}
 .menu a[aria-current='page']{color:var(--ciano);border-bottom-color:var(--ciano);text-shadow:0 0 18px rgba(130,232,242,.2)}
 .acoes{display:flex;align-items:center;gap:18px}.acoes a{font-family:var(--mono);font-size:12px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-.contratar{border:1px solid rgba(139,188,255,.4);border-radius:10px;box-shadow:0 5px 22px rgba(36,82,223,.2);background:var(--azul);padding:10px 16px;gap:8px;color:white}.contratar:hover{background:#2a5bf0;color:white}
 @media(max-width:1100px){.menu{order:3;flex-basis:100%}}
-@media(max-width:540px){.estrutura{gap:16px;padding-top:20px;padding-bottom:12px}.nome{font-size:30px}.descricao{font-size:10px}.acoes{gap:12px}.acoes a{font-size:11px}.contratar{padding:8px 12px}.menu{gap:4px 20px}}
+@media(max-width:540px){.estrutura{gap:16px;padding-top:20px;padding-bottom:12px}.nome{font-size:30px}.descricao{font-size:10px}.acoes{gap:12px}.acoes a{font-size:11px}.menu{gap:4px 20px}}
 @media(max-width:380px){.acoes{flex-basis:100%;justify-content:space-between}}
 </style>

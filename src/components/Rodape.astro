@@ -5,10 +5,9 @@ import { t } from '../i18n/textos';
 
 interface Props {
   idioma: Idioma;
-  comercial?: boolean;
 }
 
-const { idioma, comercial = true } = Astro.props;
+const { idioma } = Astro.props;
 const txt = t(idioma);
 ---
 
@@ -24,7 +23,6 @@ const txt = t(idioma);
       <Perfis />
     </nav>
 
-    {comercial && <a class="botao" href={link('contratar', idioma)}>{txt.site.contratar}</a>}
   </div>
 
   <p class="apoio direitos">

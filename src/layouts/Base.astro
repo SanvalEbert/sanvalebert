@@ -58,7 +58,7 @@ const canonico = absoluto(paginas[pagina].rota[idioma]);
     <main id="conteudo">
       <slot />
     </main>
-    <Rodape idioma={idioma} comercial={pagina !== 'estudantes'} />
+    <Rodape idioma={idioma} />
     <AoTopo rotulo={txt.site.voltarAoTopo} rotuloFim={idioma === 'pt' ? 'Ir ao fim da página' : 'Go to the bottom of the page'} />
     {idioma === 'pt' && <VLibras />}
     <Experiencia />

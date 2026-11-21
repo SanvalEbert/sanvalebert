@@ -95,37 +95,72 @@ test('o VLibras está nas páginas em português e fora das páginas em inglês'
   await expect(page.locator('[vw-access-button]')).toHaveCount(0);
 });
 
-test('os botões de contato têm destino', async ({ page }) => {
+test('a página inicial não oferece contratação', async ({ page }) => {
+  for (const rota of ['/', '/en/']) {
+    await abrir(page, rota);
+    await expect(page.locator('a[href*="wa.me"], a[href$="/contratar/"], a[href$="/en/hire/"]')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /Contratar|Hire me|proposta|proposal/ })).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText('Inteligência Artificial para Professores');
+  }
+});
+
+test('destaques ficam em carrossel com links para as redes', async ({ page }) => {
   await abrir(page, '/');
-  await expect(page.getByRole('link', { name: 'Solicitar uma proposta', exact: true })).toHaveAttribute('href', 'https://wa.me/5571985558490');
-  for (const link of await page.locator('a.botao').all()) {
-    await expect(link).toHaveAttribute('href', /^(https:\/\/|\/)/);
+  const carrossel = page.getByRole('region', { name: 'Destaques' });
+  await expect(carrossel.locator('.faixa > li').first()).toContainText('Engage-Agent');
+  await expect(carrossel.getByRole('link', { name: /Ver no Instagram/ }).first()).toHaveAttribute('href', /instagram\.com/);
+  await expect(carrossel.getByRole('link', { name: /Ler no LinkedIn/ }).first()).toHaveAttribute('href', /linkedin\.com/);
+});
+
+test('dicas e treinamentos mostram os três cartões com botão de acesso', async ({ page }) => {
+  for (const [rota, titulo, botao] of [['/', 'Dicas e treinamentos', 'Acessar'], ['/en/', 'Tips and training', 'Visit']]) {
+    await abrir(page, rota);
+    const secao = page.locator('section', { has: page.getByRole('heading', { level: 2, name: titulo }) });
+    const cartoes = secao.locator('article');
+    await expect(cartoes).toHaveCount(3);
+    for (const cartao of await cartoes.all()) {
+      await expect(cartao).toBeVisible();
+      await expect(cartao.getByRole('heading', { level: 3 })).not.toBeEmpty();
+      const link = cartao.getByRole('link', { name: new RegExp(botao) });
+      await expect(link).toHaveAttribute('href', /^https:\/\//);
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', /noopener/);
+    }
   }
-  await abrir(page, '/palestras/');
-  for (const proposta of await page.getByRole('link', { name: 'Solicitar uma proposta', exact: true }).all()) {
-    await expect(proposta).toHaveAttribute('href', 'https://wa.me/5571985558490');
+  await abrir(page, '/');
+  for (const url of ['https://www.microsoft.com/pt-br/microsoft-learn', 'https://skillbuilder.aws/', 'https://aws.amazon.com/pt/startups/']) {
+    await expect(page.locator(`a[href="${url}"]`)).toHaveCount(1);
   }
+});
+
+test('assistente San e atalhos ficam nos corredores laterais, sem cobrir o texto', async ({ page }) => {
+  await abrir(page, '/');
+  const sobrepoe = await page.evaluate(() => {
+    const caixas = [...document.querySelectorAll('.san-abrir, .navegacao-pagina .ao-topo.visivel')].map((e) => e.getBoundingClientRect());
+    const textos = [...document.querySelectorAll('main p, main h1, main h2, main h3')].map((e) => e.getBoundingClientRect());
+    return caixas.some((c) => textos.some((t) => c.left < t.right && c.right > t.left && c.top < t.bottom && c.bottom > t.top));
+  });
+  if ((page.viewportSize()?.width ?? 0) > 540) expect(sobrepoe).toBe(false);
 });
 
 test('navega até o rodapé e retorna ao topo', async ({ page }) => {
   await abrir(page, '/');
-  await page.getByRole('link', { name: 'Ir ao fim da página', exact: true }).click();
+  const fim = page.getByRole('link', { name: 'Ir ao fim da página', exact: true });
+  // No celular o atalho "Fim" fica oculto para não cobrir o texto; rola-se com o dedo.
+  if (await fim.isVisible()) await fim.click();
+  else await page.locator('footer').scrollIntoViewIfNeeded();
   await expect(page.locator('footer')).toBeInViewport();
   await page.getByRole('link', { name: 'Voltar ao topo', exact: true }).click();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
 });
 
-test('apresentação leva aos perfis e à contratação', async ({ page }) => {
+test('apresentação leva aos perfis', async ({ page }) => {
   await abrir(page, '/');
   await page.getByRole('navigation', { name: 'Menu principal' }).getByRole('link', { name: /Sobre/ }).click();
   await expect(page.locator('#sobre')).toBeInViewport();
   await expect(page.locator('#sobre')).not.toContainText('CPC 5');
   await expect(page.locator('#sobre')).not.toContainText('IGC 5');
   await expect(page.locator('#sobre').getByRole('link', { name: 'LinkedIn', exact: true })).toHaveAttribute('href', 'https://www.linkedin.com/in/sanval-ebert/');
-  await page.getByRole('link', { name: 'Contratar palestra ou formação', exact: true }).click();
-  await expect(page).toHaveURL(/\/contratar\/$/);
-  await expect(page.getByRole('link', { name: /Conversar sobre uma proposta/ })).toHaveAttribute('href', 'https://wa.me/5571985558490');
-  await expect(page.locator('main')).toContainText('WhatsApp');
 });
 
 test('Pesquisa permite encontrar publicações por assunto e área', async ({ page }) => {
