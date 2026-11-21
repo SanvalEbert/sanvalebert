@@ -23,14 +23,32 @@ const dataCurta = (d: string) =>
   new Date(d + 'T12:00:00').toLocaleDateString(pt ? 'pt-BR' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const sobre = pt ? {
   titulo: 'Sobre mim',
-  apresentacao: 'Sou docente e pesquisador. Conecto educação e tecnologia para apoiar quem ensina e ampliar as possibilidades de aprendizagem.',
-  atuacao: 'Na Universidade SENAI CIMATEC, coordeno os cursos de Engenharia de Computação e de Ciência de Dados e Inteligência Artificial. Meus estudos transitam entre inteligência artificial, tecnologias emergentes e educação.',
-  perfis: 'Acompanhe meu trabalho',
+  abertura: 'Conecto tecnologias emergentes a projetos educacionais que levam instituições, salas de aula e carreiras à transformação digital.',
+  trajetoria: 'Sou professor, pesquisador e doutor em Difusão do Conhecimento. Na Universidade SENAI CIMATEC, coordeno os cursos de Engenharia de Computação e de Ciência de Dados e Inteligência Artificial e respondo pela coordenação técnica de programas de pós-graduação.',
+  impacto: 'Desenvolvo produtos tecnológicos e educacionais que tiram a inovação do laboratório e a colocam em uso. Como mentor, acompanho equipes de estudantes da ideia ao pódio: em 2026, o Engage-Agent conquistou o 2º lugar mundial no HackaStone, em Amsterdã, e recebi o Mentor Award, um dos 19 concedidos no mundo.',
+  frentesRotulo: 'Onde atuo',
+  frentes: [
+    { titulo: 'Gestão acadêmica', texto: 'Cursos de graduação e programas de pós-graduação conectados à indústria.' },
+    { titulo: 'Pesquisa aplicada', texto: 'IA na educação, agentes inteligentes e tecnologias imersivas.' },
+    { titulo: 'Produtos e inovação', texto: 'Soluções tecnológicas e educacionais, do conceito à adoção.' },
+    { titulo: 'Mentoria', texto: 'Equipes premiadas em competições internacionais de inovação.' },
+  ],
+  perfis: 'Conheça meu trabalho',
+  perfisTexto: 'Publicações, projetos, entrevistas e bastidores da sala de aula estão nos links a seguir.',
 } : {
   titulo: 'About me',
-  apresentacao: 'I am an educator and researcher. I connect education and technology to support teachers and expand opportunities for learning.',
-  atuacao: 'At SENAI CIMATEC University, I coordinate the Computer Engineering and Data Science and Artificial Intelligence programs. My studies span artificial intelligence, emerging technologies and education.',
-  perfis: 'Follow my work',
+  abertura: 'I connect emerging technologies to education projects that move institutions, classrooms and careers through digital transformation.',
+  trajetoria: 'I am a professor, researcher and PhD in Knowledge Diffusion. At SENAI CIMATEC University, I coordinate the Computer Engineering and Data Science and Artificial Intelligence programs and lead the technical coordination of graduate programs.',
+  impacto: 'I develop technology and education products that take innovation out of the lab and into use. As a mentor, I guide student teams from idea to podium: in 2026, Engage-Agent took 2nd place worldwide at HackaStone in Amsterdam, and I received the Mentor Award, one of 19 granted worldwide.',
+  frentesRotulo: 'What I do',
+  frentes: [
+    { titulo: 'Academic leadership', texto: 'Undergraduate and graduate programs connected to industry.' },
+    { titulo: 'Applied research', texto: 'AI in education, intelligent agents and immersive technologies.' },
+    { titulo: 'Products and innovation', texto: 'Technology and education solutions, from concept to adoption.' },
+    { titulo: 'Mentoring', texto: 'Award-winning teams in international innovation competitions.' },
+  ],
+  perfis: 'Get to know my work',
+  perfisTexto: 'Publications, projects, interviews and behind-the-scenes from the classroom are in the links below.',
 };
 ---
 
@@ -50,8 +68,20 @@ const sobre = pt ? {
   <section id="sobre" class="conteudo secao sobre" aria-labelledby="sobre-titulo">
     <div class="cabeca-secao"><h2 id="sobre-titulo">{sobre.titulo}</h2></div>
     <div class="sobre-grade">
-      <div class="coluna"><p class="abertura">{sobre.apresentacao}</p><p>{sobre.atuacao}</p></div>
-      <div class="coluna"><h3>{sobre.perfis}</h3><Perfis principais /></div>
+      <div class="coluna">
+        <p class="abertura sobre-abertura">{sobre.abertura}</p>
+        <p>{sobre.trajetoria}</p>
+        <p>{sobre.impacto}</p>
+        <h3 class="rotulo destaque frentes-rotulo">{sobre.frentesRotulo}</h3>
+        <ul class="frentes">
+          {sobre.frentes.map((f) => <li><strong>{f.titulo}</strong><span>{f.texto}</span></li>)}
+        </ul>
+      </div>
+      <aside class="coluna conheca" aria-labelledby="conheca-titulo">
+        <h3 id="conheca-titulo">{sobre.perfis}</h3>
+        <p class="apoio">{sobre.perfisTexto}</p>
+        <Perfis />
+      </aside>
     </div>
   </section>
 
@@ -184,6 +214,30 @@ const sobre = pt ? {
   .perfil-profissional { padding: 6px 2px 2px; line-height: 1.7; }
 
   .sobre-grade { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; }
+  .sobre-abertura { font-size: clamp(21px, 2vw, 26px); line-height: 1.45; color: var(--papel); font-weight: 500; }
+  .frentes-rotulo { margin-top: 12px; }
+  .frentes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .frentes li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 18px;
+    border: 1px solid var(--fio);
+    border-left: 3px solid var(--ciano);
+    border-radius: 12px;
+    background: rgba(12, 23, 41, .6);
+  }
+  .frentes strong { font-size: 17px; font-weight: 650; }
+  .frentes span { font-size: 15px; line-height: 1.5; color: #d4dfed; }
+  @media (max-width: 560px) { .frentes { grid-template-columns: 1fr; } }
+  .conheca {
+    align-self: start;
+    padding: clamp(22px, 2.4vw, 30px);
+    border: 1px solid rgba(130, 232, 242, .3);
+    border-radius: 20px;
+    background: linear-gradient(160deg, rgba(20, 40, 68, .9), rgba(9, 19, 35, .95));
+  }
+  @media (min-width: 761px) { .conheca { position: sticky; top: 24px; } }
   @media (max-width: 760px) { .sobre-grade { grid-template-columns: 1fr; } }
 
   .slide-destaque {
