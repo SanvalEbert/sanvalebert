@@ -1,5 +1,6 @@
 ---
 import Perfis from './Perfis.astro';
+import Logo from './Logo.astro';
 import { link, type Idioma } from '../data/site';
 import { t } from '../i18n/textos';
 
@@ -14,8 +15,7 @@ const txt = t(idioma);
 <footer id="rodape" class="conteudo rodape">
   <div class="topo">
     <div class="assinatura">
-      <p class="nome">Sanval <em>Ebert</em></p>
-      <p class="rotulo">{txt.site.selo}</p>
+      <p class="marca-rodape"><Logo descritor={txt.site.selo} /></p>
     </div>
 
     <nav aria-label={idioma === 'pt' ? 'Redes e perfis' : 'Social and research profiles'} class="redes">
@@ -60,6 +60,8 @@ const txt = t(idioma);
   }
 
   .redes { max-width: 520px; }
+
+  .marca-rodape { font-size: 30px; }
 
   .direitos {
     margin-top: 32px;

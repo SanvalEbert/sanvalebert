@@ -1,42 +1,140 @@
 ---
+// Cabeçalho com a marca centralizada.
+// No topo da página: marca grande no centro e o menu numa linha logo abaixo.
+// Ao rolar: a marca encolhe e acompanha a leitura até o fim da primeira seção da página;
+// depois sai de cena e fica só a barra do menu. A barra é fixa; o <header> reserva a
+// altura inicial no fluxo, para o conteúdo não pular quando a marca muda de tamanho.
 import { codigoHtml, endereco, link, menu, paginas, type Idioma, type Pagina } from '../data/site';
 import { t } from '../i18n/textos';
+import Logo from './Logo.astro';
 interface Props { idioma: Idioma; pagina: Pagina }
 const { idioma, pagina } = Astro.props;
 const txt = t(idioma);
-const outro: Idioma = idioma === 'pt' ? 'en' : 'pt';
+const pt = idioma === 'pt';
+const outro: Idioma = pt ? 'en' : 'pt';
 const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' || item === 'servicos');
 ---
-<header class="portal-header">
- <div class="conteudo estrutura">
-  <a class="identidade" href={link('inicio', idioma)} title={idioma === 'pt' ? 'Ir para o início' : 'Go to home'}>
-   <span class="marca"><span class="nome">Sanval <em>Ebert</em></span><span class="descricao">{idioma === 'pt' ? 'Educação, pesquisa e tecnologia' : 'Education, research and technology'}</span></span>
-  </a>
-  <nav class="menu" aria-label={txt.site.menuPrincipal}>
-   {visiveis.map(item => item === 'servicos'
-     ? <span class="item-indisponivel" role="link" aria-disabled="true" title={txt.site.emBreve}>{txt.menu[item]}</span>
-     : <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>
-   )}
-  </nav>
-  <div class="acoes">
-   <a class="idioma" href={endereco(paginas[pagina].rota[outro])} lang={codigoHtml[outro]} hreflang={codigoHtml[outro]} title={txt.site.outroIdiomaAviso}>{txt.site.outroIdioma}</a>
+<header class="portal-header" data-cabecalho>
+ <div class="barra">
+  <div class="linha-marca">
+   <a class="identidade" href={link('inicio', idioma)} title={pt ? 'Ir para o início' : 'Go to home'}>
+    <Logo descritor={pt ? 'Educação, pesquisa e tecnologia' : 'Education, research and technology'} />
+   </a>
+  </div>
+  <div class="conteudo linha-menu">
+   <nav class="menu" aria-label={txt.site.menuPrincipal}>
+    {visiveis.map(item => item === 'servicos'
+      ? <span class="item-indisponivel" role="link" aria-disabled="true" title={txt.site.emBreve}>{txt.menu[item]}</span>
+      : <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>
+    )}
+   </nav>
+   <a class="idioma" href={endereco(paginas[pagina].rota[outro])} lang={codigoHtml[outro]} hreflang={codigoHtml[outro]} title={txt.site.outroIdiomaAviso}><span class="idioma-longo">{txt.site.outroIdioma}</span><span class="idioma-curto" aria-hidden="true">{outro.toUpperCase()}</span></a>
   </div>
  </div>
 </header>
+
+<script>
+  const cabecalho = document.querySelector<HTMLElement>('[data-cabecalho]');
+  if (cabecalho) {
+    const encolher = 140; // pixels de rolagem até a marca chegar ao tamanho compacto
+    let limite = Infinity;
+    const medir = () => {
+      const primeira = document.querySelector<HTMLElement>('main > section');
+      const barra = cabecalho.querySelector<HTMLElement>('.barra')!;
+      limite = primeira ? primeira.offsetTop + primeira.offsetHeight - barra.offsetHeight : Infinity;
+    };
+    let agendado = false;
+    const atualizar = () => {
+      agendado = false;
+      const y = window.scrollY;
+      cabecalho.style.setProperty('--p', String(Math.min(1, Math.max(0, y / encolher))));
+      cabecalho.classList.toggle('sem-marca', y > Math.max(limite, encolher));
+      cabecalho.classList.toggle('rolado', y > 4);
+    };
+    const agendar = () => { if (!agendado) { agendado = true; requestAnimationFrame(atualizar); } };
+    medir();
+    atualizar();
+    window.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('resize', () => { medir(); agendar(); });
+    window.addEventListener('load', () => { medir(); agendar(); });
+    // Ao focar um item da marca com o teclado, ela volta a aparecer.
+    cabecalho.addEventListener('focusin', () => cabecalho.classList.remove('sem-marca'));
+  }
+</script>
+
 <style>
-.portal-header{border-bottom:1px solid var(--fio);background:rgba(5,12,25,.8);backdrop-filter:blur(18px)}
-.portal-header::after{content:"";position:absolute;bottom:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(130,232,242,.65),transparent);pointer-events:none}
-.estrutura{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 24px;padding-top:24px;padding-bottom:24px}
-.identidade{display:inline-flex;align-items:center;text-decoration:none;flex-shrink:0}
-.identidade:hover .nome em{color:#a5f4fb}
-.marca{display:flex;flex-direction:column;gap:5px}
-.nome{font-size:clamp(30px,2.35vw,35px);font-weight:750;line-height:1.05;letter-spacing:-.035em;white-space:nowrap}
-.descricao{font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--nevoa);letter-spacing:.005em}
-.menu{display:flex;flex-wrap:wrap;gap:4px 22px}.menu a,.menu .item-indisponivel{font-family:var(--mono);font-size:12px;padding:12px 0;text-decoration:none;border-bottom:2px solid transparent}
-.menu .item-indisponivel{color:var(--nevoa);opacity:.58;cursor:not-allowed;user-select:none}
-.menu a[aria-current='page']{color:var(--ciano);border-bottom-color:var(--ciano);text-shadow:0 0 18px rgba(130,232,242,.2)}
-.acoes{display:flex;align-items:center;gap:18px}.acoes a{font-family:var(--mono);font-size:12px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-@media(max-width:1100px){.menu{order:3;flex-basis:100%}}
-@media(max-width:540px){.estrutura{gap:16px;padding-top:20px;padding-bottom:12px}.nome{font-size:30px}.descricao{font-size:10px}.acoes{gap:12px}.acoes a{font-size:11px}.menu{gap:4px 20px}}
-@media(max-width:380px){.acoes{flex-basis:100%;justify-content:space-between}}
+.portal-header {
+  --marca-max: 104px;
+  --marca-min: 62px;
+  --menu-altura: 52px;
+  --p: 0;
+  height: calc(var(--marca-max) + var(--menu-altura));
+  position: relative;
+  z-index: 20;
+}
+.barra {
+  position: fixed;
+  inset: 0 0 auto;
+  background: #060d1b;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--fio);
+  transition: box-shadow .3s ease;
+}
+.rolado .barra { box-shadow: 0 10px 30px rgba(0, 0, 0, .28); }
+.barra::after { content: ""; position: absolute; bottom: -1px; left: 20%; right: 20%; height: 1px; background: linear-gradient(90deg, transparent, rgba(130, 232, 242, .65), transparent); pointer-events: none; }
+
+.linha-marca {
+  height: calc(var(--marca-max) - (var(--marca-max) - var(--marca-min)) * var(--p));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: height .35s ease, opacity .3s ease;
+}
+.identidade {
+  font-size: 34px;
+  text-decoration: none;
+  transform: scale(calc(1 - var(--p) * .3));
+  transform-origin: center;
+  border-radius: 12px;
+  padding: 6px 10px;
+  transition: transform .2s ease;
+}
+.identidade:hover :global(.sobrenome) { color: #a5f4fb; }
+.identidade:hover { color: inherit; }
+
+.sem-marca .linha-marca { height: 0; opacity: 0; }
+.sem-marca .identidade { visibility: hidden; transition: visibility 0s .3s; }
+
+.linha-menu {
+  position: relative;
+  height: var(--menu-altura);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(139, 188, 255, .12);
+}
+.menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 30px; }
+.menu a, .menu .item-indisponivel { font-family: var(--mono); font-size: 12px; padding: 14px 0; text-decoration: none; border-bottom: 2px solid transparent; }
+.menu .item-indisponivel { color: var(--nevoa); opacity: .58; cursor: not-allowed; user-select: none; }
+.menu a:hover { color: var(--ciano); }
+.menu a[aria-current='page'] { color: var(--ciano); border-bottom-color: var(--ciano); }
+.idioma-curto { display: none; }
+.idioma { position: absolute; right: var(--margem); top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 12px; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+
+@media (max-width: 640px) {
+  .portal-header { --marca-max: 84px; --marca-min: 56px; --menu-altura: 48px; }
+  .identidade { font-size: 30px; }
+  .identidade :global(.descricao) { display: none; }
+  .linha-menu { justify-content: flex-start; padding-right: 52px; }
+  .idioma-longo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .idioma-curto { display: inline; border: 1px solid rgba(130, 232, 242, .4); border-radius: 8px; padding: 4px 7px; font-size: 11px; }
+  .menu { justify-content: flex-start; gap: 0 16px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .menu::-webkit-scrollbar { display: none; }
+  .menu a, .menu .item-indisponivel { font-size: 11px; white-space: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .linha-marca, .identidade, .barra { transition: none; }
+}
 </style>
