@@ -1,4 +1,5 @@
 ---
+import { tr } from '../i18n/tr';
 // Página Resultados dos estudantes, compartilhada pelas versões em português e em inglês.
 import Base from '../layouts/Base.astro';
 import { endereco, type Idioma } from '../data/site';
@@ -24,7 +25,7 @@ const e = tp(idioma).estudantes;
 
   <section class="conteudo secao resultado" aria-labelledby="engage">
     <figure class="figura">
-      <img class="foto-evento" src={endereco('images/engage-agent-amsterdam-2026.jpg')} width="1399" height="933" alt={idioma === 'pt' ? 'Premiação do Engage-Agent com o cheque de segundo lugar e as bandeiras do Brasil e do SENAI CIMATEC' : 'Engage-Agent award ceremony with the second-place cheque and the Brazilian and SENAI CIMATEC flags'} fetchpriority="high" />
+      <img class="foto-evento" src={endereco('images/engage-agent-amsterdam-2026.jpg')} width="1399" height="933" alt={tr(idioma, { pt: 'Premiação do Engage-Agent com o cheque de segundo lugar e as bandeiras do Brasil e do SENAI CIMATEC', en: 'Engage-Agent award ceremony with the second-place cheque and the Brazilian and SENAI CIMATEC flags', es: 'Premiación del Engage-Agent con el cheque del segundo lugar y las banderas de Brasil y del SENAI CIMATEC' })} fetchpriority="high" />
       <figcaption>{e.fig1}</figcaption>
     </figure>
     <div class="coluna">
@@ -85,13 +86,13 @@ const e = tp(idioma).estudantes;
 
   <section class="conteudo secao" aria-labelledby="resultados-academicos">
     <div class="cabeca-secao">
-      <p class="rotulo destaque">{idioma === 'pt' ? 'Gestão e qualidade' : 'Management and quality'}</p>
-      <h2 id="resultados-academicos">{idioma === 'pt' ? 'Resultados acadêmicos' : 'Academic results'}</h2>
+      <p class="rotulo destaque">{tr(idioma, { pt: 'Gestão e qualidade', en: 'Management and quality', es: 'Gestión y calidad' })}</p>
+      <h2 id="resultados-academicos">{tr(idioma, { pt: 'Resultados acadêmicos', en: 'Academic results', es: 'Resultados académicos' })}</h2>
     </div>
-    <div class="indicadores-academicos grade" aria-label={idioma === 'pt' ? 'Indicadores da universidade e do curso' : 'University and program indicators'}>
-      <div class="celula"><p class="indicador-valor">IGC 5</p><p>{idioma === 'pt' ? 'Nota máxima da Universidade SENAI CIMATEC no Índice Geral de Cursos.' : 'SENAI CIMATEC University’s top score in Brazil’s General Course Index.'}</p></div>
-      <div class="celula"><p class="indicador-valor">CPC 5</p><p>{idioma === 'pt' ? 'Nota máxima de Engenharia de Computação no Conceito Preliminar de Curso.' : 'Computer Engineering’s top score in Brazil’s Preliminary Course Score.'}</p></div>
-      <div class="celula"><p class="indicador-valor">{idioma === 'pt' ? '4º do Brasil' : '4th in Brazil'}</p><p>{idioma === 'pt' ? 'Engenharia de Computação: 4º melhor curso do Brasil e melhor do Norte e Nordeste, segundo dados do MEC publicados em 2025, com base no CPC.' : 'Computer Engineering: 4th in Brazil and first in the North and Northeast, according to MEC data published in 2025, based on the CPC.'}</p></div>
+    <div class="indicadores-academicos grade" aria-label={tr(idioma, { pt: 'Indicadores da universidade e do curso', en: 'University and program indicators', es: 'Indicadores de la universidad y de la carrera' })}>
+      <div class="celula"><p class="indicador-valor">IGC 5</p><p>{tr(idioma, { pt: 'Nota máxima da Universidade SENAI CIMATEC no Índice Geral de Cursos.', en: 'SENAI CIMATEC University’s top score in Brazil’s General Course Index.', es: 'Nota máxima de la Universidad SENAI CIMATEC en el Índice General de Cursos de Brasil.' })}</p></div>
+      <div class="celula"><p class="indicador-valor">CPC 5</p><p>{tr(idioma, { pt: 'Nota máxima de Engenharia de Computação no Conceito Preliminar de Curso.', en: 'Computer Engineering’s top score in Brazil’s Preliminary Course Score.', es: 'Nota máxima de Ingeniería de Computación en el Concepto Preliminar de Curso de Brasil.' })}</p></div>
+      <div class="celula"><p class="indicador-valor">{tr(idioma, { pt: '4º do Brasil', en: '4th in Brazil', es: '4.º de Brasil' })}</p><p>{tr(idioma, { pt: 'Engenharia de Computação: 4º melhor curso do Brasil e melhor do Norte e Nordeste, segundo dados do MEC publicados em 2025, com base no CPC.', en: 'Computer Engineering: 4th in Brazil and first in the North and Northeast, according to MEC data published in 2025, based on the CPC.', es: 'Ingeniería de Computación: 4.ª mejor carrera de Brasil y la mejor del Norte y Nordeste, según datos del MEC publicados en 2025, con base en el CPC.' })}</p></div>
     </div>
   </section>
 </Base>

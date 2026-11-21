@@ -1,4 +1,5 @@
 ---
+import { tr } from '../i18n/tr';
 // Página inicial, compartilhada pelas versões em português e em inglês.
 import Base from '../layouts/Base.astro';
 import { endereco, link, paginas, type Idioma, type Pagina } from '../data/site';
@@ -16,12 +17,12 @@ interface Props {
 const { idioma } = Astro.props;
 const txt = t(idioma);
 const i = txt.inicio;
-const pt = idioma === 'pt';
 const pronta = (p: string) => paginas[p as Pagina].pronta;
 const para = (p: string) => link(p as Pagina, idioma);
 const dataCurta = (d: string) =>
-  new Date(d + 'T12:00:00').toLocaleDateString(pt ? 'pt-BR' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-const sobre = pt ? {
+  new Date(d + 'T12:00:00').toLocaleDateString(tr(idioma, { pt: 'pt-BR', en: 'en-GB', es: 'es-ES' }), { day: 'numeric', month: 'short', year: 'numeric' });
+const sobre = tr(idioma, {
+  pt: {
   titulo: 'Sobre mim',
   abertura: 'Conecto tecnologias emergentes a projetos educacionais que levam instituições, salas de aula e carreiras à transformação digital.',
   trajetoria: 'Sou professor, pesquisador e doutor em Difusão do Conhecimento. Na Universidade SENAI CIMATEC, coordeno os cursos de Engenharia de Computação e de Ciência de Dados e Inteligência Artificial e respondo pela coordenação técnica de programas de pós-graduação.',
@@ -35,7 +36,8 @@ const sobre = pt ? {
   ],
   perfis: 'Conheça meu trabalho',
   perfisTexto: 'Publicações, projetos, entrevistas e bastidores da sala de aula estão nos links a seguir.',
-} : {
+},
+  en: {
   titulo: 'About me',
   abertura: 'I connect emerging technologies to education projects that move institutions, classrooms and careers through digital transformation.',
   trajetoria: 'I am a professor, researcher and PhD in Knowledge Diffusion. At SENAI CIMATEC University, I coordinate the Computer Engineering and Data Science and Artificial Intelligence programs and lead the technical coordination of graduate programs.',
@@ -49,7 +51,23 @@ const sobre = pt ? {
   ],
   perfis: 'Get to know my work',
   perfisTexto: 'Publications, projects, interviews and behind-the-scenes from the classroom are in the links below.',
-};
+},
+  es: {
+  titulo: 'Sobre mí',
+  abertura: 'Conecto tecnologías emergentes con proyectos educativos que llevan a instituciones, aulas y carreras hacia la transformación digital.',
+  trajetoria: 'Soy profesor, investigador y doctor en Difusión del Conocimiento. En la Universidad SENAI CIMATEC coordino las carreras de Ingeniería de Computación y de Ciencia de Datos e Inteligencia Artificial, y soy responsable de la coordinación técnica de programas de posgrado.',
+  impacto: 'Desarrollo productos tecnológicos y educativos que sacan la innovación del laboratorio y la ponen en uso. Como mentor, acompaño a equipos de estudiantes de la idea al podio: en 2026, Engage-Agent obtuvo el 2.º lugar mundial en el HackaStone, en Ámsterdam, y recibí el Mentor Award, uno de los 19 otorgados en el mundo.',
+  frentesRotulo: 'Dónde actúo',
+  frentes: [
+    { titulo: 'Gestión académica', texto: 'Carreras de grado y programas de posgrado conectados con la industria.' },
+    { titulo: 'Investigación aplicada', texto: 'IA en la educación, agentes inteligentes y tecnologías inmersivas.' },
+    { titulo: 'Productos e innovación', texto: 'Soluciones tecnológicas y educativas, del concepto a la adopción.' },
+    { titulo: 'Mentoría', texto: 'Equipos premiados en competencias internacionales de innovación.' },
+  ],
+  perfis: 'Conozca mi trabajo',
+  perfisTexto: 'Publicaciones, proyectos, entrevistas y el día a día en el aula están en los siguientes enlaces.',
+},
+});
 ---
 
 <Base idioma={idioma} pagina="inicio" titulo={i.titulo} descricao={i.descricao}>
@@ -60,7 +78,7 @@ const sobre = pt ? {
       {pronta('sobre') && <div class="linha"><a class="italico" href={para('sobre')}>{i.verTrajetoria}</a></div>}
     </div>
     <figure class="figura foto">
-      <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={pt ? 'Retrato de Sanval Ebert, com óculos e blazer preto' : 'Portrait of Sanval Ebert wearing glasses and a black blazer'} fetchpriority="high" />
+      <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={tr(idioma, { pt: 'Retrato de Sanval Ebert, com óculos e blazer preto', en: 'Portrait of Sanval Ebert wearing glasses and a black blazer', es: 'Retrato de Sanval Ebert, con gafas y blazer negro' })} fetchpriority="high" />
       <figcaption class="perfil-profissional">{i.credenciais.join(' | ')}</figcaption>
     </figure>
   </section>
@@ -92,7 +110,7 @@ const sobre = pt ? {
     </div>
     <Carrossel idioma={idioma} rotulo={i.destaquesRotulo} automatico={7000}>
       {destaques.map((d, n) => (
-        <li class="slide-destaque" aria-roledescription={pt ? 'item' : 'slide'} aria-label={`${n + 1} / ${destaques.length}`}>
+        <li class="slide-destaque" aria-roledescription={tr(idioma, { pt: 'item', en: 'slide', es: 'diapositiva' })} aria-label={`${n + 1} / ${destaques.length}`}>
           <figure class="figura">
             {d.imagem
               ? <img class="foto-evento" src={endereco(d.imagem.arquivo)} width={d.imagem.largura} height={d.imagem.altura} alt={d.imagem.alt[idioma]} loading={n === 0 ? 'eager' : 'lazy'} decoding="async" />
@@ -137,7 +155,7 @@ const sobre = pt ? {
                 <a class="curso" href={c.url} rel="noopener" target="_blank">
                   <span class="curso-nome">{c.nome[idioma]}</span>
                   <span class="curso-dados"><span>{c.formato[idioma]}</span><span aria-hidden="true">·</span><span>{c.duracao[idioma]}</span></span>
-                  <span class="curso-acao">{uni.botaoCurso[idioma]}<span class="so-leitor">: {c.nome[idioma]} ({pt ? 'abre em nova aba' : 'opens in a new tab'})</span> <span aria-hidden="true">↗</span></span>
+                  <span class="curso-acao">{uni.botaoCurso[idioma]}<span class="so-leitor">: {c.nome[idioma]} ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span> <span aria-hidden="true">↗</span></span>
                 </a>
               </li>
             ))}
@@ -147,7 +165,7 @@ const sobre = pt ? {
           <p>{uni.outrosTitulo[idioma]}</p>
           <ul class="linha">
             {uni.outros.map((o) => (
-              <li><a class="pilula" href={o.url} rel="noopener" target="_blank">{o.rotulo[idioma]}<span class="so-leitor"> — {uni.nome} ({pt ? 'abre em nova aba' : 'opens in a new tab'})</span> <span aria-hidden="true">↗</span></a></li>
+              <li><a class="pilula" href={o.url} rel="noopener" target="_blank">{o.rotulo[idioma]}<span class="so-leitor"> — {uni.nome} ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span> <span aria-hidden="true">↗</span></a></li>
             ))}
           </ul>
         </div>
@@ -165,13 +183,13 @@ const sobre = pt ? {
               <h3 id={`rec-${n.url.replace(/\W+/g, '-')}`}>{n.titulo[idioma]}</h3>
               <p class="cartao-resumo">{n.resumo[idioma]}</p>
               {n.etiquetas && (
-                <ul class="etiquetas" aria-label={pt ? 'Características' : 'Features'}>
+                <ul class="etiquetas" aria-label={tr(idioma, { pt: 'Características', en: 'Features', es: 'Características' })}>
                   {n.etiquetas.map((e) => <li>{e[idioma]}</li>)}
                 </ul>
               )}
               {n.data && <p class="apoio"><time datetime={n.data}>{dataCurta(n.data)}</time></p>}
               <a class="botao acessar" href={n.url} rel="noopener" target="_blank">
-                {i.noticiasElo}<span class="so-leitor"> {n.titulo[idioma]} ({pt ? 'abre em nova aba' : 'opens in a new tab'})</span>
+                {i.noticiasElo}<span class="so-leitor"> {n.titulo[idioma]} ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span>
                 <span aria-hidden="true">↗</span>
               </a>
             </article>

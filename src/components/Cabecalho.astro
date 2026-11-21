@@ -4,21 +4,20 @@
 // Ao rolar: a marca encolhe e acompanha a leitura até o fim da primeira seção da página;
 // depois sai de cena e fica só a barra do menu. A barra é fixa; o <header> reserva a
 // altura inicial no fluxo, para o conteúdo não pular quando a marca muda de tamanho.
-import { codigoHtml, endereco, link, menu, paginas, type Idioma, type Pagina } from '../data/site';
+import { codigoHtml, endereco, idiomas, link, menu, nomeIdioma, paginas, type Idioma, type Pagina } from '../data/site';
+import { tr } from '../i18n/tr';
 import { t } from '../i18n/textos';
 import Logo from './Logo.astro';
 interface Props { idioma: Idioma; pagina: Pagina }
 const { idioma, pagina } = Astro.props;
 const txt = t(idioma);
-const pt = idioma === 'pt';
-const outro: Idioma = pt ? 'en' : 'pt';
 const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' || item === 'servicos');
 ---
 <header class="portal-header" data-cabecalho>
  <div class="barra">
   <div class="linha-marca">
-   <a class="identidade" href={link('inicio', idioma)} title={pt ? 'Ir para o início' : 'Go to home'}>
-    <Logo descritor={pt ? 'Educação, pesquisa e tecnologia' : 'Education, research and technology'} />
+   <a class="identidade" href={link('inicio', idioma)} title={tr(idioma, { pt: 'Ir para o início', en: 'Go to home', es: 'Ir al inicio' })}>
+    <Logo descritor={tr(idioma, { pt: 'Educação, pesquisa e tecnologia', en: 'Education, research and technology', es: 'Educación, investigación y tecnología' })} />
    </a>
   </div>
   <div class="conteudo linha-menu">
@@ -28,7 +27,13 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' ||
       : <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>
     )}
    </nav>
-   <a class="idioma" href={endereco(paginas[pagina].rota[outro])} lang={codigoHtml[outro]} hreflang={codigoHtml[outro]} title={txt.site.outroIdiomaAviso}><span class="idioma-longo">{txt.site.outroIdioma}</span><span class="idioma-curto" aria-hidden="true">{outro.toUpperCase()}</span></a>
+   <nav class="idiomas" aria-label={tr(idioma, { pt: 'Idioma', en: 'Language', es: 'Idioma' })}>
+    <svg class="globo" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    {idiomas.map((i) => i === idioma
+      ? <span class="ativo" aria-current="true" title={nomeIdioma[i]}><span class="so-leitor">{nomeIdioma[i]}</span><span aria-hidden="true">{i.toUpperCase()}</span></span>
+      : <a href={endereco(paginas[pagina].rota[i])} lang={codigoHtml[i]} hreflang={codigoHtml[i]} title={nomeIdioma[i]}><span class="so-leitor">{nomeIdioma[i]}</span><span aria-hidden="true">{i.toUpperCase()}</span></a>
+    )}
+   </nav>
   </div>
  </div>
 </header>
@@ -120,17 +125,24 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' ||
 .menu .item-indisponivel { color: var(--nevoa); opacity: .58; cursor: not-allowed; user-select: none; }
 .menu a:hover { color: var(--ciano); }
 .menu a[aria-current='page'] { color: var(--ciano); border-bottom-color: var(--ciano); }
-.idioma-curto { display: none; }
-.idioma { position: absolute; right: var(--margem); top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 12px; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.idiomas { position: absolute; right: var(--margem); top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 2px; font-family: var(--mono); font-size: 12px; }
+.globo { color: var(--nevoa); margin-right: 6px; }
+.idiomas a, .idiomas .ativo { display: inline-grid; place-items: center; min-width: 32px; min-height: 32px; padding: 0 6px; border-radius: 8px; text-decoration: none; letter-spacing: .04em; }
+.idiomas a { color: var(--nevoa); }
+.idiomas a:hover { color: var(--papel); background: rgba(36, 82, 223, .25); }
+.idiomas .ativo { color: var(--ciano); background: rgba(130, 232, 242, .1); box-shadow: inset 0 0 0 1px rgba(130, 232, 242, .4); }
+.so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 @media (max-width: 640px) {
   .portal-header { --marca-max: 84px; --marca-min: 56px; --menu-altura: 48px; }
   .identidade { font-size: 30px; }
   .identidade :global(.descricao) { display: none; }
-  .linha-menu { justify-content: flex-start; padding-right: 52px; }
-  .idioma-longo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .idioma-curto { display: inline; border: 1px solid rgba(130, 232, 242, .4); border-radius: 8px; padding: 4px 7px; font-size: 11px; }
-  .menu { justify-content: flex-start; gap: 0 16px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .linha-menu { justify-content: flex-start; padding-right: 104px; }
+  .globo { display: none; }
+  /* Item desativado (em breve) fica oculto no celular para o menu caber inteiro. */
+  .menu .item-indisponivel { display: none; }
+  .idiomas a, .idiomas .ativo { min-width: 28px; padding: 0 4px; font-size: 11px; }
+  .menu { justify-content: flex-start; gap: 0 14px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .menu::-webkit-scrollbar { display: none; }
   .menu a, .menu .item-indisponivel { font-size: 11px; white-space: nowrap; }
 }

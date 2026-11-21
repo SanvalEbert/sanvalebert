@@ -243,7 +243,126 @@ const en: Textos = {
   },
 };
 
-const textos: Record<Idioma, Textos> = { pt, en };
+const es: Textos = {
+  palestras: {
+    titulo: 'Charlas y eventos · Sanval Ebert',
+    descricao:
+      'Charlas, mesas redondas y talleres de Sanval Ebert sobre Inteligencia Artificial en la educación, uso seguro de la IA y las profesiones del futuro.',
+    rotulo: 'Charlas y eventos',
+    chamada: ['Lleve la conversación sobre IA a', 'su evento.'],
+    resumoRotulo: 'Resumen.',
+    resumo:
+      'Charlas, mesas redondas y talleres para escuelas, universidades, empresas y eventos de tecnología, basados en investigación y en resultados reales en el aula.',
+    botao: 'Solicitar una propuesta',
+    temasRotulo: 'Temas',
+    temasTitulo: 'Cuatro conversaciones, cuatro públicos',
+    temas: [
+      {
+        publico: 'Docentes, coordinadores y directivos',
+        titulo: 'IA para quienes enseñan',
+        texto: 'Cómo usar la Inteligencia Artificial en la planificación, la evaluación y el seguimiento de los estudiantes.',
+      },
+      {
+        publico: 'Empresas e industria',
+        titulo: 'Uso seguro de la IA: datos, ética y ciberseguridad',
+        texto:
+          'Lo que una organización necesita resolver antes de adoptar IA: protección de datos, responsabilidad y confianza.',
+      },
+      {
+        publico: 'Universidades y eventos de innovación',
+        titulo: 'Agentes de IA en la educación: del laboratorio al podio mundial',
+        texto: 'La historia del Engage-Agent y lo que enseña sobre cómo formar equipos de IA.',
+      },
+      {
+        publico: 'Estudiantes y eventos de carrera',
+        titulo: 'IA, innovación y las profesiones del presente y del futuro',
+        texto: 'Cómo la IA cambia el trabajo y qué estudiar para acompañar ese cambio.',
+      },
+    ],
+    temaElo: 'Quiero esta charla',
+    videoRotulo: 'Vea una charla',
+    videoTitulo:
+      'Inteligencia Artificial, Innovación y la Construcción de las Profesiones del Presente y del Futuro (en portugués)',
+    videoElo: 'Ver en YouTube',
+    historicoRotulo: 'Historial',
+    historicoTitulo: 'Eventos en los que participé',
+    historico: [
+      {
+        quando: '2026 · Mesa redonda',
+        nome: 'Cognoscere em Foco, 2.ª edición',
+        detalhe: 'Agentes Generativos en la Investigación Científica en Educación',
+      },
+      {
+        quando: '2026 · Evento',
+        nome: 'Security Day del Sistema FIEB, 5.ª edición',
+        detalhe: 'Ciberseguridad, Inteligencia Artificial y formación de talentos',
+      },
+      {
+        quando: '2026 · Mentor',
+        nome: 'HackaStone 2026 y Dutch Conference on AI for Education',
+        detalhe: 'Vrije Universiteit Amsterdam, Países Bajos',
+      },
+      {
+        quando: '2026 · Entrevista',
+        nome: 'TV Bahia',
+        detalhe: '¿Estamos preparados para usar la Inteligencia Artificial con seguridad?',
+      },
+      {
+        quando: '2026 · Evento',
+        nome: 'Semana de la Computación CIMATEC, 5.ª edición',
+        detalhe: 'Evento de la carrera con 507 participantes',
+      },
+    ],
+    finalTitulo: ['¿Tiene un evento', 'próximamente?'],
+    finalTexto: 'Cuénteme la fecha, el público y el tema.',
+  },
+  estudantes: {
+    titulo: 'Resultados · Sanval Ebert',
+    descricao:
+      'Proyectos, reconocimientos y logros de mi trabajo en educación, investigación y tecnología, incluidos los resultados de estudiantes y egresados de las carreras que coordino.',
+    rotulo: 'Resultados',
+    chamada: ['Logros que conectan', 'educación, investigación y tecnología.'],
+    resumoRotulo: 'Resumen.',
+    resumo:
+      'Proyectos, reconocimientos y logros de mi trabajo en educación, investigación y tecnología, incluidos los resultados de estudiantes y egresados de las carreras que coordino.',
+    destaqueRotulo: 'HackaStone 2026 · Ámsterdam · Agentes de IA para la educación',
+    destaqueTitulo: ['Engage-Agent:', '2.º lugar mundial'],
+    destaqueTexto:
+      'Un agente de IA que sigue lo que el estudiante hace en el material del curso, estima su dominio de cada competencia y, al detectar dificultades, arma un camino de refuerzo y avisa al docente. Participaron 51 universidades y 27 finalistas de 11 países.',
+    timeRotulo: 'Equipo',
+    time: 'Victor Barreto Andrade Gonçalves, Amanda Lins, Átila Mascarenhas, Lucca Torres Badaro Silvani y Rafael Cezimbra.',
+    papelRotulo: 'Mi papel',
+    papel: 'Mentor del equipo.',
+    fig1: 'Premiación del Engage-Agent por el 2.º lugar mundial, en Ámsterdam.',
+    outrosRotulo: 'También en el HackaStone 2026',
+    outrosTitulo: 'Tres equipos de la universidad en la final',
+    outros: [
+      {
+        rotulo: 'Finalista mundial',
+        titulo: 'QuantumVR',
+        texto: 'Equipo de la Universidad SENAI CIMATEC entre los 27 finalistas, con artículo aceptado.',
+      },
+      {
+        rotulo: 'Copa de Colaboración Internacional',
+        titulo: 'SafeHeight',
+        texto: 'Equipo de la Prof. Ingrid Winkler, en alianza con la University of Florida.',
+      },
+    ],
+    indicadoresRotulo: 'Indicadores',
+    indicadoresTitulo: 'Experiencias en números',
+    indicadores: [
+      {
+        valor: '507',
+        texto: 'participantes en la 5.ª Semana de la Computación, con 47 voluntarios y más de 40 actividades.',
+      },
+    ],
+    finalTitulo: ['¿Quiere llevar esta experiencia a', 'su institución?'],
+    finalTexto: 'Charlas y formaciones sobre cómo preparar equipos para competencias y proyectos de IA.',
+    finalBotao: 'Hable conmigo',
+  },
+};
+
+const textos: Record<Idioma, Textos> = { pt, en, es };
 
 export function tp(idioma: Idioma): Textos {
   return textos[idioma];

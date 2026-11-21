@@ -71,7 +71,7 @@ export default async function handler(req, res) {
     try { corpo = JSON.parse(corpo); } catch { corpo = null; }
   }
   const pergunta = typeof corpo?.pergunta === 'string' ? corpo.pergunta.trim() : '';
-  const idioma = corpo?.idioma === 'en' ? 'English' : 'Português do Brasil';
+  const idioma = { en: 'English', es: 'Español' }[corpo?.idioma] ?? 'Português do Brasil';
   if (!pergunta || pergunta.length > 500) return resposta(res, 400, { erro: 'invalid_question' });
 
   const referencias = (Array.isArray(corpo?.referencias) ? corpo.referencias : [])

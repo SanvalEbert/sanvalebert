@@ -16,6 +16,13 @@ const paginas = [
   { rota: '/en/', idioma: 'en' },
   { rota: '/en/talks/', idioma: 'en' },
   { rota: '/en/students/', idioma: 'en' },
+  { rota: '/es/', idioma: 'es' },
+  { rota: '/es/investigacion/', idioma: 'es' },
+  { rota: '/es/resultados/', idioma: 'es' },
+  { rota: '/es/charlas/', idioma: 'es' },
+  { rota: '/es/servicios/', idioma: 'es' },
+  { rota: '/es/privacidad/', idioma: 'es' },
+  { rota: '/es/contratar/', idioma: 'es' },
 ];
 
 // O widget do VLibras vem de um servidor externo; nos testes ele é bloqueado
@@ -59,11 +66,39 @@ test('o botão de idioma leva à mesma página no outro idioma e volta', async (
   await page.getByRole('link', { name: 'English' }).click();
   await expect(page).toHaveURL(/\/en\/talks\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.getByRole('link', { name: 'Español' }).click();
+  await expect(page).toHaveURL(/\/es\/charlas\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   await page.getByRole('link', { name: 'Português' }).click();
   await expect(page).toHaveURL(/\/palestras\/$/);
 });
 
+test('seletor de idioma mostra as siglas PT, EN e ES com o idioma atual marcado', async ({ page }) => {
+  for (const [rota, atual, rotulo] of [['/', 'PT', 'Idioma'], ['/en/', 'EN', 'Language'], ['/es/', 'ES', 'Idioma']]) {
+    await abrir(page, rota);
+    const seletor = page.getByRole('navigation', { name: rotulo, exact: true });
+    await expect(seletor).toContainText('PT');
+    await expect(seletor).toContainText('EN');
+    await expect(seletor).toContainText('ES');
+    await expect(seletor.locator('[aria-current="true"]')).toContainText(atual);
+    await expect(seletor.getByRole('link')).toHaveCount(2);
+  }
+});
+
+test('a versão em espanhol traduz a página inicial, os destaques e o San', async ({ page }) => {
+  await abrir(page, '/es/');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('quienes enseñan');
+  await expect(page.getByRole('heading', { level: 2, name: 'Sobre mí' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Destacados' })).toContainText('BATV');
+  await expect(page.getByRole('heading', { level: 2, name: 'Consejos y formación' })).toBeVisible();
+  await expect(page.getByRole('article', { name: 'Estudie computación en la Universidad SENAI CIMATEC' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Pregunte a San/ })).toBeVisible();
+  await expect(page.locator('main')).not.toContainText(/Conheça|Pesquisa e publicações|Dicas e treinamentos/);
+});
+
 test('Tech Services aparece desabilitado no menu, sem link navegável nos dois idiomas', async ({ page }) => {
+  // No celular o item desativado fica oculto para o menu caber; a regra vale para telas maiores.
+  test.skip((page.viewportSize()?.width ?? 0) <= 640, 'item oculto no celular');
   await abrir(page, '/');
   const menu = page.getByRole('navigation', { name: 'Menu principal' });
   await expect(menu.getByRole('link', { name: 'Tech Services', exact: true })).toHaveAttribute('aria-disabled', 'true');
@@ -305,7 +340,7 @@ test('Serviços mantém idioma, modalidades e navegação em inglês', async ({ 
   await expect(page).toHaveURL(/\/en\/services\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('education and technology.');
   await expect(page.locator('.grade-servicos article')).toHaveCount(4);
-  await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Tech Services' })).toHaveAttribute('aria-disabled', 'true');
+  if ((page.viewportSize()?.width ?? 0) > 640) await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Tech Services' })).toHaveAttribute('aria-disabled', 'true');
 });
 test('política de privacidade está acessível pelo rodapé nas duas línguas', async ({ page }) => {
   await abrir(page, '/servicos/');

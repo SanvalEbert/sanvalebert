@@ -1,7 +1,7 @@
 # Sanval Ebert · Portal
 
 Site de Sanval Ebert: identidade profissional, pesquisa, resultados dos estudantes, palestras e cursos.
-Português como idioma principal, com versão em inglês em `/en/`.
+Português como idioma principal, com versões em inglês (`/en/`) e espanhol (`/es/`).
 
 ## Como rodar
 
@@ -15,7 +15,7 @@ npm test         # tipos, build, links, navegação e acessibilidade
 
 | O quê | Onde |
 | --- | --- |
-| Textos em português e inglês | `src/i18n/textos.ts` |
+| Textos em português, inglês e espanhol | `src/i18n/textos.ts`, `src/i18n/paginas.ts` e `tr()` em `src/i18n/tr.ts` |
 | Menu, redes e contato | `src/data/site.ts` |
 | Cores, tipografia e componentes visuais | `src/styles/global.css` |
 | Cabeçalho, rodapé e página inicial | `src/components/` |

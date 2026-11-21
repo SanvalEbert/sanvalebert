@@ -1,4 +1,4 @@
-// Textos do site em português e inglês.
+// Textos do site em português, inglês e espanhol.
 // Para corrigir uma frase, altere aqui. As duas versões devem ter as mesmas chaves.
 
 import type { Idioma, Pagina } from '../data/site';
@@ -125,7 +125,67 @@ const en: Textos = {
   },
 };
 
-const textos: Record<Idioma, Textos> = { pt, en };
+const es: Textos = {
+  site: {
+    nome: 'Sanval Ebert',
+    selo: 'IA para quienes enseñan',
+    assinatura: 'Educación y tecnología',
+    edicao: 'Edición 2026',
+    local: 'Salvador, Bahía, Brasil',
+    pular: 'Saltar al contenido',
+    contratar: 'Contratar',
+    outroIdioma: 'Português',
+    outroIdiomaAviso: 'Leia esta página em português',
+    emBreve: 'próximamente',
+    referencias: 'Referencias',
+    menuPrincipal: 'Menú principal',
+    fotoEmBreve: 'Foto próximamente',
+    voltarAoTopo: 'Volver arriba',
+    tabela: 'Tabla',
+  },
+  menu: {
+    inicio: 'Inicio',
+    sobre: 'Sobre mí',
+    pesquisa: 'Investigación',
+    estudantes: 'Resultados',
+    palestras: 'Charlas',
+    servicos: 'Tech Services',
+    privacidade: 'Privacidad y Seguridad',
+    cursos: 'Cursos',
+    radar: 'Radar',
+    contratar: 'Contratar',
+  },
+  inicio: {
+    titulo: 'Sanval Ebert · Inteligencia Artificial para quienes enseñan',
+    descricao:
+      'Profesor, investigador y coordinador de carreras en la Universidad SENAI CIMATEC. Investigación, logros de los estudiantes y recomendaciones sobre tecnología y educación.',
+    chamada: ['Inteligencia Artificial para', 'quienes enseñan.'],
+    resumo:
+      'Investigador, coordinador y profesor. Conecto educación y tecnología con investigación, emprendimiento y negocios.',
+    credenciais: [
+      'PhD',
+      'Universidad SENAI CIMATEC',
+      'Coordinador de Ingeniería de Computación e IA',
+      'IA, Cloud Computing y Ciberseguridad',
+      'Investigador en IA en la Educación',
+      'Cisco Academy',
+      'AWS Academy',
+      'Fortinet Academy',
+    ],
+    verTrajetoria: 'Ver trayectoria',
+    destaquesRotulo: 'Destacados',
+    destaquesTitulo: 'Logros y participaciones recientes',
+    noticiasRotulo: 'Para aprender',
+    noticiasTitulo: 'Consejos y formación',
+    noticiasTexto: 'Plataformas que recomiendo para que profesionales y estudiantes amplíen sus habilidades en tecnologías emergentes, desde el primer curso hasta la certificación.',
+    noticiasElo: 'Acceder',
+  },
+  rodape: {
+    direitos: '© 2026 Sanval Ebert',
+  },
+};
+
+const textos: Record<Idioma, Textos> = { pt, en, es };
 
 export function t(idioma: Idioma): Textos {
   return textos[idioma];

@@ -1,15 +1,16 @@
 ---
+import { tr } from '../i18n/tr';
 import { registrosAmsterdam, type Idioma } from '../data/site';
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
 ---
 
-<div class="linha registros-amsterdam" aria-label={idioma === 'pt' ? 'Registros de Amsterdã nas redes sociais' : 'Amsterdam records on social media'}>
+<div class="linha registros-amsterdam" aria-label={tr(idioma, { pt: 'Registros de Amsterdã nas redes sociais', en: 'Amsterdam records on social media', es: 'Registros de Ámsterdam en redes sociales' })}>
   <a class="italico" href={registrosAmsterdam.instagram}>
-    {idioma === 'pt' ? 'Ver registros no Instagram' : 'See photos on Instagram'} <span aria-hidden="true">↗</span>
+    {tr(idioma, { pt: 'Ver registros no Instagram', en: 'See photos on Instagram', es: 'Ver fotos en Instagram' })} <span aria-hidden="true">↗</span>
   </a>
   <a class="italico" href={registrosAmsterdam.linkedin}>
-    {idioma === 'pt' ? 'Ver a conquista no LinkedIn' : 'Read about the achievement on LinkedIn'} <span aria-hidden="true">↗</span>
+    {tr(idioma, { pt: 'Ver a conquista no LinkedIn', en: 'Read about the achievement on LinkedIn', es: 'Ver el logro en LinkedIn' })} <span aria-hidden="true">↗</span>
   </a>
 </div>
 

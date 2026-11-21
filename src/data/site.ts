@@ -1,28 +1,31 @@
 // Dados gerais do site: idiomas, menu, redes e contato.
 
-export const idiomas = ['pt', 'en'] as const;
+export const idiomas = ['pt', 'en', 'es'] as const;
 export type Idioma = (typeof idiomas)[number];
 
 export const idiomaPadrao: Idioma = 'pt';
 
 /** Código usado no atributo lang do HTML. */
-export const codigoHtml: Record<Idioma, string> = { pt: 'pt-BR', en: 'en' };
+export const codigoHtml: Record<Idioma, string> = { pt: 'pt-BR', en: 'en', es: 'es' };
+
+/** Nome de cada idioma escrito nele mesmo, para o seletor de idioma. */
+export const nomeIdioma: Record<Idioma, string> = { pt: 'Português', en: 'English', es: 'Español' };
 
 /**
  * Páginas do site. `pronta: false` mantém o item no menu, mas sem link,
  * até a página ser implementada.
  */
 export const paginas = {
-  inicio: { rota: { pt: '', en: 'en/' }, pronta: true },
-  sobre: { rota: { pt: 'sobre/', en: 'en/about/' }, pronta: false },
-  pesquisa: { rota: { pt: 'pesquisa/', en: 'en/research/' }, pronta: true },
-  estudantes: { rota: { pt: 'estudantes/', en: 'en/students/' }, pronta: true },
-  palestras: { rota: { pt: 'palestras/', en: 'en/talks/' }, pronta: true },
-  servicos: { rota: { pt: 'servicos/', en: 'en/services/' }, pronta: false },
-  privacidade: { rota: { pt: 'privacidade/', en: 'en/privacy/' }, pronta: true },
-  cursos: { rota: { pt: 'cursos/', en: 'en/courses/' }, pronta: false },
-  radar: { rota: { pt: 'radar/', en: 'en/radar/' }, pronta: false },
-  contratar: { rota: { pt: 'contratar/', en: 'en/hire/' }, pronta: true },
+  inicio: { rota: { pt: '', en: 'en/', es: 'es/' }, pronta: true },
+  sobre: { rota: { pt: 'sobre/', en: 'en/about/', es: 'es/sobre-mi/' }, pronta: false },
+  pesquisa: { rota: { pt: 'pesquisa/', en: 'en/research/', es: 'es/investigacion/' }, pronta: true },
+  estudantes: { rota: { pt: 'estudantes/', en: 'en/students/', es: 'es/resultados/' }, pronta: true },
+  palestras: { rota: { pt: 'palestras/', en: 'en/talks/', es: 'es/charlas/' }, pronta: true },
+  servicos: { rota: { pt: 'servicos/', en: 'en/services/', es: 'es/servicios/' }, pronta: false },
+  privacidade: { rota: { pt: 'privacidade/', en: 'en/privacy/', es: 'es/privacidad/' }, pronta: true },
+  cursos: { rota: { pt: 'cursos/', en: 'en/courses/', es: 'es/cursos/' }, pronta: false },
+  radar: { rota: { pt: 'radar/', en: 'en/radar/', es: 'es/radar/' }, pronta: false },
+  contratar: { rota: { pt: 'contratar/', en: 'en/hire/', es: 'es/contratar/' }, pronta: true },
 } as const;
 
 export type Pagina = keyof typeof paginas;

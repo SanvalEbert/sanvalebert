@@ -1,11 +1,12 @@
 ---
+import { tr } from '../i18n/tr';
 import Base from '../layouts/Base.astro';
 import { contatoWhatsApp, endereco, link, type Idioma } from '../data/site';
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
-const pt = idioma === 'pt';
-const texto = pt ? {
+const texto = tr(idioma, {
+  pt: {
   titulo: 'Serviços e experiências de aprendizagem · Sanval Ebert',
   descricao: 'Palestras, treinamentos, minicursos e workshops em IA, educação e tecnologias emergentes com Sanval Ebert.',
   rotulo: 'TechEdu · Serviços',
@@ -33,7 +34,8 @@ const texto = pt ? {
   chamada: 'Vamos construir uma experiência de aprendizagem?',
   descricaoFinal: 'Conte sua necessidade. O primeiro contato será feito pelo WhatsApp; o cadastro de interessados com Google será disponibilizado em uma próxima etapa.',
   transparencia: 'Nesta fase, o site não coleta seus dados de cadastro automaticamente ao clicar em “Tenho interesse”. Você decide o que enviar no WhatsApp.',
-} : {
+},
+  en: {
   titulo: 'Learning services and experiences · Sanval Ebert',
   descricao: 'Talks, training, short courses and workshops on AI, education and emerging technologies with Sanval Ebert.',
   rotulo: 'TechEdu · Services',
@@ -61,8 +63,38 @@ const texto = pt ? {
   chamada: 'Shall we design a learning experience?',
   descricaoFinal: 'Tell us what you need. Initial contact is through WhatsApp; interest registration with Google will be offered in a later phase.',
   transparencia: 'At this stage, clicking “I am interested” does not automatically register your personal details on this website. You choose what to share on WhatsApp.',
-};
-const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURIComponent(pt ? `Olá, Sanval! Tenho interesse em ${assunto.toLowerCase()} pelo TechEdu. Gostaria de conversar sobre formatos e disponibilidade.` : `Hello Sanval! I am interested in ${assunto.toLowerCase()} via TechEdu. I would like to discuss options and availability.`)}`;
+},
+  es: {
+  titulo: 'Servicios y experiencias de aprendizaje · Sanval Ebert',
+  descricao: 'Charlas, formaciones, minicursos y talleres sobre IA, educación y tecnologías emergentes con Sanval Ebert.',
+  rotulo: 'TechEdu · Servicios',
+  titulo1: 'Experiencias que conectan',
+  titulo2: 'educación y tecnología.',
+  resumo: 'Charlas, formaciones y actividades prácticas para docentes, equipos, instituciones y organizaciones que desean comprender y aplicar la Inteligencia Artificial.',
+  explorar: 'Explorar modalidades',
+  contato: 'Solicitar una propuesta',
+  formatos: 'Modalidades',
+  formatosTitulo: 'Elija la experiencia que tiene sentido para usted',
+  publico: 'Públicos',
+  artigos: [
+    { id:'palestras', numero:'01', nome:'Charlas', publico:'Eventos, escuelas, universidades y organizaciones', texto:'Conversaciones basadas en investigación sobre IA, innovación, ciberseguridad, educación y carreras.', detalhes:'Conocer temas y charlas', interesse:'Me interesa una charla' },
+    { id:'treinamentos', numero:'02', nome:'Formaciones', publico:'Docentes, directivos y empresas', texto:'Recorridos de aprendizaje a medida de los objetivos institucionales, aplicando la IA al trabajo, la enseñanza y la gestión.', detalhes:'Me interesa una formación', interesse:'Me interesa una formación' },
+    { id:'minicursos', numero:'03', nome:'Minicursos', publico:'Profesionales, docentes y estudiantes', texto:'Aprendizaje enfocado en competencias, con ejercicios prácticos y una introducción a herramientas y conceptos.', detalhes:'Me interesa un minicurso', interesse:'Me interesa un minicurso' },
+    { id:'workshops', numero:'04', nome:'Talleres', publico:'Equipos, eventos y comunidades de aprendizaje', texto:'Actividades colaborativas y prácticas, desafíos y soluciones para problemas reales de enseñanza y aprendizaje.', detalhes:'Me interesa un taller', interesse:'Me interesa un taller' },
+  ],
+  caminhoRotulo: 'Cómo funciona',
+  caminhoTitulo: 'De una idea a una experiencia de aprendizaje',
+  etapas: [
+    { numero:'01', nome:'Elija una modalidad', texto:'Explore las opciones y seleccione la que responde a sus necesidades.' },
+    { numero:'02', nome:'Cuéntenos lo que necesita', texto:'Comparta el público, el tema, el formato y la fecha prevista, si ya la conoce.' },
+    { numero:'03', nome:'Reciba una propuesta', texto:'Alineamos objetivos de aprendizaje, carga horaria, formato y disponibilidad.' },
+  ],
+  chamada: '¿Diseñamos una experiencia de aprendizaje?',
+  descricaoFinal: 'Cuéntenos lo que necesita. El contacto inicial es por WhatsApp; el registro de interés con Google se ofrecerá en una etapa posterior.',
+  transparencia: 'En esta etapa, hacer clic en “Me interesa” no registra automáticamente sus datos personales en este sitio. Usted decide qué compartir por WhatsApp.',
+},
+});
+const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURIComponent(tr(idioma, { pt: `Olá, Sanval! Tenho interesse em ${assunto.toLowerCase()} pelo TechEdu. Gostaria de conversar sobre formatos e disponibilidade.`, en: `Hello Sanval! I am interested in ${assunto.toLowerCase()} via TechEdu. I would like to discuss options and availability.`, es: `¡Hola, Sanval! Me interesa ${assunto.toLowerCase()} de TechEdu. Me gustaría conversar sobre formatos y disponibilidad.` }))}`;
 ---
 
 <Base idioma={idioma} pagina="servicos" titulo={texto.titulo} descricao={texto.descricao}>
@@ -97,9 +129,9 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
             <a class="botao" href={servico.id === 'palestras' ? link('palestras', idioma) : urlInteresse(servico.nome)}>
               {servico.detalhes}
             </a>
-            {servico.id === 'palestras' && <a class="italico" href={urlInteresse(servico.nome)}>{pt ? 'Tenho interesse' : 'I am interested'}</a>}
+            {servico.id === 'palestras' && <a class="italico" href={urlInteresse(servico.nome)}>{tr(idioma, { pt: 'Tenho interesse', en: 'I am interested', es: 'Me interesa' })}</a>}
             <button type="button" class="botao botao-piloto" hidden data-cadastro-modalidade-link={servico.id} data-nome-servico={servico.nome}>
-              {pt ? 'Registrar interesse com Google · teste' : 'Register interest with Google · test'}
+              {tr(idioma, { pt: 'Registrar interesse com Google · teste', en: 'Register interest with Google · test', es: 'Registrar interés con Google · prueba' })}
             </button>
           </div>
         </article>
@@ -109,37 +141,31 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
 
   <section class="conteudo secao painel-piloto" data-techedu-piloto data-idioma={idioma} hidden aria-labelledby="piloto-titulo">
     <div class="celula coluna">
-      <p class="rotulo destaque">{pt ? 'Cadastro experimental · acesso de teste' : 'Early access · test registration'}</p>
-      <h2 id="piloto-titulo">{pt ? 'Seus interesses no TechEdu' : 'Your interests in TechEdu'}</h2>
-      <p>{pt
-        ? 'Apenas para participantes de teste autorizados pelo Google. Para registrar interesse, selecione uma modalidade acima. O Google identifica nome e e-mail; registramos somente seu identificador, a modalidade e a data. Sem CPF, telefone ou mensagens promocionais.'
-        : 'For Google-authorized test participants only. Choose a service above to register interest. Google identifies your name and email; we store only your identifier, selected service and date. No national ID, phone number or promotional messages.'}</p>
+      <p class="rotulo destaque">{tr(idioma, { pt: 'Cadastro experimental · acesso de teste', en: 'Early access · test registration', es: 'Acceso experimental · registro de prueba' })}</p>
+      <h2 id="piloto-titulo">{tr(idioma, { pt: 'Seus interesses no TechEdu', en: 'Your interests in TechEdu', es: 'Sus intereses en TechEdu' })}</h2>
+      <p>{tr(idioma, { pt: 'Apenas para participantes de teste autorizados pelo Google. Para registrar interesse, selecione uma modalidade acima. O Google identifica nome e e-mail; registramos somente seu identificador, a modalidade e a data. Sem CPF, telefone ou mensagens promocionais.', en: 'For Google-authorized test participants only. Choose a service above to register interest. Google identifies your name and email; we store only your identifier, selected service and date. No national ID, phone number or promotional messages.', es: 'Solo para participantes de prueba autorizados por Google. Elija un servicio arriba para registrar su interés. Google identifica su nombre y correo; guardamos solo su identificador, el servicio elegido y la fecha. Sin documento de identidad, teléfono ni mensajes promocionales.' })}</p>
       <p class="mensagem-piloto" data-cadastro-status role="status" aria-live="polite"></p>
       <div data-cadastro-painel hidden class="conta-piloto">
-        <p><strong>{pt ? 'Conta Google conectada:' : 'Connected Google account:'}</strong> <span data-cadastro-email></span></p>
-        <h3>{pt ? 'Registros de interesse' : 'Interest records'}</h3>
+        <p><strong>{tr(idioma, { pt: 'Conta Google conectada:', en: 'Connected Google account:', es: 'Cuenta de Google conectada:' })}</strong> <span data-cadastro-email></span></p>
+        <h3>{tr(idioma, { pt: 'Registros de interesse', en: 'Interest records', es: 'Registros de interés' })}</h3>
         <ul class="lista-interesses" data-cadastro-lista></ul>
-        <button class="botao-texto-privacidade" data-cadastro-sair type="button">{pt ? 'Sair da conta' : 'Sign out'}</button>
+        <button class="botao-texto-privacidade" data-cadastro-sair type="button">{tr(idioma, { pt: 'Sair da conta', en: 'Sign out', es: 'Cerrar sesión' })}</button>
       </div>
-      <p class="aviso-piloto">{pt
-        ? 'Esta funcionalidade ainda está em validação. O catálogo continua público e o contato comercial permanece disponível pelo WhatsApp.'
-        : 'This feature is under validation. The catalog remains public and WhatsApp is still available for enquiries.'}
-      <a href={link('privacidade', idioma)}>{pt ? 'Política de Privacidade e Segurança' : 'Privacy and Security Policy'}</a></p>
+      <p class="aviso-piloto">{tr(idioma, { pt: 'Esta funcionalidade ainda está em validação. O catálogo continua público e o contato comercial permanece disponível pelo WhatsApp.', en: 'This feature is under validation. The catalog remains public and WhatsApp is still available for enquiries.', es: 'Esta funcionalidad aún está en validación. El catálogo sigue siendo público y el contacto por WhatsApp continúa disponible.' })}
+      <a href={link('privacidade', idioma)}>{tr(idioma, { pt: 'Política de Privacidade e Segurança', en: 'Privacy and Security Policy', es: 'Política de Privacidad y Seguridad' })}</a></p>
     </div>
   </section>
 
   <dialog class="modal-cadastro" data-cadastro-dialogo aria-labelledby="modal-cadastro-titulo">
     <div class="coluna corpo-modal">
-      <p class="rotulo destaque">{pt ? 'TechEdu · cadastro mínimo' : 'TechEdu · minimal registration'}</p>
-      <h2 id="modal-cadastro-titulo">{pt ? 'Registrar interesse com Google' : 'Register interest with Google'}</h2>
-      <p><strong>{pt ? 'Serviço:' : 'Service:'}</strong> <span data-cadastro-modalidade></span></p>
-      <p>{pt
-        ? 'Ao continuar, você autoriza a identificação pelo Google (nome, e-mail e identificador da conta) e solicita que seja registrado seu interesse nesta modalidade, com a data. Não acessamos Gmail, Drive ou contatos e não enviamos marketing automaticamente.'
-        : 'By continuing, you sign in with Google (name, email and account ID) and request registration of your interest in this service, including the date. We do not access Gmail, Drive or contacts, and do not send marketing automatically.'}</p>
-      <a class="italico" href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança' : 'Read the Privacy and Security Policy'}</a>
+      <p class="rotulo destaque">{tr(idioma, { pt: 'TechEdu · cadastro mínimo', en: 'TechEdu · minimal registration', es: 'TechEdu · registro mínimo' })}</p>
+      <h2 id="modal-cadastro-titulo">{tr(idioma, { pt: 'Registrar interesse com Google', en: 'Register interest with Google', es: 'Registrar interés con Google' })}</h2>
+      <p><strong>{tr(idioma, { pt: 'Serviço:', en: 'Service:', es: 'Servicio:' })}</strong> <span data-cadastro-modalidade></span></p>
+      <p>{tr(idioma, { pt: 'Ao continuar, você autoriza a identificação pelo Google (nome, e-mail e identificador da conta) e solicita que seja registrado seu interesse nesta modalidade, com a data. Não acessamos Gmail, Drive ou contatos e não enviamos marketing automaticamente.', en: 'By continuing, you sign in with Google (name, email and account ID) and request registration of your interest in this service, including the date. We do not access Gmail, Drive or contacts, and do not send marketing automatically.', es: 'Al continuar, usted inicia sesión con Google (nombre, correo e identificador de la cuenta) y solicita el registro de su interés en este servicio, con la fecha. No accedemos a Gmail, Drive ni contactos, y no enviamos publicidad automáticamente.' })}</p>
+      <a class="italico" href={link('privacidade', idioma)}>{tr(idioma, { pt: 'Leia a Política de Privacidade e Segurança', en: 'Read the Privacy and Security Policy', es: 'Leer la Política de Privacidad y Seguridad' })}</a>
       <div class="linha botoes-modal">
-        <button type="button" class="botao" data-cadastro-continuar>{pt ? 'Continuar com Google' : 'Continue with Google'}</button>
-        <button type="button" class="botao-cancelar" data-cadastro-cancelar>{pt ? 'Cancelar' : 'Cancel'}</button>
+        <button type="button" class="botao" data-cadastro-continuar>{tr(idioma, { pt: 'Continuar com Google', en: 'Continue with Google', es: 'Continuar con Google' })}</button>
+        <button type="button" class="botao-cancelar" data-cadastro-cancelar>{tr(idioma, { pt: 'Cancelar', en: 'Cancel', es: 'Cancelar' })}</button>
       </div>
     </div>
   </dialog>
@@ -159,7 +185,7 @@ const urlInteresse = (assunto: string) => `${contatoWhatsApp}?text=${encodeURICo
       <h2 id="conversa-titulo">{texto.chamada}</h2>
       <p>{texto.descricaoFinal}</p>
       <div><a class="botao botao-noite" href={link('contratar', idioma)}>{texto.contato}</a></div>
-      <p class="privacidade">{texto.transparencia} <a href={link('privacidade', idioma)}>{pt ? 'Leia a Política de Privacidade e Segurança.' : 'Read the Privacy and Security Policy.'}</a></p>
+      <p class="privacidade">{texto.transparencia} <a href={link('privacidade', idioma)}>{tr(idioma, { pt: 'Leia a Política de Privacidade e Segurança.', en: 'Read the Privacy and Security Policy.', es: 'Lea la Política de Privacidad y Seguridad.' })}</a></p>
     </div>
   </section>
   <script is:inline data-interest-module={endereco('js/techedu-interesses.mjs')}>

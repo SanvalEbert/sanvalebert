@@ -1,4 +1,5 @@
 ---
+import { tr } from '../i18n/tr';
 // Carrossel: uma faixa com rolagem horizontal e botões de anterior e próximo.
 // Funciona sem JavaScript (rolagem com o dedo ou o trackpad); o script liga os botões.
 // Com `automatico`, os itens passam sozinhos em ciclo, com botão de pausa (WCAG 2.2.2).
@@ -17,17 +18,16 @@ interface Props {
 }
 
 const { idioma, rotulo, modo = 'cheio', automatico } = Astro.props;
-const pt = idioma === 'pt';
 const rotulos = {
-  pausar: pt ? 'Pausar a passagem automática' : 'Pause automatic rotation',
-  continuar: pt ? 'Retomar a passagem automática' : 'Resume automatic rotation',
+  pausar: tr(idioma, { pt: 'Pausar a passagem automática', en: 'Pause automatic rotation', es: 'Pausar el pase automático' }),
+  continuar: tr(idioma, { pt: 'Retomar a passagem automática', en: 'Resume automatic rotation', es: 'Reanudar el pase automático' }),
 };
 ---
 
 <div
   class={`carrossel ${modo}`}
   role="region"
-  aria-roledescription={pt ? 'carrossel' : 'carousel'}
+  aria-roledescription={tr(idioma, { pt: 'carrossel', en: 'carousel', es: 'carrusel' })}
   aria-label={rotulo}
   data-carrossel
   data-automatico={automatico}
@@ -38,9 +38,9 @@ const rotulos = {
     <slot />
   </ul>
   <div class="controles" hidden>
-    <button type="button" data-anterior aria-label={pt ? 'Anterior' : 'Previous'}><span aria-hidden="true">←</span></button>
+    <button type="button" data-anterior aria-label={tr(idioma, { pt: 'Anterior', en: 'Previous', es: 'Anterior' })}><span aria-hidden="true">←</span></button>
     <p class="contagem" aria-live="polite"><span data-atual>1</span> / <span data-total>1</span></p>
-    <button type="button" data-proximo aria-label={pt ? 'Próximo' : 'Next'}><span aria-hidden="true">→</span></button>
+    <button type="button" data-proximo aria-label={tr(idioma, { pt: 'Próximo', en: 'Next', es: 'Siguiente' })}><span aria-hidden="true">→</span></button>
     {automatico && (
       <button type="button" class="pausa" data-pausa aria-label={rotulos.pausar} aria-pressed="false" hidden>
         <svg class="icone-pausar" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" rx="1" fill="currentColor" /><rect x="8.5" y="1" width="3.5" height="12" rx="1" fill="currentColor" /></svg>

@@ -1,33 +1,41 @@
 ---
+import { tr } from '../i18n/tr';
 import Base from '../layouts/Base.astro';
 import { contatoWhatsApp, type Idioma } from '../data/site';
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
-const pt = idioma === 'pt';
-const titulo = pt ? 'Contratar palestras e formações · Sanval Ebert' : 'Book talks and training · Sanval Ebert';
-const descricao = pt ? 'Contrate palestras, minicursos e formação de professores sobre Inteligência Artificial, educação e tecnologia com Sanval Ebert.' : 'Book talks, short courses and teacher training on Artificial Intelligence, education and technology with Sanval Ebert.';
-const servicos = pt ? [
+const titulo = tr(idioma, { pt: 'Contratar palestras e formações · Sanval Ebert', en: 'Book talks and training · Sanval Ebert', es: 'Contratar charlas y formaciones · Sanval Ebert' });
+const descricao = tr(idioma, { pt: 'Contrate palestras, minicursos e formação de professores sobre Inteligência Artificial, educação e tecnologia com Sanval Ebert.', en: 'Book talks, short courses and teacher training on Artificial Intelligence, education and technology with Sanval Ebert.', es: 'Contrate charlas, minicursos y formación docente sobre Inteligencia Artificial, educación y tecnología con Sanval Ebert.' });
+const servicos = tr(idioma, {
+  pt: [
   { nome: 'Palestras', texto: 'Inteligência Artificial, educação e tecnologias emergentes para o público do seu evento.' },
   { nome: 'Minicursos e workshops', texto: 'Encontros práticos para explorar ferramentas e aplicações de IA na educação e no trabalho.' },
   { nome: 'Formação de professores', texto: 'Formação para equipes docentes, conectando IA ao planejamento, à avaliação e ao acompanhamento dos estudantes.' },
-] : [
+],
+  en: [
   { nome: 'Talks', texto: 'Artificial Intelligence, education and emerging technologies for your event audience.' },
   { nome: 'Short courses and workshops', texto: 'Practical sessions exploring AI tools and applications in education and work.' },
   { nome: 'Teacher training', texto: 'Training for teaching teams connecting AI to planning, assessment and student follow-up.' },
-];
+],
+  es: [
+  { nome: 'Charlas', texto: 'Inteligencia Artificial, educación y tecnologías emergentes para el público de su evento.' },
+  { nome: 'Minicursos y talleres', texto: 'Encuentros prácticos para explorar herramientas y aplicaciones de IA en la educación y en el trabajo.' },
+  { nome: 'Formación docente', texto: 'Formación para equipos docentes, conectando la IA con la planificación, la evaluación y el seguimiento de los estudiantes.' },
+],
+});
 ---
 <Base idioma={idioma} pagina="contratar" titulo={titulo} descricao={descricao}>
   <section class="conteudo secao coluna">
-    <h1 class="titulo-pagina">{pt ? 'Palestras e formações para' : 'Talks and training for'} <em>{pt ? 'sua instituição.' : 'your institution.'}</em></h1>
-    <p class="abertura">{pt ? 'Vamos conversar sobre o que seu público precisa aprender e construir uma proposta para seu evento ou sua equipe.' : 'Let us discuss what your audience needs to learn and shape a proposal for your event or team.'}</p>
+    <h1 class="titulo-pagina">{tr(idioma, { pt: 'Palestras e formações para', en: 'Talks and training for', es: 'Charlas y formaciones para' })} <em>{tr(idioma, { pt: 'sua instituição.', en: 'your institution.', es: 'su institución.' })}</em></h1>
+    <p class="abertura">{tr(idioma, { pt: 'Vamos conversar sobre o que seu público precisa aprender e construir uma proposta para seu evento ou sua equipe.', en: 'Let us discuss what your audience needs to learn and shape a proposal for your event or team.', es: 'Conversemos sobre lo que su público necesita aprender y armemos una propuesta para su evento o su equipo.' })}</p>
   </section>
   <section class="conteudo secao" aria-labelledby="servicos">
-    <div class="cabeca-secao"><h2 id="servicos">{pt ? 'Como posso contribuir' : 'How I can help'}</h2></div>
+    <div class="cabeca-secao"><h2 id="servicos">{tr(idioma, { pt: 'Como posso contribuir', en: 'How I can help', es: 'Cómo puedo contribuir' })}</h2></div>
     <div class="grade">{servicos.map(s => <article class="celula"><h3>{s.nome}</h3><p>{s.texto}</p></article>)}</div>
   </section>
   <section class="conteudo secao coluna" aria-labelledby="proposta">
-    <h2 id="proposta">{pt ? 'Conte o que você está planejando' : 'Tell me what you are planning'}</h2>
-    <p>{pt ? 'Para começarmos, envie o tema de interesse, o público, a data prevista e se o encontro será presencial ou on-line. A conversa inicial acontece pelo WhatsApp.' : 'To get started, send the topic, audience, expected date and whether the session will be in person or online. Our first conversation takes place on WhatsApp.'}</p>
-    <div><a class="botao" href={contatoWhatsApp}>{pt ? 'Conversar sobre uma proposta' : 'Discuss a proposal'} ↗</a></div>
+    <h2 id="proposta">{tr(idioma, { pt: 'Conte o que você está planejando', en: 'Tell me what you are planning', es: 'Cuénteme lo que está planeando' })}</h2>
+    <p>{tr(idioma, { pt: 'Para começarmos, envie o tema de interesse, o público, a data prevista e se o encontro será presencial ou on-line. A conversa inicial acontece pelo WhatsApp.', en: 'To get started, send the topic, audience, expected date and whether the session will be in person or online. Our first conversation takes place on WhatsApp.', es: 'Para empezar, envíe el tema de interés, el público, la fecha prevista y si el encuentro será presencial o en línea. La conversación inicial es por WhatsApp.' })}</p>
+    <div><a class="botao" href={contatoWhatsApp}>{tr(idioma, { pt: 'Conversar sobre uma proposta', en: 'Discuss a proposal', es: 'Conversar sobre una propuesta' })} ↗</a></div>
   </section>
 </Base>

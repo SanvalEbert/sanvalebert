@@ -1,11 +1,12 @@
 ---
+import { tr } from '../i18n/tr';
 import Base from '../layouts/Base.astro';
 import { contatoWhatsApp, type Idioma } from '../data/site';
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
-const pt = idioma === 'pt';
-const d = pt ? {
+const d = tr(idioma, {
+  pt: {
   titulo: 'Privacidade e Segurança · TechEdu · Sanval Ebert',
   descricao: 'Saiba como o TechEdu protege dados de visitantes, mensagens ao assistente San e registros experimentais de interesse via Google, conforme a LGPD.',
   rotulo: 'TechEdu · Transparência',
@@ -75,7 +76,8 @@ const d = pt ? {
   contatoTexto: 'Fale diretamente para solicitar informações ou exercer seus direitos relacionados aos dados compartilhados com o TechEdu.',
   contatoBotao: 'Entrar em contato pelo WhatsApp',
   linkResponsavel: 'Contato de privacidade',
-} : {
+},
+  en: {
   titulo: 'Privacy and Security · TechEdu · Sanval Ebert',
   descricao: 'How TechEdu uses visitor information, questions sent to San and Google-based pilot interest registration, in accordance with Brazilian data protection law.',
   rotulo: 'TechEdu · Transparency',
@@ -145,8 +147,80 @@ const d = pt ? {
   contatoTexto: 'Contact us to request information or exercise your rights regarding data shared with TechEdu.',
   contatoBotao: 'Contact us on WhatsApp',
   linkResponsavel: 'Privacy contact',
-};
-const mensagem = pt ? 'Olá, gostaria de falar sobre privacidade e dados pessoais no TechEdu.' : 'Hello, I would like to ask about personal data and privacy at TechEdu.';
+},
+  es: {
+  titulo: 'Privacidad y Seguridad · TechEdu · Sanval Ebert',
+  descricao: 'Conozca cómo TechEdu protege los datos de los visitantes, los mensajes al asistente San y los registros experimentales de interés mediante Google, de acuerdo con la LGPD brasileña.',
+  rotulo: 'TechEdu · Transparencia',
+  chamada: 'Sus datos,',
+  destaque: 'su control.',
+  resumo: 'Recopilamos solo lo necesario para atenderle. Explicamos de forma sencilla cómo funciona el portal hoy y qué se implementará más adelante.',
+  revisao: 'Versión del 15 de noviembre de 2026',
+  secoes: [
+    {
+      titulo: '1. Quién es responsable del portal',
+      paragrafos: [
+        'TechEdu es el portal profesional de Sanval Ebert. Para cuestiones de privacidad y solicitudes relacionadas con la información compartida a través de este sitio, utilice el canal de contacto indicado al final de esta página.',
+      ],
+    },
+    {
+      titulo: '2. Qué información utilizamos actualmente',
+      paragrafos: [
+        'La navegación por el catálogo de Servicios no exige iniciar sesión ni registrarse. No solicitamos documento de identidad, dirección, teléfono, fecha de nacimiento, cargo ni institución para explorar las ofertas.',
+        'El sitio utiliza Vercel Web Analytics para estadísticas agregadas, como páginas visitadas, origen aproximado de las visitas y rendimiento del portal. Esta herramienta no usa cookies de identificación propias para contar visitantes. El proveedor de alojamiento también procesa los datos técnicos necesarios para operar y proteger el servicio.',
+        'Cuando usted conversa con el asistente San, su pregunta y un contexto limitado de la conversación se envían al servicio de IA de OpenAI para generar una respuesta. La dirección IP puede tratarse temporalmente para limitar abusos del asistente, sin integrarse a la base de interesados. No incluya contraseñas, documentos personales ni información sensible en sus preguntas.',
+        'Cuando usted elige conversar por WhatsApp, sale del portal y decide qué datos y mensajes compartir. El tratamiento en esa aplicación también está sujeto a las condiciones y políticas de WhatsApp.',
+      ],
+    },
+    {
+      titulo: '3. Para qué se usan los datos',
+      paragrafos: [
+        'Los datos de navegación ayudan a comprender el uso del portal. Las preguntas al asistente se procesan para responder al visitante. Los mensajes de contacto sirven para aclarar dudas y preparar las propuestas solicitadas.',
+        'El catálogo público no exige iniciar sesión. El registro con Google funciona solo en acceso experimental para participantes autorizados como usuarios de prueba. No vendemos ni comercializamos bases de datos de visitantes.',
+      ],
+    },
+    {
+      titulo: '4. Registro con Google: acceso experimental',
+      paragrafos: [
+        'En el piloto, Google proporciona datos de identificación como nombre, correo electrónico e identificador de cuenta a Supabase Auth; el registro de interés contiene solo el identificador técnico del usuario, el servicio elegido y la fecha. Google puede proporcionar metadatos básicos de perfil, sujetos a las condiciones de los proveedores.',
+        'No solicitamos acceso al contenido de Gmail, Google Drive ni contactos. El registro solo se crea después de elegir la modalidad y de la confirmación expresa del visitante. El piloto no inscribe a nadie en campañas promocionales y WhatsApp sigue siendo el canal público de contacto.',
+      ],
+    },
+    {
+      titulo: '5. Protección y acceso a la información',
+      paragrafos: [
+        'El sitio utiliza HTTPS. La clave de acceso a la IA permanece exclusivamente en el servidor. La base separada de TechEdu, alojada en Supabase en la región de São Paulo, utiliza reglas de aislamiento por usuario (RLS). Cada persona autenticada puede consultar y eliminar sus propios intereses; el área administrativa aún no está activada.',
+        'Adoptaremos procesos para prevenir accesos indebidos, revisar permisos y responder a posibles incidentes. Ninguna medida tecnológica elimina por completo los riesgos; por eso evitamos recopilar información innecesaria.',
+      ],
+    },
+    {
+      titulo: '6. Proveedores y almacenamiento',
+      paragrafos: [
+        'Vercel aloja el sitio y proporciona estadísticas de acceso. OpenAI procesa los mensajes enviados al asistente San. En el piloto de registro, Google proporciona la autenticación y Supabase almacena la identidad y los registros de interés. La biblioteca de autenticación se carga bajo demanda desde un servicio de distribución de código (jsDelivr), que puede procesar datos técnicos de la conexión. WhatsApp se utiliza cuando el visitante inicia el contacto.',
+        'Estos proveedores pueden realizar operaciones técnicas fuera de Brasil, conforme a las condiciones y salvaguardas legales aplicables. La base de TechEdu es independiente de las bases de otros cursos; el plazo de conservación se detallará antes de abrir el registro al público en general.',
+      ],
+    },
+    {
+      titulo: '7. Conservación y derechos del titular',
+      paragrafos: [
+        'La información se conserva solo durante el período necesario para atender las solicitudes y cumplir las obligaciones legales. En el piloto, el participante puede consultar y eliminar sus registros de interés directamente en la página de Servicios; para solicitar la eliminación de la identidad guardada en el proveedor de autenticación, utilice el canal de contacto. Los registros del piloto se revisarán antes de la apertura al público.',
+        'Usted puede solicitar información sobre el tratamiento de sus datos, acceso, corrección, oposición o eliminación, cuando corresponda, conforme a la Ley General de Protección de Datos Personales de Brasil (LGPD). Para hacer una solicitud, utilice nuestro canal de contacto.',
+      ],
+    },
+    {
+      titulo: '8. Cambios en esta política',
+      paragrafos: [
+        'Esta política se actualizará antes de la apertura general del registro y cuando se lancen nuevas funcionalidades, como inscripciones, pagos o un Entorno Virtual de Aprendizaje. Los cambios relevantes se comunicarán antes de ampliar la recopilación de datos.',
+      ],
+    },
+  ],
+  contatoTitulo: '¿Dudas sobre privacidad?',
+  contatoTexto: 'Escriba directamente para solicitar información o ejercer sus derechos sobre los datos compartidos con TechEdu.',
+  contatoBotao: 'Contactar por WhatsApp',
+  linkResponsavel: 'Contacto de privacidad',
+},
+});
+const mensagem = tr(idioma, { pt: 'Olá, gostaria de falar sobre privacidade e dados pessoais no TechEdu.', en: 'Hello, I would like to ask about personal data and privacy at TechEdu.', es: 'Hola, me gustaría consultar sobre datos personales y privacidad en TechEdu.' });
 const contato = `${contatoWhatsApp}?text=${encodeURIComponent(mensagem)}`;
 ---
 <Base idioma={idioma} pagina="privacidade" titulo={d.titulo} descricao={d.descricao}>
@@ -158,7 +232,7 @@ const contato = `${contatoWhatsApp}?text=${encodeURIComponent(mensagem)}`;
       <p class="apoio">{d.revisao}</p>
     </div>
   </section>
-  <section class="conteudo secao" aria-label={pt ? 'Informações sobre privacidade' : 'Privacy information'}>
+  <section class="conteudo secao" aria-label={tr(idioma, { pt: 'Informações sobre privacidade', en: 'Privacy information', es: 'Información de privacidad' })}>
     <div class="texto-politica">
       {d.secoes.map((secao, i) => <section class="item-politica" aria-labelledby={`politica-${i}`}>
         <h2 id={`politica-${i}`}>{secao.titulo}</h2>

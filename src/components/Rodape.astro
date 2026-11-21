@@ -1,4 +1,5 @@
 ---
+import { tr } from '../i18n/tr';
 import Perfis from './Perfis.astro';
 import Logo from './Logo.astro';
 import { link, type Idioma } from '../data/site';
@@ -18,8 +19,8 @@ const txt = t(idioma);
       <p class="marca-rodape"><Logo descritor={txt.site.selo} /></p>
     </div>
 
-    <nav aria-label={idioma === 'pt' ? 'Redes e perfis' : 'Social and research profiles'} class="redes">
-      <p class="rotulo destaque">{idioma === 'pt' ? 'Conecte-se comigo' : 'Connect with me'}</p>
+    <nav aria-label={tr(idioma, { pt: 'Redes e perfis', en: 'Social and research profiles', es: 'Redes y perfiles' })} class="redes">
+      <p class="rotulo destaque">{tr(idioma, { pt: 'Conecte-se comigo', en: 'Connect with me', es: 'Conecte conmigo' })}</p>
       <Perfis />
     </nav>
 
@@ -28,7 +29,7 @@ const txt = t(idioma);
   <p class="apoio direitos">
     <span>{txt.rodape.direitos}</span>
     <span aria-hidden="true"> · </span>
-    <a href={link('privacidade', idioma)}>{idioma === 'pt' ? 'Privacidade e Segurança' : 'Privacy and Security'}</a>
+    <a href={link('privacidade', idioma)}>{txt.menu.privacidade}</a>
   </p>
 </footer>
 

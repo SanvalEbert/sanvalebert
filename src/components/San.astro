@@ -1,10 +1,11 @@
 ---
+import { tr } from '../i18n/tr';
 import { publicacoes } from '../data/publicacoes';
 import { contatoWhatsApp, endereco, link, type Idioma } from '../data/site';
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
-const pt = idioma === 'pt';
-const textos = pt ? {
+const textos = tr(idioma, {
+  pt: {
   abrir: 'Pergunte ao San', chamada: 'Pesquisas, publicações e contato', fechar: 'Fechar conversa', titulo: 'San · guia do portal',
   descricao: 'Respostas a partir do conteúdo do site', pergunta: 'O que você procura?', enviar: 'Enviar',
   boasVindas: 'Olá! Sou San, seu assistente virtual. Posso ajudar você a encontrar pesquisas, publicações, resultados de estudantes, palestras e formas de contato. O que gostaria de saber?',
@@ -13,7 +14,9 @@ const textos = pt ? {
   voce: 'Você', limpar: 'Limpar conversa',
   contato: 'Falar com Sanval no WhatsApp', pesquisa: 'Pesquisa e publicações',
   respostaContato: 'O contato divulgado pelo professor Sanval Ebert neste portal é o WhatsApp: (71) 98555-8490. Clique no link abaixo para conversar diretamente com ele.',
-} : {
+  porNada: 'Por nada! O que mais gostaria de explorar?', consultando: 'Consultando as informações do portal…',
+},
+  en: {
   abrir: 'Ask San', chamada: 'Research, publications and contact', fechar: 'Close conversation', titulo: 'San · portal guide',
   descricao: 'Answers from this website’s content', pergunta: 'What are you looking for?', enviar: 'Send',
   boasVindas: 'Hello! I’m San, your virtual assistant. I can help you find research, publications, student achievements, talks and contact details. What would you like to know?',
@@ -22,36 +25,49 @@ const textos = pt ? {
   voce: 'You', limpar: 'Clear conversation',
   contato: 'Contact Sanval on WhatsApp', pesquisa: 'Research and publications',
   respostaContato: 'Professor Sanval Ebert’s contact listed on this portal is WhatsApp: +55 71 98555-8490. Use the link below to contact him directly.',
-};
+  porNada: 'You’re welcome! What else would you like to explore?', consultando: 'Checking portal information…',
+},
+  es: {
+  abrir: 'Pregunte a San', chamada: 'Investigación, publicaciones y contacto', fechar: 'Cerrar conversación', titulo: 'San · guía del portal',
+  descricao: 'Respuestas a partir del contenido del sitio', pergunta: '¿Qué está buscando?', enviar: 'Enviar',
+  boasVindas: '¡Hola! Soy San, su asistente virtual. Puedo ayudarle a encontrar investigaciones, publicaciones, resultados de estudiantes, charlas y formas de contacto. ¿Qué le gustaría saber?',
+  limite: 'Respondo con base en el portal. Cuando la IA no está disponible, consulto el catálogo local. Para otras consultas, use WhatsApp.',
+  desconhecido: 'No encontré esa información en el contenido del portal. Puede explorar las publicaciones o hablar directamente con Sanval.',
+  voce: 'Usted', limpar: 'Borrar conversación',
+  contato: 'Hablar con Sanval por WhatsApp', pesquisa: 'Investigación y publicaciones',
+  respostaContato: 'El contacto que el profesor Sanval Ebert publica en este portal es WhatsApp: +55 71 98555-8490. Use el enlace de abajo para hablar directamente con él.',
+  porNada: '¡De nada! ¿Qué más le gustaría explorar?', consultando: 'Consultando la información del portal…',
+},
+});
 const entradas = [
   {
-    titulo: pt ? 'Sobre Sanval Ebert' : 'About Sanval Ebert', url: link('sobre', idioma),
-    termos: 'sobre biografia perfil quem sanval coordenador professor docente pesquisador about biography profile who coordinator researcher',
-    resumo: pt ? 'Sanval Ebert é docente e pesquisador na Universidade SENAI CIMATEC, onde coordena Engenharia de Computação e Ciência de Dados e Inteligência Artificial. Conecta educação, pesquisa e tecnologia.' : 'Sanval Ebert is an educator and researcher at SENAI CIMATEC University, coordinating Computer Engineering and Data Science and Artificial Intelligence. His work connects education, research and technology.',
+    titulo: tr(idioma, { pt: 'Sobre Sanval Ebert', en: 'About Sanval Ebert', es: 'Sobre Sanval Ebert' }), url: link('sobre', idioma),
+    termos: 'sobre biografia perfil quem sanval coordenador professor docente pesquisador about biography profile who coordinator researcher sobre mi biografia quien profesor investigador coordinador',
+    resumo: tr(idioma, { pt: 'Sanval Ebert é docente e pesquisador na Universidade SENAI CIMATEC, onde coordena Engenharia de Computação e Ciência de Dados e Inteligência Artificial. Conecta educação, pesquisa e tecnologia.', en: 'Sanval Ebert is an educator and researcher at SENAI CIMATEC University, coordinating Computer Engineering and Data Science and Artificial Intelligence. His work connects education, research and technology.', es: 'Sanval Ebert es docente e investigador en la Universidad SENAI CIMATEC, donde coordina las carreras de Ingeniería de Computación y de Ciencia de Datos e Inteligencia Artificial. Su trabajo conecta educación, investigación y tecnología.' }),
   },
   {
     titulo: textos.pesquisa, url: link('pesquisa', idioma),
-    termos: 'pesquisa publicacoes artigos research publications papers inteligencia artificial ia ai educacao education imersao realidade virtual metaverso',
-    resumo: pt ? 'As pesquisas do portal abordam IA e ambientes de aprendizagem, experiências imersivas, modelagem de dados e formação profissional. O catálogo reúne artigos, capítulos, trabalhos de congresso e preprint, com fontes originais.' : 'The portal’s research covers AI and learning environments, immersive experiences, data modelling and professional training. The catalogue includes articles, chapters, conference papers and a preprint, with original sources.',
+    termos: 'pesquisa publicacoes artigos research publications papers inteligencia artificial ia ai educacao education imersao realidade virtual metaverso investigacion publicaciones articulos inteligencia educacion inmersion realidad',
+    resumo: tr(idioma, { pt: 'As pesquisas do portal abordam IA e ambientes de aprendizagem, experiências imersivas, modelagem de dados e formação profissional. O catálogo reúne artigos, capítulos, trabalhos de congresso e preprint, com fontes originais.', en: 'The portal’s research covers AI and learning environments, immersive experiences, data modelling and professional training. The catalogue includes articles, chapters, conference papers and a preprint, with original sources.', es: 'Las investigaciones del portal abarcan IA y entornos de aprendizaje, experiencias inmersivas, modelado de datos y formación profesional. El catálogo reúne artículos, capítulos, trabajos de congreso y un preprint, con las fuentes originales.' }),
   },
   {
-    titulo: pt ? 'Resultados · Engage-Agent' : 'Achievements · Engage-Agent', url: link('estudantes', idioma) + '#engage',
-    termos: 'resultados estudantes alunos equipe engage agent hackastone hackathon amsterdam holanda segundo lugar premio students achievements team award',
-    resumo: pt ? 'O Engage-Agent, equipe orientada por Sanval Ebert, conquistou o segundo lugar mundial no HackaStone 2026, em Amsterdam. O projeto acompanha o percurso de aprendizagem e apoia o professor. Conheça a equipe e os registros na página de Resultados.' : 'Engage-Agent, the team mentored by Sanval Ebert, placed second worldwide at HackaStone 2026 in Amsterdam. The project follows learning progress and supports teachers. Meet the team and see the records on the Achievements page.',
+    titulo: tr(idioma, { pt: 'Resultados · Engage-Agent', en: 'Achievements · Engage-Agent', es: 'Resultados · Engage-Agent' }), url: link('estudantes', idioma) + '#engage',
+    termos: 'resultados estudantes alunos equipe engage agent hackastone hackathon amsterdam holanda segundo lugar premio students achievements team award estudiantes equipo premio segundo lugar logros',
+    resumo: tr(idioma, { pt: 'O Engage-Agent, equipe orientada por Sanval Ebert, conquistou o segundo lugar mundial no HackaStone 2026, em Amsterdam. O projeto acompanha o percurso de aprendizagem e apoia o professor. Conheça a equipe e os registros na página de Resultados.', en: 'Engage-Agent, the team mentored by Sanval Ebert, placed second worldwide at HackaStone 2026 in Amsterdam. The project follows learning progress and supports teachers. Meet the team and see the records on the Achievements page.', es: 'Engage-Agent, el equipo orientado por Sanval Ebert, obtuvo el segundo lugar mundial en el HackaStone 2026, en Ámsterdam. El proyecto acompaña el recorrido de aprendizaje y apoya al docente. Conozca al equipo y los registros en la página de Resultados.' }),
   },
   {
-    titulo: pt ? 'Serviços TechEdu' : 'TechEdu Services', url: link('servicos', idioma),
-    termos: 'serviços servicos services training treinamentos minicursos short courses workshops palestras talks cursos formação formacao capacitação capacitacao inscrição inscricao interesse',
-    resumo: pt ? 'O TechEdu apresenta quatro modalidades: palestras, treinamentos, minicursos e workshops. Conheça os formatos na página de Serviços. Nesta etapa, interessados podem conversar pelo WhatsApp; o cadastro Google ainda não está ativo.' : 'TechEdu offers four formats: talks, training, short courses and workshops. Explore the Services page. For now, visitors may contact Sanval via WhatsApp; Google sign-in is not active yet.',
+    titulo: tr(idioma, { pt: 'Serviços TechEdu', en: 'TechEdu Services', es: 'Servicios TechEdu' }), url: link('servicos', idioma),
+    termos: 'serviços servicos services training treinamentos minicursos short courses workshops palestras talks cursos formação formacao capacitação capacitacao inscrição inscricao interesse servicios formaciones talleres minicursos cursos interes',
+    resumo: tr(idioma, { pt: 'O TechEdu apresenta quatro modalidades: palestras, treinamentos, minicursos e workshops. Conheça os formatos na página de Serviços. Nesta etapa, interessados podem conversar pelo WhatsApp; o cadastro Google ainda não está ativo.', en: 'TechEdu offers four formats: talks, training, short courses and workshops. Explore the Services page. For now, visitors may contact Sanval via WhatsApp; Google sign-in is not active yet.', es: 'TechEdu ofrece cuatro formatos: charlas, formaciones, minicursos y talleres. Conozca la página de Servicios. Por ahora, el contacto con Sanval es por WhatsApp; el inicio de sesión con Google aún no está activo.' }),
   },
   {
-    titulo: pt ? 'Palestras e eventos' : 'Talks and events', url: link('palestras', idioma),
-    termos: 'palestra evento formacao curso oficina workshop contratar proposta preco valor agenda disponibilidade talk event training course hire proposal price schedule contact contato whatsapp',
-    resumo: pt ? 'O portal apresenta temas de palestras sobre educação, IA e tecnologias emergentes. Para consultar disponibilidade, valores ou solicitar uma proposta para seu evento ou formação, converse com Sanval pelo WhatsApp.' : 'The portal presents talks on education, AI and emerging technologies. To check availability, pricing or request a proposal for an event or training programme, contact Sanval on WhatsApp.',
+    titulo: tr(idioma, { pt: 'Palestras e eventos', en: 'Talks and events', es: 'Charlas y eventos' }), url: link('palestras', idioma),
+    termos: 'palestra evento formacao curso oficina workshop contratar proposta preco valor agenda disponibilidade talk event training course hire proposal price schedule contact contato whatsapp charla charlas evento formacion taller contratar propuesta precio agenda disponibilidad contacto',
+    resumo: tr(idioma, { pt: 'O portal apresenta temas de palestras sobre educação, IA e tecnologias emergentes. Para consultar disponibilidade, valores ou solicitar uma proposta para seu evento ou formação, converse com Sanval pelo WhatsApp.', en: 'The portal presents talks on education, AI and emerging technologies. To check availability, pricing or request a proposal for an event or training programme, contact Sanval on WhatsApp.', es: 'El portal presenta charlas sobre educación, IA y tecnologías emergentes. Para consultar disponibilidad, valores o solicitar una propuesta para un evento o formación, contacte a Sanval por WhatsApp.' }),
   },
   ...publicacoes.map(p => ({ titulo: p.title, url: p.doi ? `https://doi.org/${p.doi}` : `https://www.researchgate.net/publication/${p.rg}`, termos: `${p.title} ${p.authors} ${p.year} ${p.area}`, resumo: `${p.year} · ${p.venue}. ${p.summary[idioma]}` })),
 ];
-const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: link('pesquisa', idioma), pt });
+const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: link('pesquisa', idioma), idioma });
 ---
 <div class="san" data-san data-config={config}>
   <button class="san-abrir" data-san-abrir type="button" aria-haspopup="dialog" aria-controls="san-painel" title={textos.abrir}>
@@ -65,9 +81,9 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       <div><h2 id="san-titulo">{textos.titulo}</h2><p id="san-descricao">{textos.descricao}</p></div>
       <button class="san-fechar" data-san-fechar aria-label={textos.fechar}>×</button>
     </header>
-    <div class="san-historico" role="log" aria-live="polite" aria-relevant="additions" aria-label={pt ? 'Conversa com San' : 'Conversation with San'} data-san-historico></div>
-    <div class="san-sugestoes" aria-label={pt ? 'Sugestões de perguntas' : 'Suggested questions'}>
-      {[pt ? 'Pesquisas' : 'Research', pt ? 'Publicações' : 'Publications', pt ? 'Palestras' : 'Talks', pt ? 'Contato' : 'Contact'].map(s => <button type="button" data-san-sugestao>{s}</button>)}
+    <div class="san-historico" role="log" aria-live="polite" aria-relevant="additions" aria-label={tr(idioma, { pt: 'Conversa com San', en: 'Conversation with San', es: 'Conversación con San' })} data-san-historico></div>
+    <div class="san-sugestoes" aria-label={tr(idioma, { pt: 'Sugestões de perguntas', en: 'Suggested questions', es: 'Preguntas sugeridas' })}>
+      {[tr(idioma, { pt: 'Pesquisas', en: 'Research', es: 'Investigación' }), tr(idioma, { pt: 'Publicações', en: 'Publications', es: 'Publicaciones' }), tr(idioma, { pt: 'Palestras', en: 'Talks', es: 'Charlas' }), tr(idioma, { pt: 'Contato', en: 'Contact', es: 'Contacto' })].map(s => <button type="button" data-san-sugestao>{s}</button>)}
     </div>
     <form class="san-form" data-san-form>
       <label for="san-pergunta">{textos.pergunta}</label>
@@ -118,12 +134,12 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       const n = normalizar(texto);
       // Contact requests take priority over biography and publication matches.
       // They do not require spelling the professor's name correctly.
-      if (/\b(contato|contact|telefone|phone|telephone|celular|whatsapp|whats|zap|numero|number|email|e-mail|reach)\b/.test(n) || /\b(falar|conversar)\s+(diretamente\s+)?com\b|\b(talk|speak)\s+(to|with)\b/.test(n)) {
+      if (/\b(contato|contacto|contact|telefone|telefono|phone|telephone|celular|whatsapp|whats|zap|numero|number|email|e-mail|correo|reach)\b/.test(n) || /\b(falar|conversar|hablar)\s+(diretamente\s+|directamente\s+)?(com|con)\b|\b(talk|speak)\s+(to|with)\b/.test(n)) {
         mensagem(txt.respostaContato, false, [{titulo:txt.contato, url:config.contatoWhatsApp}]);
         return;
       }
       if (/^(oi|ola|hello|hi|bom dia|boa tarde|boa noite)[!.\s]*$/.test(n)) { mensagem(txt.boasVindas); return; }
-      if (/^(obrigad[oa]|thanks|thank you)[!.\s]*$/.test(n)) { mensagem(config.pt ? 'Por nada! O que mais gostaria de explorar?' : 'You’re welcome! What else would you like to explore?'); return; }
+      if (/^(obrigad[oa]|thanks|thank you|gracias|muchas gracias)[!.\s]*$/.test(n)) { mensagem(txt.porNada); return; }
       const tokens = [...new Set(n.split(/[^a-z0-9]+/).filter(t => (t.length > 2 || t === 'ia' || t === 'ai') && !ignorar.has(t)).map(singular))];
       const resultados = entradas.map(e => {
         const palavras = normalizar(`${e.termos} ${e.titulo} ${e.resumo}`).split(/[^a-z0-9]+/).map(singular);
@@ -137,7 +153,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
       }
       const fontes = [...resultados.map(r => ({titulo:r.e.titulo,url:r.e.url})), {titulo:txt.contato,url:config.contatoWhatsApp}];
       const respostaLocal = resultados[0].e.resumo;
-      const pendente = mensagem(config.pt ? 'Consultando as informações do portal…' : 'Checking portal information…');
+      const pendente = mensagem(txt.consultando);
       let respostaFinal = respostaLocal;
       try {
         const controlador = new AbortController();
@@ -149,7 +165,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
               pergunta: texto,
-              idioma: config.pt ? 'pt' : 'en',
+              idioma: config.idioma,
               referencias: resultados.map(r => ({titulo:r.e.titulo, resumo:r.e.resumo, url:r.e.url})),
               historico: historicoIA.slice(-4),
             }),
