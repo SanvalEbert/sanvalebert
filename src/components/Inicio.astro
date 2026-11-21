@@ -59,7 +59,7 @@ const sobre = pt ? {
       <p class="rotulo destaque">{i.destaquesRotulo}</p>
       <h2 id="destaques">{i.destaquesTitulo}</h2>
     </div>
-    <Carrossel idioma={idioma} rotulo={i.destaquesRotulo}>
+    <Carrossel idioma={idioma} rotulo={i.destaquesRotulo} automatico={7000}>
       {destaques.map((d, n) => (
         <li class="slide-destaque" aria-roledescription={pt ? 'item' : 'slide'} aria-label={`${n + 1} / ${destaques.length}`}>
           <figure class="figura">

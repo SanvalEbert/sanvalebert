@@ -113,10 +113,30 @@ test('destaques ficam em carrossel com links para as redes', async ({ page }) =>
   await expect(slides.nth(1)).toContainText('Engage-Agent');
   for (const img of await carrossel.locator('img').all()) await expect(img).toHaveAttribute('alt', /.+/);
   if ((page.viewportSize()?.width ?? 0) > 540) {
+    const pausa = carrossel.getByRole('button', { name: 'Pausar a passagem automática' });
+    await pausa.click();
+    await expect(carrossel.getByRole('button', { name: 'Retomar a passagem automática' })).toHaveAttribute('aria-pressed', 'true');
     await carrossel.getByRole('button', { name: 'Próximo' }).click();
     await expect(carrossel.locator('[data-atual]')).toHaveText('2');
-    await expect(carrossel.getByRole('button', { name: 'Próximo' })).toBeDisabled();
+    // Em ciclo, o próximo do último volta ao primeiro.
+    await carrossel.getByRole('button', { name: 'Próximo' }).click();
+    await expect(carrossel.locator('[data-atual]')).toHaveText('1');
   }
+});
+
+test('carrossel de destaques passa sozinho e respeita quem pede menos movimento', async ({ page }) => {
+  await page.clock.install();
+  await abrir(page, '/');
+  const carrossel = page.getByRole('region', { name: 'Destaques' });
+  await page.mouse.move(0, 0);
+  await expect(carrossel.locator('[data-atual]')).toHaveText('1');
+  await page.clock.runFor(7500);
+  await expect(carrossel.locator('[data-atual]')).toHaveText('2');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await abrir(page, '/');
+  await page.clock.runFor(15000);
+  await expect(page.getByRole('region', { name: 'Destaques' }).locator('[data-atual]')).toHaveText('1');
+  await expect(page.getByRole('button', { name: 'Pausar a passagem automática' })).toBeHidden();
   await expect(carrossel.getByRole('link', { name: /Ver no Instagram/ }).first()).toHaveAttribute('href', /instagram\.com/);
   await expect(carrossel.getByRole('link', { name: /Ler no LinkedIn/ }).first()).toHaveAttribute('href', /linkedin\.com/);
 });

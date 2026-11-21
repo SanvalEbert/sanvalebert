@@ -1,6 +1,9 @@
 ---
-// Carrossel simples: uma faixa com rolagem horizontal e botões de anterior e próximo.
-// Funciona sem JavaScript (rolagem com o dedo ou o trackpad); o script só liga os botões.
+// Carrossel: uma faixa com rolagem horizontal e botões de anterior e próximo.
+// Funciona sem JavaScript (rolagem com o dedo ou o trackpad); o script liga os botões.
+// Com `automatico`, os itens passam sozinhos em ciclo, com botão de pausa (WCAG 2.2.2).
+// A rotação para quando o visitante passa o mouse, foca um item ou troca de aba, e não
+// começa para quem pediu menos movimento no sistema (prefers-reduced-motion).
 // Os itens chegam pelo slot, cada um dentro de um <li>.
 import type { Idioma } from '../data/site';
 
@@ -9,13 +12,28 @@ interface Props {
   rotulo: string;
   /** 'cheio' mostra um item por vez; 'cartoes' mostra vários lado a lado. */
   modo?: 'cheio' | 'cartoes';
+  /** Intervalo da rotação automática, em milissegundos. Omitir desliga a rotação. */
+  automatico?: number;
 }
 
-const { idioma, rotulo, modo = 'cheio' } = Astro.props;
+const { idioma, rotulo, modo = 'cheio', automatico } = Astro.props;
 const pt = idioma === 'pt';
+const rotulos = {
+  pausar: pt ? 'Pausar a passagem automática' : 'Pause automatic rotation',
+  continuar: pt ? 'Retomar a passagem automática' : 'Resume automatic rotation',
+};
 ---
 
-<div class={`carrossel ${modo}`} role="region" aria-roledescription={pt ? 'carrossel' : 'carousel'} aria-label={rotulo} data-carrossel>
+<div
+  class={`carrossel ${modo}`}
+  role="region"
+  aria-roledescription={pt ? 'carrossel' : 'carousel'}
+  aria-label={rotulo}
+  data-carrossel
+  data-automatico={automatico}
+  data-rotulo-pausar={rotulos.pausar}
+  data-rotulo-continuar={rotulos.continuar}
+>
   <ul class="faixa" tabindex="0">
     <slot />
   </ul>
@@ -23,6 +41,13 @@ const pt = idioma === 'pt';
     <button type="button" data-anterior aria-label={pt ? 'Anterior' : 'Previous'}><span aria-hidden="true">←</span></button>
     <p class="contagem" aria-live="polite"><span data-atual>1</span> / <span data-total>1</span></p>
     <button type="button" data-proximo aria-label={pt ? 'Próximo' : 'Next'}><span aria-hidden="true">→</span></button>
+    {automatico && (
+      <button type="button" class="pausa" data-pausa aria-label={rotulos.pausar} aria-pressed="false" hidden>
+        <svg class="icone-pausar" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" rx="1" fill="currentColor" /><rect x="8.5" y="1" width="3.5" height="12" rx="1" fill="currentColor" /></svg>
+        <svg class="icone-continuar" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor" /></svg>
+      </button>
+    )}
+    {automatico && <span class="progresso" aria-hidden="true"><span data-progresso></span></span>}
   </div>
 </div>
 
@@ -34,6 +59,10 @@ const pt = idioma === 'pt';
     const anterior = raiz.querySelector<HTMLButtonElement>('[data-anterior]')!;
     const proximo = raiz.querySelector<HTMLButtonElement>('[data-proximo]')!;
     const atual = raiz.querySelector<HTMLElement>('[data-atual]')!;
+    const pausa = raiz.querySelector<HTMLButtonElement>('[data-pausa]');
+    const barra = raiz.querySelector<HTMLElement>('[data-progresso]');
+    const intervalo = Number(raiz.dataset.automatico) || 0;
+    const poucoMovimento = matchMedia('(prefers-reduced-motion: reduce)');
     raiz.querySelector<HTMLElement>('[data-total]')!.textContent = String(itens.length);
 
     const indice = () => {
@@ -45,22 +74,65 @@ const pt = idioma === 'pt';
       return melhor;
     };
     const fim = () => faixa.scrollLeft + faixa.clientWidth >= faixa.scrollWidth - 4;
+    const rolavel = () => faixa.scrollWidth > faixa.clientWidth + 4;
+    const emCiclo = intervalo > 0;
+
     const atualizar = () => {
-      controles.hidden = faixa.scrollWidth <= faixa.clientWidth + 4;
+      controles.hidden = !rolavel();
       const i = fim() ? itens.length - 1 : indice();
       atual.textContent = String(i + 1);
-      anterior.disabled = faixa.scrollLeft <= 4;
-      proximo.disabled = fim();
+      // Em ciclo, as setas dão a volta; sem ciclo, param nas pontas.
+      anterior.disabled = !emCiclo && faixa.scrollLeft <= 4;
+      proximo.disabled = !emCiclo && fim();
     };
-    const ir = (passo: number) => {
-      const alvo = itens[Math.max(0, Math.min(itens.length - 1, indice() + passo))];
-      faixa.scrollTo({ left: alvo.offsetLeft - faixa.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    const irPara = (i: number) => {
+      const alvo = itens[(i + itens.length) % itens.length];
+      faixa.scrollTo({ left: alvo.offsetLeft - faixa.offsetLeft, behavior: poucoMovimento.matches ? 'auto' : 'smooth' });
     };
-    anterior.addEventListener('click', () => ir(-1));
-    proximo.addEventListener('click', () => ir(1));
+    const passo = (n: number) => {
+      const i = fim() && n > 0 ? itens.length - 1 : indice();
+      irPara(emCiclo ? i + n : Math.max(0, Math.min(itens.length - 1, i + n)));
+    };
+
+    // Rotação automática
+    let pausadoPeloVisitante = false;
+    let suspenso = false; // mouse em cima, foco dentro ou aba oculta
+    let temporizador: number | undefined;
+    const ativo = () => emCiclo && rolavel() && !pausadoPeloVisitante && !suspenso && !poucoMovimento.matches && !document.hidden;
+    const reiniciar = () => {
+      window.clearTimeout(temporizador);
+      if (barra) { barra.style.animation = 'none'; void barra.offsetWidth; barra.style.animation = ''; }
+      raiz.classList.toggle('rodando', ativo());
+      if (ativo()) {
+        if (barra) barra.style.animationDuration = `${intervalo}ms`;
+        temporizador = window.setTimeout(() => { passo(1); reiniciar(); }, intervalo);
+      }
+    };
+    const marcarPausa = () => {
+      if (!pausa) return;
+      pausa.hidden = !emCiclo || poucoMovimento.matches;
+      pausa.setAttribute('aria-pressed', String(pausadoPeloVisitante));
+      pausa.setAttribute('aria-label', pausadoPeloVisitante ? raiz.dataset.rotuloContinuar! : raiz.dataset.rotuloPausar!);
+      pausa.classList.toggle('pausado', pausadoPeloVisitante);
+    };
+
+    anterior.addEventListener('click', () => { passo(-1); reiniciar(); });
+    proximo.addEventListener('click', () => { passo(1); reiniciar(); });
+    pausa?.addEventListener('click', () => { pausadoPeloVisitante = !pausadoPeloVisitante; marcarPausa(); reiniciar(); });
+    const suspender = (valor: boolean) => () => { suspenso = valor; reiniciar(); };
+    faixa.addEventListener('mouseenter', suspender(true));
+    faixa.addEventListener('mouseleave', suspender(false));
+    faixa.addEventListener('focusin', suspender(true));
+    faixa.addEventListener('focusout', (e) => { if (!faixa.contains(e.relatedTarget as Node)) { suspenso = false; reiniciar(); } });
+    faixa.addEventListener('pointerdown', () => { pausadoPeloVisitante = true; marcarPausa(); reiniciar(); }, { passive: true });
+    document.addEventListener('visibilitychange', reiniciar);
+    poucoMovimento.addEventListener('change', () => { marcarPausa(); reiniciar(); });
+
     faixa.addEventListener('scroll', () => requestAnimationFrame(atualizar), { passive: true });
-    new ResizeObserver(atualizar).observe(faixa);
+    new ResizeObserver(() => { atualizar(); reiniciar(); }).observe(faixa);
     atualizar();
+    marcarPausa();
+    reiniciar();
   }
 </script>
 
@@ -89,6 +161,7 @@ const pt = idioma === 'pt';
 
   .controles {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 16px;
     margin-top: 24px;
@@ -97,6 +170,8 @@ const pt = idioma === 'pt';
   .controles button {
     width: 44px;
     height: 44px;
+    display: inline-grid;
+    place-items: center;
     border: 1px solid rgba(130, 232, 242, .45);
     border-radius: 50%;
     background: var(--painel);
@@ -106,7 +181,17 @@ const pt = idioma === 'pt';
     cursor: pointer;
     transition: border-color .2s ease, background .2s ease;
   }
+  .controles button[hidden] { display: none; }
   .controles button:hover:not(:disabled) { border-color: var(--ciano); background: #12284a; }
   .controles button:disabled { opacity: .35; cursor: default; }
   .contagem { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; color: var(--nevoa); min-width: 3.5em; text-align: center; }
+
+  .pausa .icone-continuar, .pausa.pausado .icone-pausar { display: none; }
+  .pausa.pausado .icone-continuar { display: block; }
+
+  /* Barra fina que mostra quanto falta para o próximo item. */
+  .progresso { flex: 0 1 120px; height: 2px; border-radius: 2px; background: rgba(139, 188, 255, .2); overflow: hidden; }
+  .progresso span { display: block; height: 100%; width: 100%; background: var(--ciano); transform-origin: left; transform: scaleX(0); }
+  .rodando .progresso span { animation: encher linear forwards; }
+  @keyframes encher { to { transform: scaleX(1); } }
 </style>
