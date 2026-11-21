@@ -145,7 +145,7 @@ test('dicas e treinamentos mostram os quatro cartões com botão de acesso', asy
   for (const [rota, titulo, botao] of [['/', 'Dicas e treinamentos', 'Acessar'], ['/en/', 'Tips and training', 'Visit']]) {
     await abrir(page, rota);
     const secao = page.locator('section', { has: page.getByRole('heading', { level: 2, name: titulo }) });
-    const cartoes = secao.locator('article');
+    const cartoes = secao.locator('.recomendacoes article');
     await expect(cartoes).toHaveCount(4);
     for (const cartao of await cartoes.all()) {
       await expect(cartao).toBeVisible();
@@ -160,6 +160,20 @@ test('dicas e treinamentos mostram os quatro cartões com botão de acesso', asy
   for (const url of ['https://www.microsoft.com/pt-br/microsoft-learn', 'https://skillbuilder.aws/', 'https://training.fortinet.com/', 'https://aws.amazon.com/pt/startups/']) {
     await expect(page.locator(`a[href="${url}"]`)).toHaveCount(1);
   }
+});
+
+test('cartão da Universidade SENAI CIMATEC destaca os cursos de computação', async ({ page }) => {
+  await abrir(page, '/');
+  const uni = page.getByRole('article', { name: 'Estude computação na Universidade SENAI CIMATEC' });
+  await expect(uni).toBeVisible();
+  const cursos = uni.getByRole('link', { name: /Conhecer o curso/ });
+  await expect(cursos).toHaveCount(2);
+  await expect(cursos.nth(0)).toContainText('Engenharia de Computação');
+  await expect(cursos.nth(1)).toContainText('Ciência de Dados e Inteligência Artificial');
+  for (const nome of ['Todos os cursos', 'Pós-graduação', 'Extensão']) {
+    await expect(uni.getByRole('link', { name: new RegExp(nome) })).toHaveAttribute('href', /^https:\/\/universidadesenaicimatec\.edu\.br\//);
+  }
+  for (const link of await uni.getByRole('link').all()) await expect(link).toHaveAttribute('target', '_blank');
 });
 
 test('assistente San e atalhos ficam nos corredores laterais, sem cobrir o texto', async ({ page }) => {
