@@ -54,6 +54,17 @@ const todas: Noticia[] = [
     url: 'https://skillbuilder.aws/',
   },
   {
+    categoria: 'treinamento',
+    titulo: { pt: 'Fortinet Training Institute', en: 'Fortinet Training Institute' },
+    resumo: {
+      pt: 'Cursos gratuitos de cibersegurança, no seu ritmo: redes seguras, segurança em nuvem, operações com IA e zero trust, com trilha para as certificações NSE.',
+      en: 'Free self-paced cybersecurity courses: secure networking, cloud security, AI-driven security operations and zero trust, with a path to NSE certifications.',
+    },
+    fonte: 'Fortinet',
+    etiquetas: [{ pt: 'Gratuito', en: 'Free' }, { pt: 'Cibersegurança', en: 'Cybersecurity' }, { pt: 'Certificações NSE', en: 'NSE certifications' }],
+    url: 'https://training.fortinet.com/',
+  },
+  {
     categoria: 'tecnologia',
     titulo: { pt: 'AWS para Startups', en: 'AWS for Startups' },
     resumo: {

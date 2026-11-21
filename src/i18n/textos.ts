@@ -39,7 +39,7 @@ const pt = {
       'Professor, pesquisador e coordenador na Universidade SENAI CIMATEC. Pesquisa, resultados dos estudantes e recomendações sobre tecnologia e educação.',
     chamada: ['Inteligência Artificial para', 'quem ensina.'],
     resumo:
-      'Pesquisador, coordenador e professor. Conecto educação e tecnologia na pesquisa e na sala de aula.',
+      'Pesquisador, coordenador e professor. Conecto educação e tecnologia com pesquisa, empreendedorismo e negócios.',
     credenciais: [
       'PhD',
       'Universidade SENAI CIMATEC',
@@ -101,7 +101,7 @@ const en: Textos = {
       'Professor, researcher and program coordinator at SENAI CIMATEC University. Research, student achievements and recommendations on technology and education.',
     chamada: ['Artificial Intelligence for', 'those who teach.'],
     resumo:
-      'Researcher, program coordinator and professor. I connect education and technology in research and in the classroom.',
+      'Researcher, program coordinator and professor. I connect education and technology with research, entrepreneurship and business.',
     credenciais: [
       'PhD',
       'SENAI CIMATEC University',

@@ -121,12 +121,12 @@ test('destaques ficam em carrossel com links para as redes', async ({ page }) =>
   await expect(carrossel.getByRole('link', { name: /Ler no LinkedIn/ }).first()).toHaveAttribute('href', /linkedin\.com/);
 });
 
-test('dicas e treinamentos mostram os três cartões com botão de acesso', async ({ page }) => {
+test('dicas e treinamentos mostram os quatro cartões com botão de acesso', async ({ page }) => {
   for (const [rota, titulo, botao] of [['/', 'Dicas e treinamentos', 'Acessar'], ['/en/', 'Tips and training', 'Visit']]) {
     await abrir(page, rota);
     const secao = page.locator('section', { has: page.getByRole('heading', { level: 2, name: titulo }) });
     const cartoes = secao.locator('article');
-    await expect(cartoes).toHaveCount(3);
+    await expect(cartoes).toHaveCount(4);
     for (const cartao of await cartoes.all()) {
       await expect(cartao).toBeVisible();
       await expect(cartao.getByRole('heading', { level: 3 })).not.toBeEmpty();
@@ -137,7 +137,7 @@ test('dicas e treinamentos mostram os três cartões com botão de acesso', asyn
     }
   }
   await abrir(page, '/');
-  for (const url of ['https://www.microsoft.com/pt-br/microsoft-learn', 'https://skillbuilder.aws/', 'https://aws.amazon.com/pt/startups/']) {
+  for (const url of ['https://www.microsoft.com/pt-br/microsoft-learn', 'https://skillbuilder.aws/', 'https://training.fortinet.com/', 'https://aws.amazon.com/pt/startups/']) {
     await expect(page.locator(`a[href="${url}"]`)).toHaveCount(1);
   }
 });
