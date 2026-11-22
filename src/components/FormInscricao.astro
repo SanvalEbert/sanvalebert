@@ -32,7 +32,6 @@ const t = tr(idioma, {
       padrao: 'Não foi possível concluir sua inscrição agora. Tente novamente em instantes.',
     },
     obrigatorio: 'Campos obrigatórios. Seus dados ficam protegidos e não são compartilhados.',
-    reserva: 'Enquanto isso, inscreva-se por este formulário',
   },
   en: {
     titulo: 'Free registration',
@@ -56,7 +55,6 @@ const t = tr(idioma, {
       padrao: 'We could not complete your registration right now. Please try again shortly.',
     },
     obrigatorio: 'All fields are required. Your data is protected and never shared.',
-    reserva: 'Meanwhile, register through this form',
   },
   es: {
     titulo: 'Inscripción gratuita',
@@ -80,12 +78,11 @@ const t = tr(idioma, {
       padrao: 'No fue posible completar su inscripción ahora. Intente de nuevo en unos instantes.',
     },
     obrigatorio: 'Todos los campos son obligatorios. Sus datos están protegidos y no se comparten.',
-    reserva: 'Mientras tanto, inscríbase por este formulario',
   },
 });
 ---
 
-<div class="inscricao" data-inscricao data-erros={JSON.stringify(t.erros)} data-enviando={t.enviando} data-reserva="https://professor-ia-eosin.vercel.app/#inscricao" data-reserva-texto={t.reserva}>
+<div class="inscricao" data-inscricao data-erros={JSON.stringify(t.erros)} data-enviando={t.enviando}>
   <form class="formulario" novalidate data-formulario>
     <h3>{t.titulo}</h3>
     <p class="etapas">{t.etapas}</p>
@@ -142,13 +139,6 @@ const t = tr(idioma, {
 
     const mostrarErro = (codigo: string) => {
       erro.textContent = erros[codigo] || erros.padrao;
-      // Reserva temporária: enquanto o banco não estiver configurado no portal, aponta o formulário anterior.
-      if (codigo === 'registrations_not_configured' && raiz.dataset.reserva) {
-        const a = document.createElement('a');
-        a.href = raiz.dataset.reserva; a.target = '_blank'; a.rel = 'noopener noreferrer';
-        a.textContent = raiz.dataset.reservaTexto || '';
-        erro.append(' ', a, '.');
-      }
       erro.hidden = false;
     };
 
