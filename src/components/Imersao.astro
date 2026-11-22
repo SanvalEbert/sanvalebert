@@ -1,0 +1,276 @@
+---
+// Página da imersão "Inteligência Artificial na Prática Docente" (menu: IA para Professores).
+// Apresenta o projeto no visual do portal e leva à inscrição no site da imersão, que guarda os dados.
+import Base from '../layouts/Base.astro';
+import { endereco, inscricaoImersao, link, type Idioma } from '../data/site';
+import { tr } from '../i18n/tr';
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props;
+
+const t = tr(idioma, {
+  pt: {
+    titulo: 'IA para Professores · Imersão Inteligência Artificial na Prática Docente · Sanval Ebert',
+    descricao: 'Imersão online e gratuita para professores: três mentorias ao vivo em 23, 24 e 25 de fevereiro de 2027, das 20h às 21h (horário de Brasília), para compreender, experimentar e aplicar IA na prática docente.',
+    rotulo: 'Imersão online e gratuita para professores',
+    chamada: ['Nunca foi tão interessante', 'ensinar com Inteligência Artificial.'],
+    resumo: 'Em três noites, você vai compreender, experimentar e aplicar a IA na sua prática docente e começar 2027 como protagonista dessa transformação.',
+    quando: '23, 24 e 25 de fevereiro de 2027',
+    horario: '20h às 21h, horário de Brasília · ao vivo e online',
+    inscrever: 'Quero participar gratuitamente',
+    programacao: 'Ver a programação',
+    agenda: 'Adicionar à agenda',
+    numeros: [['3', 'mentorias ao vivo'], ['100%', 'online e gratuita'], ['1', 'proposta pedagógica sua']],
+    fotoAlt: 'Sanval Ebert explica um conteúdo em sala de aula',
+    porqueRotulo: 'Por que agora',
+    citacao: 'Ensinar com o suporte da Inteligência Artificial tem transformado a atividade docente em algo muito mais prazeroso. Os resultados acontecem de forma dinâmica e inteligente, e o professor ganha espaço para criar e inovar, porque muitas tarefas mecânicas podem ser automatizadas.',
+    convite: 'Quero provocar professores de todo o Brasil a viver essa experiência.',
+    protagonismoRotulo: 'Em 2027, mais protagonismo',
+    protagonismoTitulo: 'A IA cuida do mecânico. Você fica com o que só um professor sabe fazer.',
+    protagonismoTexto: 'A imersão conecta a IA aos desafios reais da sala de aula, com experimentação, critério e autoria.',
+    frentes: [
+      ['Planejar', 'Aulas e sequências didáticas com objetivos claros, em menos tempo.'],
+      ['Produzir', 'Materiais, atividades e experiências alinhadas à aprendizagem.'],
+      ['Avaliar', 'Questões, rubricas e critérios de avaliação consistentes.'],
+      ['Dar devolutivas', 'Correções e feedback ágeis, sem perder o olhar do professor.'],
+      ['Criar agentes', 'Assistentes de IA que apoiam você e seus estudantes.'],
+      ['Agir com ética', 'Autoria, privacidade e pensamento crítico no centro das escolhas.'],
+    ],
+    jornadaRotulo: 'Programação',
+    jornadaTitulo: 'Três noites. Uma nova forma de ensinar.',
+    encontros: [
+      { etapa: 'Compreender', dia: 'Terça, 23/02', data: '2027-02-23', titulo: 'IA na educação: fundamentos e possibilidades', texto: 'Usos concretos, limites e cuidados éticos. Você esboça uma atividade pedagógica com IA.' },
+      { etapa: 'Experimentar', dia: 'Quarta, 24/02', data: '2027-02-24', titulo: 'Oficina: planejar, criar e avaliar com IA', texto: 'Materiais, atividades e critérios de avaliação pensados para a sua realidade.' },
+      { etapa: 'Aplicar', dia: 'Quinta, 25/02', data: '2027-02-25', titulo: 'Da ideia à aplicação: agentes e autoria docente', texto: 'Você experimenta agentes de IA e finaliza uma proposta para usar nas suas aulas.' },
+    ],
+    resultado: 'Ao final, você terá uma proposta de atividade ou recurso pedagógico com IA, pronta para a sua sala de aula.',
+    conduzRotulo: 'Quem conduz',
+    conduzTexto: 'Professor, pesquisador e doutor em Difusão do Conhecimento, coordeno os cursos de Engenharia de Computação e de Ciência de Dados e Inteligência Artificial na Universidade SENAI CIMATEC. Durante a transformação digital da pandemia, trabalhei com professores de diferentes regiões do Brasil, e é com eles que gosto de construir.',
+    conduzElo: 'Conheça minha trajetória',
+    conduzFotoAlt: 'Sanval Ebert fala ao microfone no palco de um evento do SENAI CIMATEC',
+    finalTitulo: ['Vamos viver essa', 'experiência juntos?'],
+    finalTexto: 'Inscrição gratuita, aberta a professores de todo o Brasil. Depois do cadastro, você recebe as orientações para entrar no grupo da imersão.',
+  },
+  en: {
+    titulo: 'AI for Teachers · Artificial Intelligence in Teaching Practice immersion · Sanval Ebert',
+    descricao: 'A free online immersion for teachers: three live mentoring sessions on 23, 24 and 25 February 2027, 8 to 9 pm Brasília time, to understand, try out and apply AI in teaching. Sessions are in Portuguese.',
+    rotulo: 'Free online immersion for teachers · in Portuguese',
+    chamada: ['Teaching with Artificial Intelligence', 'has never been this exciting.'],
+    resumo: 'Over three evenings, you will understand, try out and apply AI in your teaching, and start 2027 leading this transformation.',
+    quando: '23, 24 and 25 February 2027',
+    horario: '8 to 9 pm, Brasília time (UTC−3) · live and online',
+    inscrever: 'Join for free',
+    programacao: 'See the programme',
+    agenda: 'Add to calendar',
+    numeros: [['3', 'live mentoring sessions'], ['100%', 'online and free'], ['1', 'teaching plan of your own']],
+    fotoAlt: 'Sanval Ebert explaining a topic in a classroom',
+    porqueRotulo: 'Why now',
+    citacao: 'Teaching with the support of Artificial Intelligence has made the work of teachers far more enjoyable. Results come quickly and intelligently, and teachers gain room to create and innovate, because many mechanical tasks can be automated.',
+    convite: 'I want to challenge teachers across Brazil to live this experience.',
+    protagonismoRotulo: 'In 2027, a bigger role for teachers',
+    protagonismoTitulo: 'AI takes care of the mechanical work. You keep what only a teacher can do.',
+    protagonismoTexto: 'The immersion connects AI to real classroom challenges, with experimentation, judgement and authorship.',
+    frentes: [
+      ['Plan', 'Lessons and learning sequences with clear goals, in less time.'],
+      ['Create', 'Materials, activities and experiences aligned with learning.'],
+      ['Assess', 'Questions, rubrics and consistent assessment criteria.'],
+      ['Give feedback', 'Fast corrections and feedback without losing the teacher’s eye.'],
+      ['Build agents', 'AI assistants that support you and your students.'],
+      ['Act ethically', 'Authorship, privacy and critical thinking at the centre of every choice.'],
+    ],
+    jornadaRotulo: 'Programme',
+    jornadaTitulo: 'Three evenings. A new way to teach.',
+    encontros: [
+      { etapa: 'Understand', dia: 'Tuesday, 23 Feb', data: '2027-02-23', titulo: 'AI in education: foundations and possibilities', texto: 'Concrete uses, limits and ethical care. You sketch a teaching activity with AI.' },
+      { etapa: 'Try out', dia: 'Wednesday, 24 Feb', data: '2027-02-24', titulo: 'Workshop: plan, create and assess with AI', texto: 'Materials, activities and assessment criteria designed for your reality.' },
+      { etapa: 'Apply', dia: 'Thursday, 25 Feb', data: '2027-02-25', titulo: 'From idea to practice: agents and teacher authorship', texto: 'You try out AI agents and finish a plan to use in your classes.' },
+    ],
+    resultado: 'By the end, you will have an AI-supported activity or teaching resource ready for your classroom.',
+    conduzRotulo: 'Who leads it',
+    conduzTexto: 'I am a professor, researcher and PhD in Knowledge Diffusion, and I coordinate the Computer Engineering and Data Science and Artificial Intelligence programs at SENAI CIMATEC University. During the digital shift of the pandemic, I worked with teachers from different regions of Brazil, and building with them is what I enjoy most.',
+    conduzElo: 'See my path',
+    conduzFotoAlt: 'Sanval Ebert speaking into a microphone on stage at a SENAI CIMATEC event',
+    finalTitulo: ['Shall we live this', 'experience together?'],
+    finalTexto: 'Free registration, open to teachers across Brazil. After signing up, you will receive instructions to join the immersion group.',
+  },
+  es: {
+    titulo: 'IA para Docentes · Inmersión Inteligencia Artificial en la Práctica Docente · Sanval Ebert',
+    descricao: 'Inmersión en línea y gratuita para docentes: tres mentorías en vivo el 23, 24 y 25 de febrero de 2027, de 20 a 21 h (hora de Brasilia), para comprender, experimentar y aplicar la IA en la práctica docente. Los encuentros son en portugués.',
+    rotulo: 'Inmersión en línea y gratuita para docentes · en portugués',
+    chamada: ['Nunca fue tan interesante', 'enseñar con Inteligencia Artificial.'],
+    resumo: 'En tres noches, usted va a comprender, experimentar y aplicar la IA en su práctica docente y empezar 2027 como protagonista de esta transformación.',
+    quando: '23, 24 y 25 de febrero de 2027',
+    horario: 'De 20 a 21 h, hora de Brasilia (UTC−3) · en vivo y en línea',
+    inscrever: 'Quiero participar gratis',
+    programacao: 'Ver el programa',
+    agenda: 'Añadir a la agenda',
+    numeros: [['3', 'mentorías en vivo'], ['100%', 'en línea y gratuita'], ['1', 'propuesta pedagógica suya']],
+    fotoAlt: 'Sanval Ebert explica un contenido en el aula',
+    porqueRotulo: 'Por qué ahora',
+    citacao: 'Enseñar con el apoyo de la Inteligencia Artificial ha transformado la actividad docente en algo mucho más placentero. Los resultados llegan de forma dinámica e inteligente, y el docente gana espacio para crear e innovar, porque muchas tareas mecánicas se pueden automatizar.',
+    convite: 'Quiero invitar a docentes de todo Brasil a vivir esta experiencia.',
+    protagonismoRotulo: 'En 2027, más protagonismo',
+    protagonismoTitulo: 'La IA se ocupa de lo mecánico. Usted se queda con lo que solo un docente sabe hacer.',
+    protagonismoTexto: 'La inmersión conecta la IA con los desafíos reales del aula, con experimentación, criterio y autoría.',
+    frentes: [
+      ['Planificar', 'Clases y secuencias didácticas con objetivos claros, en menos tiempo.'],
+      ['Producir', 'Materiales, actividades y experiencias alineadas al aprendizaje.'],
+      ['Evaluar', 'Preguntas, rúbricas y criterios de evaluación consistentes.'],
+      ['Dar devoluciones', 'Correcciones y feedback ágiles, sin perder la mirada docente.'],
+      ['Crear agentes', 'Asistentes de IA que le apoyan a usted y a sus estudiantes.'],
+      ['Actuar con ética', 'Autoría, privacidad y pensamiento crítico en el centro de las decisiones.'],
+    ],
+    jornadaRotulo: 'Programa',
+    jornadaTitulo: 'Tres noches. Una nueva forma de enseñar.',
+    encontros: [
+      { etapa: 'Comprender', dia: 'Martes, 23/02', data: '2027-02-23', titulo: 'IA en la educación: fundamentos y posibilidades', texto: 'Usos concretos, límites y cuidados éticos. Usted esboza una actividad pedagógica con IA.' },
+      { etapa: 'Experimentar', dia: 'Miércoles, 24/02', data: '2027-02-24', titulo: 'Taller: planificar, crear y evaluar con IA', texto: 'Materiales, actividades y criterios de evaluación pensados para su realidad.' },
+      { etapa: 'Aplicar', dia: 'Jueves, 25/02', data: '2027-02-25', titulo: 'De la idea a la aplicación: agentes y autoría docente', texto: 'Usted experimenta agentes de IA y termina una propuesta para usar en sus clases.' },
+    ],
+    resultado: 'Al final, usted tendrá una propuesta de actividad o recurso pedagógico con IA, lista para su aula.',
+    conduzRotulo: 'Quién lo conduce',
+    conduzTexto: 'Profesor, investigador y doctor en Difusión del Conocimiento, coordino las carreras de Ingeniería de Computación y de Ciencia de Datos e Inteligencia Artificial en la Universidad SENAI CIMATEC. Durante la transformación digital de la pandemia trabajé con docentes de distintas regiones de Brasil, y es con ellos que me gusta construir.',
+    conduzElo: 'Conozca mi trayectoria',
+    conduzFotoAlt: 'Sanval Ebert habla al micrófono en el escenario de un evento del SENAI CIMATEC',
+    finalTitulo: ['¿Vivimos juntos esta', 'experiencia?'],
+    finalTexto: 'Inscripción gratuita, abierta a docentes de todo Brasil. Después del registro, recibirá las indicaciones para entrar al grupo de la inmersión.',
+  },
+});
+const agenda = endereco('agenda/imersao-ia-fevereiro-2027.ics');
+---
+
+<Base idioma={idioma} pagina="imersao" titulo={t.titulo} descricao={t.descricao}>
+  <section class="conteudo secao abre">
+    <div class="coluna texto">
+      <p class="rotulo destaque">{t.rotulo}</p>
+      <h1 class="titulo-pagina">{t.chamada[0]} <em>{t.chamada[1]}</em></h1>
+      <p class="abertura">{t.resumo}</p>
+      <p class="quando"><strong>{t.quando}</strong><span>{t.horario}</span></p>
+      <div class="linha">
+        <a class="botao" href={inscricaoImersao}>{t.inscrever} <span aria-hidden="true">↗</span></a>
+        <a class="italico" href="#programacao">{t.programacao}</a>
+        <a class="italico" href={agenda} download>{t.agenda}</a>
+      </div>
+      <dl class="numeros">
+        {t.numeros.map(([valor, texto]) => <div><dt>{valor}</dt><dd>{texto}</dd></div>)}
+      </dl>
+    </div>
+    <figure class="foto-abertura">
+      <img src={endereco('images/sala-de-aula.jpg')} width="760" height="950" alt={t.fotoAlt} fetchpriority="high" />
+    </figure>
+  </section>
+
+  <section class="conteudo secao manifesto" aria-labelledby="porque">
+    <p id="porque" class="rotulo destaque">{t.porqueRotulo}</p>
+    <blockquote>
+      <p>“{t.citacao}”</p>
+      <footer><cite>Sanval Ebert</cite></footer>
+    </blockquote>
+    <p class="convite">{t.convite}</p>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="protagonismo">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{t.protagonismoRotulo}</p>
+      <h2 id="protagonismo">{t.protagonismoTitulo}</h2>
+      <p class="apoio-texto">{t.protagonismoTexto}</p>
+    </div>
+    <ol class="frentes">
+      {t.frentes.map(([nome, texto], n) => (
+        <li><span class="frente-numero" aria-hidden="true">{String(n + 1).padStart(2, '0')}</span><h3>{nome}</h3><p>{texto}</p></li>
+      ))}
+    </ol>
+  </section>
+
+  <section id="programacao" class="conteudo secao" aria-labelledby="jornada">
+    <div class="cabeca-secao">
+      <p class="rotulo destaque">{t.jornadaRotulo}</p>
+      <h2 id="jornada">{t.jornadaTitulo}</h2>
+      <p class="apoio-texto">{t.quando} · {t.horario}</p>
+    </div>
+    <ol class="encontros">
+      {t.encontros.map((e, n) => (
+        <li>
+          <p class="encontro-topo"><span class="encontro-numero">{String(n + 1).padStart(2, '0')}</span><span class="encontro-etapa">{e.etapa}</span></p>
+          <p class="encontro-dia"><time datetime={`${e.data}T20:00-03:00`}>{e.dia}</time> · 20h–21h</p>
+          <h3>{e.titulo}</h3>
+          <p>{e.texto}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="resultado">{t.resultado}</p>
+  </section>
+
+  <section class="conteudo secao conduz" aria-labelledby="quem-conduz">
+    <figure class="foto-conduz">
+      <img src={endereco('images/palco-cimatec-microfone.jpg')} width="760" height="950" alt={t.conduzFotoAlt} loading="lazy" decoding="async" />
+    </figure>
+    <div class="coluna">
+      <p class="rotulo destaque">{t.conduzRotulo}</p>
+      <h2 id="quem-conduz">Sanval Ebert</h2>
+      <p class="abertura">{t.conduzTexto}</p>
+      <a class="italico" href={link('inicio', idioma) + '#sobre'}>{t.conduzElo} →</a>
+    </div>
+  </section>
+
+  <section class="conteudo secao" aria-labelledby="final">
+    <div class="bloco-azul chamada-final">
+      <div>
+        <h2 id="final">{t.finalTitulo[0]} <i>{t.finalTitulo[1]}</i></h2>
+        <p>{t.finalTexto}</p>
+      </div>
+      <a class="botao botao-noite" href={inscricaoImersao}>{t.inscrever} <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .abre { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px clamp(32px, 5vw, 72px); align-items: center; }
+  .texto { gap: 22px; }
+  .texto h1 { font-size: clamp(40px, 4.4vw, 62px); line-height: 1.04; }
+  .quando { display: flex; flex-direction: column; gap: 4px; padding-left: 16px; border-left: 2px solid var(--ciano); }
+  .quando strong { font-size: clamp(20px, 2vw, 24px); font-weight: 650; }
+  .quando span { font-family: var(--mono); font-size: 13px; color: var(--nevoa); }
+  .numeros { margin: 8px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .numeros div { padding-top: 12px; border-top: 1px solid rgba(130, 232, 242, .35); }
+  .numeros dt { font-size: clamp(30px, 3vw, 40px); font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+  .numeros dd { margin: 6px 0 0; font-size: 14px; color: var(--nevoa); }
+  .foto-abertura, .foto-conduz { margin: 0; border-radius: 22px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 75%, transparent 100%); mask-image: linear-gradient(180deg, #000 75%, transparent 100%); }
+  .foto-abertura img, .foto-conduz img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+  @media (max-width: 860px) { .abre { grid-template-columns: 1fr; } .foto-abertura { max-width: 420px; } }
+
+  .manifesto { display: flex; flex-direction: column; gap: 22px; }
+  .manifesto blockquote { margin: 0; max-width: 46em; padding-left: clamp(20px, 3vw, 36px); border-left: 3px solid var(--ciano); }
+  .manifesto blockquote p { font-size: clamp(22px, 2.3vw, 31px); line-height: 1.35; font-weight: 500; letter-spacing: -.015em; }
+  .manifesto footer { margin-top: 16px; }
+  .manifesto cite { font-family: var(--mono); font-style: normal; font-size: 13px; color: var(--ciano); letter-spacing: .08em; text-transform: uppercase; }
+  .convite { font-size: clamp(19px, 1.8vw, 22px); color: #d4dfed; max-width: 34em; }
+
+  .apoio-texto { color: #d4dfed; max-width: 40em; }
+  .frentes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; }
+  .frentes li { padding: 22px 0; border-top: 1px solid var(--fio); display: flex; flex-direction: column; gap: 6px; }
+  .frente-numero { font-family: var(--mono); font-size: 12px; color: var(--ciano); }
+  .frentes h3 { font-size: clamp(22px, 2vw, 26px); }
+  .frentes p { color: #d4dfed; font-size: 16px; }
+  @media (max-width: 860px) { .frentes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .frentes { grid-template-columns: 1fr; } }
+
+  .encontros { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid rgba(130, 232, 242, .45); }
+  .encontros li { padding: 26px 28px 26px 0; display: flex; flex-direction: column; gap: 10px; position: relative; }
+  .encontros li + li { padding-left: 28px; border-left: 1px solid var(--fio); }
+  .encontro-topo { display: flex; align-items: baseline; gap: 12px; }
+  .encontro-numero { font-size: clamp(36px, 4vw, 52px); font-weight: 700; letter-spacing: -.04em; line-height: 1; color: var(--ciano); }
+  .encontro-etapa { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--nevoa); }
+  .encontro-dia { font-family: var(--mono); font-size: 13px; color: var(--papel); }
+  .encontros h3 { font-size: clamp(21px, 2vw, 25px); line-height: 1.2; }
+  .encontros p:last-child { color: #d4dfed; font-size: 16px; }
+  .resultado { margin-top: 28px; font-size: clamp(19px, 1.8vw, 22px); max-width: 36em; padding: 18px 22px; border-radius: 16px; background: rgba(36, 82, 223, .16); border: 1px solid rgba(130, 232, 242, .3); }
+  @media (max-width: 860px) {
+    .encontros { grid-template-columns: 1fr; }
+    .encontros li, .encontros li + li { padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--fio); }
+  }
+
+  .conduz { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 32px clamp(32px, 5vw, 72px); align-items: center; }
+  .foto-conduz { max-width: 380px; }
+  @media (max-width: 760px) { .conduz { grid-template-columns: 1fr; } .foto-conduz { max-width: 320px; } }
+</style>

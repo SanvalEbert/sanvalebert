@@ -22,6 +22,7 @@ export const paginas = {
   estudantes: { rota: { pt: 'estudantes/', en: 'en/students/', es: 'es/resultados/' }, pronta: true },
   palestras: { rota: { pt: 'palestras/', en: 'en/talks/', es: 'es/charlas/' }, pronta: true },
   servicos: { rota: { pt: 'servicos/', en: 'en/services/', es: 'es/servicios/' }, pronta: false },
+  imersao: { rota: { pt: 'ia-para-professores/', en: 'en/ai-for-teachers/', es: 'es/ia-para-docentes/' }, pronta: true },
   privacidade: { rota: { pt: 'privacidade/', en: 'en/privacy/', es: 'es/privacidad/' }, pronta: true },
   cursos: { rota: { pt: 'cursos/', en: 'en/courses/', es: 'es/cursos/' }, pronta: false },
   radar: { rota: { pt: 'radar/', en: 'en/radar/', es: 'es/radar/' }, pronta: false },
@@ -31,7 +32,10 @@ export const paginas = {
 export type Pagina = keyof typeof paginas;
 
 /** Ordem e numeração do menu, iguais em todos os canais. */
-export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'servicos'];
+export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'imersao'];
+
+/** Inscrição da imersão IA na Prática Docente (formulário próprio, com dados guardados conforme a LGPD). */
+export const inscricaoImersao = 'https://professor-ia-eosin.vercel.app/#inscricao';
 
 /** WhatsApp para propostas de palestras, eventos e formações. */
 export const contatoWhatsApp = 'https://wa.me/5571985558490';

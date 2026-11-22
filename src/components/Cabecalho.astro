@@ -10,7 +10,7 @@ import Logo from './Logo.astro';
 interface Props { idioma: Idioma; pagina: Pagina }
 const { idioma, pagina } = Astro.props;
 const txt = t(idioma);
-const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' || item === 'servicos');
+const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
 ---
 <header class="portal-header" data-cabecalho>
  <div class="barra">
@@ -19,7 +19,7 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre' ||
     <Logo descritor={tr(idioma, { pt: 'Educação, pesquisa e tecnologia', en: 'Education, research and technology', es: 'Educación, investigación y tecnología' })} />
    </a>
    <nav class="menu" aria-label={txt.site.menuPrincipal}>
-    {visiveis.map(item => item === 'servicos'
+    {visiveis.map(item => !paginas[item].pronta && item !== 'sobre'
       ? <span class="item-indisponivel" role="link" aria-disabled="true" title={txt.site.emBreve}>{txt.menu[item]}</span>
       : <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>
     )}

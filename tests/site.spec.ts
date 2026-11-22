@@ -23,6 +23,9 @@ const paginas = [
   { rota: '/es/servicios/', idioma: 'es' },
   { rota: '/es/privacidad/', idioma: 'es' },
   { rota: '/es/contratar/', idioma: 'es' },
+  { rota: '/ia-para-professores/', idioma: 'pt-BR' },
+  { rota: '/en/ai-for-teachers/', idioma: 'en' },
+  { rota: '/es/ia-para-docentes/', idioma: 'es' },
 ];
 
 // O widget do VLibras vem de um servidor externo; nos testes ele é bloqueado
@@ -96,21 +99,37 @@ test('a versão em espanhol traduz a página inicial, os destaques e o San', asy
   await expect(page.locator('main')).not.toContainText(/Conheça|Pesquisa e publicações|Dicas e treinamentos/);
 });
 
-test('Tech Services aparece desabilitado no menu, sem link navegável nos dois idiomas', async ({ page }) => {
-  // No celular o item desativado fica oculto para o menu caber; a regra vale para telas maiores.
-  test.skip((page.viewportSize()?.width ?? 0) <= 640, 'item oculto no celular');
-  await abrir(page, '/');
-  const menu = page.getByRole('navigation', { name: 'Menu principal' });
-  await expect(menu.getByRole('link', { name: 'Tech Services', exact: true })).toHaveAttribute('aria-disabled', 'true');
-  await expect(menu.locator('a', { hasText: 'Tech Services' })).toHaveCount(0);
-  await expect(page.locator('a[href="/servicos/"]')).toHaveCount(0);
-  await expect(menu.getByRole('link', { name: 'Pesquisa', exact: true })).toHaveAttribute('href', '/pesquisa/');
+test('menu leva o professor à página IA para Professores nos três idiomas', async ({ page }) => {
+  for (const [rota, menu, nome, destino] of [
+    ['/', 'Menu principal', 'IA para Professores', '/ia-para-professores/'],
+    ['/en/', 'Main menu', 'AI for Teachers', '/en/ai-for-teachers/'],
+    ['/es/', 'Menú principal', 'IA para Docentes', '/es/ia-para-docentes/'],
+  ]) {
+    await abrir(page, rota);
+    const item = page.getByRole('navigation', { name: menu }).getByRole('link', { name: nome, exact: true });
+    await expect(item).toHaveAttribute('href', destino);
+    await expect(page.getByRole('navigation', { name: menu })).not.toContainText('Tech Services');
+  }
+});
 
-  await abrir(page, '/en/');
-  const englishMenu = page.getByRole('navigation', { name: 'Main menu' });
-  await expect(englishMenu.getByRole('link', { name: 'Tech Services', exact: true })).toHaveAttribute('aria-disabled', 'true');
-  await expect(englishMenu.locator('a', { hasText: 'Tech Services' })).toHaveCount(0);
-  await expect(page.locator('a[href="/en/services/"]')).toHaveCount(0);
+test('página da imersão traz as novas datas, a programação e a inscrição em nova aba', async ({ page }) => {
+  await abrir(page, '/ia-para-professores/');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Nunca foi tão interessante');
+  await expect(page.locator('main')).toContainText('23, 24 e 25 de fevereiro de 2027');
+  await expect(page.locator('main')).toContainText('20h às 21h');
+  await expect(page.locator('main')).not.toContainText(/novembro|17\/11|2026-11/);
+  await expect(page.locator('.encontros li')).toHaveCount(3);
+  for (const data of ['2027-02-23T20:00-03:00', '2027-02-24T20:00-03:00', '2027-02-25T20:00-03:00']) {
+    await expect(page.locator(`time[datetime="${data}"]`)).toHaveCount(1);
+  }
+  const inscricao = page.getByRole('link', { name: /Quero participar gratuitamente/ });
+  await expect(inscricao).toHaveCount(2);
+  await expect(inscricao.first()).toHaveAttribute('href', 'https://professor-ia-eosin.vercel.app/#inscricao');
+  await expect(inscricao.first()).toHaveAttribute('target', '_blank');
+  await expect(page.getByRole('link', { name: 'Adicionar à agenda' })).toHaveAttribute('href', '/agenda/imersao-ia-fevereiro-2027.ics');
+  const ics = await (await page.request.get('/agenda/imersao-ia-fevereiro-2027.ics')).text();
+  expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(3);
+  expect(ics).toContain('DTSTART:20270223T230000Z');
 });
 
 test('o botão de voltar ao topo aparece ao rolar e leva ao início', async ({ page }) => {
@@ -372,7 +391,6 @@ test('Serviços mantém idioma, modalidades e navegação em inglês', async ({ 
   await expect(page).toHaveURL(/\/en\/services\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('education and technology.');
   await expect(page.locator('.grade-servicos article')).toHaveCount(4);
-  if ((page.viewportSize()?.width ?? 0) > 640) await expect(page.getByRole('navigation', { name: 'Main menu' }).getByRole('link', { name: 'Tech Services' })).toHaveAttribute('aria-disabled', 'true');
 });
 test('política de privacidade está acessível pelo rodapé nas duas línguas', async ({ page }) => {
   await abrir(page, '/servicos/');

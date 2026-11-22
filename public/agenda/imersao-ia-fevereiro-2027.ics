@@ -1,0 +1,51 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Sanval Ebert//Imersao IA na Pratica Docente//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:imersao-ia-2027-encontro-1@sanvalebert
+DTSTAMP:20261122T130000Z
+DTSTART:20270223T230000Z
+DTEND:20270224T000000Z
+SUMMARY:Imersão IA na Prática Docente · Encontro 1
+DESCRIPTION:Compreender: IA na educação, fundamentos e possibilidades. Mentoria online e gratuita com Sanval Ebert\, das 20h às 21h (horário de Brasília). Inscrição: https://professor-ia-eosin.vercel.app/#inscricao
+LOCATION:Online
+URL:https://professor-ia-eosin.vercel.app/
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Imersão IA na Prática Docente começa em 30 minutos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:imersao-ia-2027-encontro-2@sanvalebert
+DTSTAMP:20261122T130000Z
+DTSTART:20270224T230000Z
+DTEND:20270225T000000Z
+SUMMARY:Imersão IA na Prática Docente · Encontro 2
+DESCRIPTION:Experimentar: planejar, criar e avaliar com IA. Mentoria online e gratuita com Sanval Ebert\, das 20h às 21h (horário de Brasília). Inscrição: https://professor-ia-eosin.vercel.app/#inscricao
+LOCATION:Online
+URL:https://professor-ia-eosin.vercel.app/
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Imersão IA na Prática Docente começa em 30 minutos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:imersao-ia-2027-encontro-3@sanvalebert
+DTSTAMP:20261122T130000Z
+DTSTART:20270225T230000Z
+DTEND:20270226T000000Z
+SUMMARY:Imersão IA na Prática Docente · Encontro 3
+DESCRIPTION:Aplicar: agentes de IA e autoria docente. Mentoria online e gratuita com Sanval Ebert\, das 20h às 21h (horário de Brasília). Inscrição: https://professor-ia-eosin.vercel.app/#inscricao
+LOCATION:Online
+URL:https://professor-ia-eosin.vercel.app/
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Imersão IA na Prática Docente começa em 30 minutos
+END:VALARM
+END:VEVENT
+END:VCALENDAR
