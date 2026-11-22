@@ -16,7 +16,7 @@ const txt = t(idioma);
 <footer id="rodape" class="conteudo rodape">
   <div class="topo">
     <div class="assinatura">
-      <p class="marca-rodape"><Logo descritor={txt.site.selo} /></p>
+      <p class="marca-rodape"><Logo alt={tr(idioma, { pt: 'Sanval Ebert — Educação, pesquisa e tecnologia', en: 'Sanval Ebert — Education, research and technology', es: 'Sanval Ebert — Educación, investigación y tecnología' })} /></p>
     </div>
 
     <nav aria-label={tr(idioma, { pt: 'Redes e perfis', en: 'Social and research profiles', es: 'Redes y perfiles' })} class="redes">
@@ -62,7 +62,7 @@ const txt = t(idioma);
 
   .redes { max-width: 520px; }
 
-  .marca-rodape { font-size: 30px; }
+  .marca-rodape { font-size: 56px; margin: 0; }
 
   .direitos {
     margin-top: 32px;

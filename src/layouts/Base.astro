@@ -47,11 +47,14 @@ const canonico = absoluto(paginas[pagina].rota[idioma]);
     <meta property="og:description" content={descricao} />
     <meta property="og:url" content={canonico} />
     <meta property="og:locale" content={tr(idioma, { pt: 'pt_BR', en: 'en_US', es: 'es_ES' })} />
-    <meta name="theme-color" content="#060c18" />
+    <meta name="theme-color" content="#081423" />
     {/* Estatísticas privadas no painel Vercel (sem contador público ou cookies).
         Requer habilitar Web Analytics no projeto e gerar uma nova implantação. */}
     <script is:inline defer src="/_vercel/insights/script.js"></script>
-    <link rel="icon" type="image/svg+xml" href={endereco('favicon.svg')} />
+    <link rel="icon" type="image/svg+xml" href={endereco('brand/favicon.svg')} />
+    <link rel="icon" type="image/x-icon" href={endereco('brand/favicon.ico')} sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" sizes="180x180" href={endereco('brand/icone-180.png')} />
+    <link rel="manifest" href={endereco('brand/site.webmanifest')} />
   </head>
   <body id="topo">
     <a class="pular" href="#conteudo">{txt.site.pular}</a>

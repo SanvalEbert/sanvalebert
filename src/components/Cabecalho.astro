@@ -16,7 +16,7 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
  <div class="barra">
   <div class="conteudo linha">
    <a class="identidade" href={link('inicio', idioma)} title={tr(idioma, { pt: 'Ir para o início', en: 'Go to home', es: 'Ir al inicio' })}>
-    <Logo descritor={tr(idioma, { pt: 'Educação, pesquisa e tecnologia', en: 'Education, research and technology', es: 'Educación, investigación y tecnología' })} />
+    <Logo compactoNoCelular prioridade alt={tr(idioma, { pt: 'Sanval Ebert — Educação, pesquisa e tecnologia', en: 'Sanval Ebert — Education, research and technology', es: 'Sanval Ebert — Educación, investigación y tecnología' })} />
    </a>
    <nav class="menu" aria-label={txt.site.menuPrincipal}>
     {visiveis.map(item => !paginas[item].pronta && item !== 'sobre'
@@ -64,7 +64,7 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
   align-items: center;
   gap: 24px;
 }
-.identidade { justify-self: start; font-size: 27px; text-decoration: none; transform: scale(calc(1 - var(--p) * .16)); transform-origin: left center; border-radius: 10px; padding: 4px 6px 4px 0; }
+.identidade { justify-self: start; font-size: 52px; line-height: 0; text-decoration: none; transform: scale(calc(1 - var(--p) * .16)); transform-origin: left center; border-radius: 10px; padding: 4px 6px 4px 0; }
 .identidade:hover { color: inherit; }
 .identidade:hover :global(.letra-e) { fill: #5ee0e8; }
 .menu { display: flex; gap: 4px 30px; }
@@ -86,7 +86,7 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
 @media (max-width: 760px) {
   .portal-header { --alto-max: 116px; --alto-min: 104px; }
   .linha { grid-template-columns: 1fr auto; grid-template-areas: "marca idiomas" "menu menu"; row-gap: 0; align-content: center; }
-  .identidade { grid-area: marca; font-size: 24px; }
+  .identidade { grid-area: marca; font-size: 36px; }
   .idiomas { grid-area: idiomas; }
   .menu { grid-area: menu; gap: 0 18px; overflow-x: auto; scrollbar-width: none; border-top: 1px solid rgba(139, 188, 255, .12); }
   .menu::-webkit-scrollbar { display: none; }

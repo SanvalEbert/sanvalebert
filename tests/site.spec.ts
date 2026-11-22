@@ -390,24 +390,34 @@ test('Analytics é carregado de forma privada, sem contador público', async ({ 
   await expect(page.locator('[data-contador-publico], .visitantes-publicos')).toHaveCount(0);
 });
 
-test('cabeçalho exibe a marca com monograma SE e nome em destaque', async ({ page }) => {
+test('cabeçalho exibe a marca oficial (arquivos de produção) com nome e descritor', async ({ page }) => {
   await abrir(page, '/');
   const identidade = page.locator('.portal-header .identidade');
-  await expect(identidade.locator('svg.simbolo')).toBeVisible();
-  await expect(identidade.locator('svg.simbolo')).toHaveAttribute('aria-hidden', 'true');
-  await expect(identidade.locator('.nome')).toHaveText('Sanval Ebert');
-  await expect(identidade.locator('.descricao')).toHaveText('Educação, pesquisa e tecnologia');
+  const marca = identidade.locator('img');
+  await expect(marca).toBeVisible();
+  await expect(marca).toHaveAttribute('src', '/brand/logo-horizontal-escuro.svg');
+  await expect(marca).toHaveAttribute('alt', 'Sanval Ebert — Educação, pesquisa e tecnologia');
   await expect(identidade).toHaveAttribute('href', '/');
-  const fonte = await identidade.locator('.nome').evaluate(el => parseFloat(getComputedStyle(el).fontSize));
-  // Com o monograma ao lado, o nome tem 27px no computador e 24px no celular.
-  expect(fonte).toBeGreaterThanOrEqual(24);
+  const altura = await marca.evaluate(el => el.getBoundingClientRect().height);
+  expect(altura).toBeGreaterThanOrEqual(30);
+  const proporcao = await marca.evaluate(el => { const r = el.getBoundingClientRect(); return r.width / r.height; });
+  expect(proporcao).toBeGreaterThan(4);
+  const resposta = await page.request.get('/brand/logo-horizontal-escuro.svg');
+  expect(resposta.ok()).toBe(true);
 });
 
 test('cabeçalho preserva identidade e idioma em inglês', async ({ page }) => {
   await abrir(page, '/en/');
-  const identidade = page.locator('.portal-header .identidade');
-  await expect(identidade.locator('.nome')).toHaveText('Sanval Ebert');
-  await expect(identidade.locator('.descricao')).toHaveText('Education, research and technology');
+  const marca = page.locator('.portal-header .identidade img');
+  await expect(marca).toHaveAttribute('alt', 'Sanval Ebert — Education, research and technology');
+});
+
+test('ícones da marca estão publicados', async ({ page }) => {
+  await abrir(page, '/');
+  for (const href of ['/brand/favicon.svg', '/brand/favicon.ico', '/brand/icone-180.png', '/brand/site.webmanifest']) {
+    await expect(page.locator(`link[href="${href}"]`)).toHaveCount(1);
+    expect((await page.request.get(href)).ok()).toBe(true);
+  }
 });
 
 test('Serviços exibe quatro modalidades e preserva a página de palestras', async ({ page }) => {
