@@ -1,25 +1,35 @@
 ---
-// Marca: o nome em texto, "Sanval" em branco forte e "Ebert" em ciano leve, com o descritor abaixo.
-// Em texto (não imagem), para ficar nítido e ser lido por leitores de tela.
-// O tamanho segue o font-size do elemento pai (1em = altura de referência do nome).
+// Marca Sanval Ebert (opção 1 da identidade): monograma SE e nome.
+// O "S" é geométrico e inclinado; o "E" são três barras em ciano alinhadas aos traços do S.
+// Desenhado em vetor (SVG) a partir da prancha de identidade, para ficar nítido em qualquer tamanho.
+// Sobre o fundo escuro do site, o S fica claro; o nome é texto, para ser lido por leitores de tela.
+// O tamanho segue o font-size do elemento pai (1em = altura do nome).
 interface Props {
-  /** Mostra o descritor abaixo do nome. */
+  /** Descritor exibido abaixo do nome. */
   descritor?: string;
 }
 const { descritor } = Astro.props;
 ---
 
 <span class="logo">
+  <svg class="simbolo" viewBox="-18 -1 132 74" aria-hidden="true" focusable="false">
+    <g transform="skewX(-16)">
+      <path class="letra-s" d="M60 10 H26 A16 13 0 0 0 10 23 A16 13 0 0 0 26 36 H34 A16 13 0 0 1 50 49 A16 13 0 0 1 34 62 H-6" fill="none" stroke-width="20" />
+      <path class="letra-e" d="M66 0 H112 V20 H66 Z M66 26 H105 V46 H66 Z M66 52 H108 V72 H66 Z" />
+    </g>
+  </svg>
   <span class="texto">
-    <span class="nome">Sanval <span class="sobrenome">Ebert</span></span>
+    <span class="nome">Sanval Ebert</span>
     {descritor && <span class="descricao">{descritor}</span>}
   </span>
 </span>
 
 <style>
-  .logo { display: inline-flex; align-items: center; gap: .5em; line-height: 1; }
-  .texto { display: flex; flex-direction: column; gap: .3em; }
-  .nome { font-family: var(--sans); font-size: 1em; font-weight: 750; letter-spacing: -.035em; color: var(--papel); white-space: nowrap; }
-  .sobrenome { font-weight: 300; color: var(--ciano); }
-  .descricao { font-family: var(--mono); font-size: max(.34em, 10px); letter-spacing: .16em; text-transform: uppercase; color: var(--nevoa); white-space: nowrap; }
+  .logo { display: inline-flex; align-items: center; gap: .45em; line-height: 1; }
+  .simbolo { height: 1.55em; width: auto; flex: none; }
+  .letra-s { stroke: #f5f3ee; }
+  .letra-e { fill: #21c4ce; }
+  .texto { display: flex; flex-direction: column; gap: .32em; }
+  .nome { font-family: var(--sans); font-size: 1em; font-weight: 700; letter-spacing: -.03em; color: #f5f3ee; white-space: nowrap; }
+  .descricao { font-family: var(--sans); font-size: max(.3em, 10px); font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--nevoa); white-space: nowrap; }
 </style>
