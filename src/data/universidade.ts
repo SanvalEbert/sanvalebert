@@ -17,21 +17,40 @@ export const universidade = {
   nome: 'Universidade SENAI CIMATEC',
   rotulo: { pt: 'Graduação em computação', en: 'Computing degrees', es: 'Grado en computación' } satisfies Texto,
   titulo: {
-    pt: 'Estude computação na Universidade SENAI CIMATEC',
-    en: 'Study computing at SENAI CIMATEC University',
-    es: 'Estudie computación en la Universidad SENAI CIMATEC',
+    pt: 'Estude na Universidade SENAI CIMATEC.',
+    en: 'Study at SENAI CIMATEC University.',
+    es: 'Estudie en la Universidad SENAI CIMATEC.',
   } satisfies Texto,
+  recomendo: { pt: 'Eu recomendo.', en: 'I recommend it.', es: 'Yo la recomiendo.' } satisfies Texto,
   resumo: {
-    pt: 'Formação dentro de um dos maiores centros de tecnologia e inovação do país, com laboratórios que simulam o mercado, projetos reais, estágios com a indústria e apoio ao empreendedorismo.',
-    en: 'Study inside one of Brazil’s largest technology and innovation centers, with labs that simulate the market, real projects, industry internships and support for entrepreneurship.',
-    es: 'Formación dentro de uno de los mayores centros de tecnología e innovación de Brasil, con laboratorios que simulan el mercado, proyectos reales, prácticas en la industria y apoyo al emprendimiento.',
+    pt: 'Formação de excelência dentro de um dos maiores centros de tecnologia e inovação do país.',
+    en: 'Excellent education inside one of Brazil’s largest technology and innovation centers.',
+    es: 'Formación de excelencia dentro de uno de los mayores centros de tecnología e innovación de Brasil.',
   } satisfies Texto,
+  indicadores: [
+    {
+      valor: 'IGC 5',
+      texto: {
+        pt: 'Nota máxima da Universidade SENAI CIMATEC no Índice Geral de Cursos do MEC.',
+        en: 'SENAI CIMATEC University’s top score in the MEC General Course Index.',
+        es: 'Nota máxima de la Universidad SENAI CIMATEC en el Índice General de Cursos del MEC.',
+      } satisfies Texto,
+    },
+    {
+      valor: 'CPC 5',
+      texto: {
+        pt: 'Nota máxima de Engenharia de Computação no Conceito Preliminar de Curso do MEC.',
+        en: 'Computer Engineering’s top score in the MEC Preliminary Course Score.',
+        es: 'Nota máxima de Ingeniería de Computación en el Concepto Preliminar de Curso del MEC.',
+      } satisfies Texto,
+    },
+  ],
   nota: { pt: 'Cursos que coordeno', en: 'Programs I coordinate', es: 'Carreras que coordino' } satisfies Texto,
   cursos: [
     {
       nome: { pt: 'Engenharia de Computação', en: 'Computer Engineering', es: 'Ingeniería de Computación' },
       formato: { pt: 'Presencial', en: 'On-site', es: 'Presencial' },
-      duracao: { pt: '5 anos', en: '5 years', es: '5 años' },
+      duracao: { pt: '5 anos · CPC 5', en: '5 years · CPC 5', es: '5 años · CPC 5' },
       url: 'https://www.universidadesenaicimatec.edu.br/en/curso/computer-engineering/',
     },
     {

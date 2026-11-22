@@ -117,7 +117,7 @@ const config = JSON.stringify({ textos, entradas, contatoWhatsApp, pesquisa: lin
         const lista = document.createElement('ul');
         for (const fonte of fontes) {
           const item = document.createElement('li'); const a = document.createElement('a');
-          a.textContent = fonte.titulo; a.href = fonte.url; item.append(a); lista.append(item);
+          a.textContent = fonte.titulo; a.href = fonte.url; if (new URL(fonte.url, location.href).origin !== location.origin) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } item.append(a); lista.append(item);
         }
         bloco.append(lista);
       }

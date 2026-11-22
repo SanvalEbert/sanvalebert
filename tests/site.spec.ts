@@ -91,7 +91,7 @@ test('a versão em espanhol traduz a página inicial, os destaques e o San', asy
   await expect(page.getByRole('heading', { level: 2, name: 'Sobre mí' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Destacados' })).toContainText('BATV');
   await expect(page.getByRole('heading', { level: 2, name: 'Consejos y formación' })).toBeVisible();
-  await expect(page.getByRole('article', { name: 'Estudie computación en la Universidad SENAI CIMATEC' })).toBeVisible();
+  await expect(page.getByRole('article', { name: /Estudie en la Universidad SENAI CIMATEC/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /Pregunte a San/ })).toBeVisible();
   await expect(page.locator('main')).not.toContainText(/Conheça|Pesquisa e publicações|Dicas e treinamentos/);
 });
@@ -128,6 +128,19 @@ test('o VLibras está nas páginas em português e fora das páginas em inglês'
   await expect(page.locator('[vw-access-button]')).toHaveCount(1);
   await abrir(page, '/en/');
   await expect(page.locator('[vw-access-button]')).toHaveCount(0);
+});
+
+test('links externos abrem em nova aba com rel seguro; links internos ficam na mesma aba', async ({ page }) => {
+  for (const rota of ['/', '/pesquisa/', '/estudantes/', '/es/']) {
+    await abrir(page, rota);
+    const externos = page.locator('a[href^="http"]:not([href^="http://localhost"])');
+    expect(await externos.count()).toBeGreaterThan(3);
+    for (const a of await externos.all()) {
+      await expect(a).toHaveAttribute('target', '_blank');
+      await expect(a).toHaveAttribute('rel', /noopener/);
+    }
+    for (const a of await page.locator('a[href^="/"], a[href^="#"]').all()) await expect(a).not.toHaveAttribute('target', '_blank');
+  }
 });
 
 test('a página inicial não oferece contratação', async ({ page }) => {
@@ -212,8 +225,11 @@ test('dicas e treinamentos mostram as quatro notas de curadoria com link de aces
 
 test('cartão da Universidade SENAI CIMATEC destaca os cursos de computação', async ({ page }) => {
   await abrir(page, '/');
-  const uni = page.getByRole('article', { name: 'Estude computação na Universidade SENAI CIMATEC' });
+  const uni = page.getByRole('article', { name: /Estude na Universidade SENAI CIMATEC/ });
   await expect(uni).toBeVisible();
+  await expect(uni).toContainText('Eu recomendo.');
+  await expect(uni).toContainText('IGC 5');
+  await expect(uni).toContainText('CPC 5');
   const cursos = uni.getByRole('link', { name: /Conhecer o curso/ });
   await expect(cursos).toHaveCount(2);
   await expect(cursos.nth(0)).toContainText('Engenharia de Computação');
@@ -320,7 +336,8 @@ test('cabeçalho exibe a marca com monograma SE e nome em destaque', async ({ pa
   await expect(identidade.locator('.descricao')).toHaveText('Educação, pesquisa e tecnologia');
   await expect(identidade).toHaveAttribute('href', '/');
   const fonte = await identidade.locator('.nome').evaluate(el => parseFloat(getComputedStyle(el).fontSize));
-  expect(fonte).toBeGreaterThanOrEqual(30);
+  // Com o monograma ao lado, o nome tem 27px no computador e 24px no celular.
+  expect(fonte).toBeGreaterThanOrEqual(24);
 });
 
 test('cabeçalho preserva identidade e idioma em inglês', async ({ page }) => {

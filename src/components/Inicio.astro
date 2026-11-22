@@ -137,9 +137,12 @@ const sobre = tr(idioma, {
       </div>
       <article class="universidade" aria-labelledby="uni-titulo">
         <div class="uni-intro">
-          <p class="rotulo destaque">{uni.nome} · {uni.rotulo[idioma]}</p>
-          <h3 id="uni-titulo">{uni.titulo[idioma]}</h3>
+          <p class="rotulo destaque">{uni.rotulo[idioma]}</p>
+          <h3 id="uni-titulo">{uni.titulo[idioma]} <span class="uni-recomendo">{uni.recomendo[idioma]}</span></h3>
           <p class="uni-resumo">{uni.resumo[idioma]}</p>
+          <dl class="uni-indicadores">
+            {uni.indicadores.map((d) => <div><dt>{d.valor}</dt><dd>{d.texto[idioma]}</dd></div>)}
+          </dl>
         </div>
         <div class="uni-cursos">
           <p class="apoio uni-nota">{uni.nota[idioma]}</p>
@@ -253,6 +256,12 @@ const sobre = tr(idioma, {
   .uni-intro { display: flex; flex-direction: column; gap: 16px; }
   .universidade h3 { font-size: clamp(28px, 3vw, 40px); line-height: 1.1; letter-spacing: -.02em; }
   .uni-resumo { color: #d4dfed; font-size: 17px; line-height: 1.65; max-width: 34em; }
+  .uni-recomendo { display: block; color: var(--ciano); }
+  .uni-indicadores { margin: 8px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .uni-indicadores div { padding-top: 14px; border-top: 1px solid rgba(130, 232, 242, .35); }
+  .uni-indicadores dt { font-size: clamp(30px, 3vw, 40px); font-weight: 700; letter-spacing: -.03em; line-height: 1; color: var(--papel); }
+  .uni-indicadores dd { margin: 8px 0 0; font-size: 14px; line-height: 1.5; color: var(--nevoa); }
+  @media (max-width: 480px) { .uni-indicadores { grid-template-columns: 1fr; } }
   .uni-cursos { display: flex; flex-direction: column; gap: 6px; }
   .uni-nota { text-transform: uppercase; letter-spacing: .12em; font-size: 11px; }
   .uni-cursos ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(130, 232, 242, .35); }
