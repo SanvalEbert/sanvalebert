@@ -21,7 +21,7 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
    <nav class="menu" aria-label={txt.site.menuPrincipal}>
     {visiveis.map(item => !paginas[item].pronta && item !== 'sobre'
       ? <span class="item-indisponivel" role="link" aria-disabled="true" title={txt.site.emBreve}>{txt.menu[item]}</span>
-      : <a href={link(item, idioma)} aria-current={item === pagina ? 'page' : undefined}>{txt.menu[item]}</a>
+      : <a href={link(item, idioma)} class={item === 'imersao' ? 'chamada' : undefined} aria-current={item === pagina ? 'page' : undefined}>{item === 'imersao' && <span class="ponto" aria-hidden="true"></span>}{txt.menu[item]}</a>
     )}
    </nav>
    <nav class="idiomas" aria-label={tr(idioma, { pt: 'Idioma', en: 'Language', es: 'Idioma' })}>
@@ -72,6 +72,13 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
 .menu .item-indisponivel { color: var(--nevoa); opacity: .58; cursor: not-allowed; user-select: none; }
 .menu a:hover { color: var(--ciano); }
 .menu a[aria-current='page'] { color: var(--ciano); border-bottom-color: var(--ciano); }
+/* Destaque da imersão: cor invertida (ciano da marca com texto azul-escuro), sem sair da paleta. */
+.menu { align-items: center; }
+.menu a.chamada { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 0; border-radius: 999px; background: #21c4ce; color: #081423; font-weight: 700; box-shadow: 0 0 0 0 rgba(33, 196, 206, .45); transition: background-color .2s, box-shadow .2s; }
+.menu a.chamada:hover, .menu a.chamada:focus-visible { background: #5ee0e8; color: #081423; box-shadow: 0 0 0 4px rgba(33, 196, 206, .22); }
+.menu a.chamada[aria-current='page'] { color: #081423; border: 0; box-shadow: inset 0 0 0 2px #f5f3ee; }
+.chamada .ponto { width: 7px; height: 7px; border-radius: 50%; background: #081423; animation: pulsar 2.4s ease-in-out infinite; }
+@keyframes pulsar { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .idiomas { justify-self: end; display: flex; align-items: center; gap: 2px; font-family: var(--mono); font-size: 12px; }
 .globo { color: var(--nevoa); margin-right: 6px; }
 .idiomas a, .idiomas .ativo { display: inline-grid; place-items: center; min-width: 32px; min-height: 32px; padding: 0 6px; border-radius: 8px; text-decoration: none; letter-spacing: .04em; }
@@ -88,13 +95,16 @@ const visiveis = menu.filter(item => paginas[item].pronta || item === 'sobre');
   .linha { grid-template-columns: 1fr auto; grid-template-areas: "marca idiomas" "menu menu"; row-gap: 0; align-content: center; }
   .identidade { grid-area: marca; font-size: 36px; }
   .idiomas { grid-area: idiomas; }
-  .menu { grid-area: menu; gap: 0 18px; overflow-x: auto; scrollbar-width: none; border-top: 1px solid rgba(139, 188, 255, .12); }
+  .menu { grid-area: menu; gap: 0 14px; overflow-x: auto; scrollbar-width: none; border-top: 1px solid rgba(139, 188, 255, .12); }
   .menu::-webkit-scrollbar { display: none; }
   .menu a { font-size: 11px; padding: 12px 0; }
+  .menu a.chamada { padding: 5px 10px; gap: 6px; flex: none; }
+  .chamada .ponto { display: none; }
   /* Item desativado (em breve) fica oculto no celular para o menu caber inteiro. */
   .menu .item-indisponivel { display: none; }
   .globo { display: none; }
   .idiomas a, .idiomas .ativo { min-width: 28px; padding: 0 4px; font-size: 11px; }
 }
-@media (prefers-reduced-motion: reduce) { .identidade, .barra { transition: none; } }
+@media (max-width: 380px) { .menu { gap: 0 9px; } .menu a.chamada { padding: 5px 8px; } }
+@media (prefers-reduced-motion: reduce) { .identidade, .barra { transition: none; } .chamada .ponto { animation: none; } }
 </style>

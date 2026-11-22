@@ -165,9 +165,15 @@ test('página da imersão traz as novas datas, a programação e a inscrição e
   for (const data of ['2027-02-23T20:00-03:00', '2027-02-24T20:00-03:00', '2027-02-25T20:00-03:00']) {
     await expect(page.locator(`time[datetime="${data}"]`)).toHaveCount(1);
   }
-  const inscricao = page.getByRole('link', { name: /Quero participar gratuitamente/ });
+  const inscricao = page.getByRole('link', { name: /Garantir minha vaga gratuita/ });
   await expect(inscricao).toHaveCount(1);
   await expect(inscricao).toHaveAttribute('href', '#inscricao');
+  // Chamada de urgência com contagem regressiva até o primeiro encontro.
+  await expect(page.getByRole('heading', { name: 'Fevereiro é logo ali.' })).toBeVisible();
+  await expect(page.locator('.botao-faixa')).toHaveAttribute('href', '#inscricao');
+  await expect(page.locator('.contagem')).toContainText(/Faltam \d+ dias para o primeiro encontro/);
+  // Destaque do item no menu.
+  await expect(page.locator('.portal-header .menu a.chamada')).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('main a[href*="professor-ia-eosin"]')).toHaveCount(0);
   await expect(page.locator('main')).toContainText('algo ainda mais prazeroso');
   await expect(page.getByRole('link', { name: 'Adicionar à agenda' })).toHaveAttribute('href', '/agenda/imersao-ia-fevereiro-2027.ics');
