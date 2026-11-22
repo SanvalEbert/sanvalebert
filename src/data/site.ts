@@ -34,8 +34,7 @@ export type Pagina = keyof typeof paginas;
 /** Ordem e numeração do menu, iguais em todos os canais. */
 export const menu: Pagina[] = ['sobre', 'pesquisa', 'estudantes', 'imersao'];
 
-/** Inscrição da imersão IA na Prática Docente (formulário próprio, com dados guardados conforme a LGPD). */
-export const inscricaoImersao = 'https://professor-ia-eosin.vercel.app/#inscricao';
+
 
 /** WhatsApp para propostas de palestras, eventos e formações. */
 export const contatoWhatsApp = 'https://wa.me/5571985558490';

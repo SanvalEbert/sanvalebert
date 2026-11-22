@@ -1,9 +1,10 @@
 ---
 // Página da imersão "Inteligência Artificial na Prática Docente" (menu: IA para Professores).
-// Apresenta o projeto no visual do portal e leva à inscrição no site da imersão, que guarda os dados.
+// Apresenta o projeto no visual do portal e recebe a inscrição na própria página (api/inscricoes.js).
 import Base from '../layouts/Base.astro';
-import { endereco, inscricaoImersao, link, type Idioma } from '../data/site';
+import { endereco, link, type Idioma } from '../data/site';
 import { tr } from '../i18n/tr';
+import FormInscricao from './FormInscricao.astro';
 
 interface Props { idioma: Idioma }
 const { idioma } = Astro.props;
@@ -23,7 +24,7 @@ const t = tr(idioma, {
     numeros: [['3', 'mentorias ao vivo'], ['100%', 'online e gratuita'], ['1', 'proposta pedagógica sua']],
     fotoAlt: 'Sanval Ebert explica um conteúdo em sala de aula',
     porqueRotulo: 'Por que agora',
-    citacao: 'Ensinar com o suporte da Inteligência Artificial tem transformado a atividade docente em algo muito mais prazeroso. Os resultados acontecem de forma dinâmica e inteligente, e o professor ganha espaço para criar e inovar, porque muitas tarefas mecânicas podem ser automatizadas.',
+    citacao: 'Ensinar com o suporte da Inteligência Artificial tem transformado a atividade docente em algo ainda mais prazeroso. Os resultados acontecem de forma dinâmica e inteligente, e o professor ganha espaço para criar e inovar, porque muitas tarefas mecânicas podem ser automatizadas.',
     convite: 'Quero provocar professores de todo o Brasil a viver essa experiência.',
     protagonismoRotulo: 'Em 2027, mais protagonismo',
     protagonismoTitulo: 'A IA cuida do mecânico. Você fica com o que só um professor sabe fazer.',
@@ -49,7 +50,8 @@ const t = tr(idioma, {
     conduzElo: 'Conheça minha trajetória',
     conduzFotoAlt: 'Sanval Ebert fala ao microfone no palco de um evento do SENAI CIMATEC',
     finalTitulo: ['Vamos viver essa', 'experiência juntos?'],
-    finalTexto: 'Inscrição gratuita, aberta a professores de todo o Brasil. Depois do cadastro, você recebe as orientações para entrar no grupo da imersão.',
+    finalTexto: 'Inscrição gratuita, aberta a professores de todo o Brasil. Inscreva-se aqui mesmo: logo depois do cadastro, você recebe o link do grupo da imersão.',
+    incluso: ['Participação gratuita', 'Três mentorias de 1h, ao vivo, às 20h', 'Atividades práticas e produção pedagógica', 'Link do grupo logo após a inscrição'],
   },
   en: {
     titulo: 'AI for Teachers · Artificial Intelligence in Teaching Practice immersion · Sanval Ebert',
@@ -65,7 +67,7 @@ const t = tr(idioma, {
     numeros: [['3', 'live mentoring sessions'], ['100%', 'online and free'], ['1', 'teaching plan of your own']],
     fotoAlt: 'Sanval Ebert explaining a topic in a classroom',
     porqueRotulo: 'Why now',
-    citacao: 'Teaching with the support of Artificial Intelligence has made the work of teachers far more enjoyable. Results come quickly and intelligently, and teachers gain room to create and innovate, because many mechanical tasks can be automated.',
+    citacao: 'Teaching with the support of Artificial Intelligence has made the work of teachers even more enjoyable. Results come quickly and intelligently, and teachers gain room to create and innovate, because many mechanical tasks can be automated.',
     convite: 'I want to challenge teachers across Brazil to live this experience.',
     protagonismoRotulo: 'In 2027, a bigger role for teachers',
     protagonismoTitulo: 'AI takes care of the mechanical work. You keep what only a teacher can do.',
@@ -91,7 +93,8 @@ const t = tr(idioma, {
     conduzElo: 'See my path',
     conduzFotoAlt: 'Sanval Ebert speaking into a microphone on stage at a SENAI CIMATEC event',
     finalTitulo: ['Shall we live this', 'experience together?'],
-    finalTexto: 'Free registration, open to teachers across Brazil. After signing up, you will receive instructions to join the immersion group.',
+    finalTexto: 'Free registration, open to teachers across Brazil. Sign up right here: as soon as you register, you get the link to the immersion group.',
+    incluso: ['Free participation', 'Three live 1-hour sessions at 8 pm (Brasília)', 'Hands-on activities and lesson design', 'Group link right after you register'],
   },
   es: {
     titulo: 'IA para Docentes · Inmersión Inteligencia Artificial en la Práctica Docente · Sanval Ebert',
@@ -107,7 +110,7 @@ const t = tr(idioma, {
     numeros: [['3', 'mentorías en vivo'], ['100%', 'en línea y gratuita'], ['1', 'propuesta pedagógica suya']],
     fotoAlt: 'Sanval Ebert explica un contenido en el aula',
     porqueRotulo: 'Por qué ahora',
-    citacao: 'Enseñar con el apoyo de la Inteligencia Artificial ha transformado la actividad docente en algo mucho más placentero. Los resultados llegan de forma dinámica e inteligente, y el docente gana espacio para crear e innovar, porque muchas tareas mecánicas se pueden automatizar.',
+    citacao: 'Enseñar con el apoyo de la Inteligencia Artificial ha transformado la actividad docente en algo aún más placentero. Los resultados llegan de forma dinámica e inteligente, y el docente gana espacio para crear e innovar, porque muchas tareas mecánicas se pueden automatizar.',
     convite: 'Quiero invitar a docentes de todo Brasil a vivir esta experiencia.',
     protagonismoRotulo: 'En 2027, más protagonismo',
     protagonismoTitulo: 'La IA se ocupa de lo mecánico. Usted se queda con lo que solo un docente sabe hacer.',
@@ -133,7 +136,8 @@ const t = tr(idioma, {
     conduzElo: 'Conozca mi trayectoria',
     conduzFotoAlt: 'Sanval Ebert habla al micrófono en el escenario de un evento del SENAI CIMATEC',
     finalTitulo: ['¿Vivimos juntos esta', 'experiencia?'],
-    finalTexto: 'Inscripción gratuita, abierta a docentes de todo Brasil. Después del registro, recibirá las indicaciones para entrar al grupo de la inmersión.',
+    finalTexto: 'Inscripción gratuita, abierta a docentes de todo Brasil. Inscríbase aquí mismo: apenas se registre, recibirá el enlace al grupo de la inmersión.',
+    incluso: ['Participación gratuita', 'Tres mentorías de 1 h, en vivo, a las 20 h (Brasilia)', 'Actividades prácticas y producción pedagógica', 'Enlace al grupo apenas se inscriba'],
   },
 });
 const agenda = endereco('agenda/imersao-ia-fevereiro-2027.ics');
@@ -147,7 +151,7 @@ const agenda = endereco('agenda/imersao-ia-fevereiro-2027.ics');
       <p class="abertura">{t.resumo}</p>
       <p class="quando"><strong>{t.quando}</strong><span>{t.horario}</span></p>
       <div class="linha">
-        <a class="botao" href={inscricaoImersao}>{t.inscrever} <span aria-hidden="true">↗</span></a>
+        <a class="botao" href="#inscricao">{t.inscrever} <span aria-hidden="true">↓</span></a>
         <a class="italico" href="#programacao">{t.programacao}</a>
         <a class="italico" href={agenda} download>{t.agenda}</a>
       </div>
@@ -213,14 +217,16 @@ const agenda = endereco('agenda/imersao-ia-fevereiro-2027.ics');
     </div>
   </section>
 
-  <section class="conteudo secao" aria-labelledby="final">
-    <div class="bloco-azul chamada-final">
-      <div>
-        <h2 id="final">{t.finalTitulo[0]} <i>{t.finalTitulo[1]}</i></h2>
-        <p>{t.finalTexto}</p>
-      </div>
-      <a class="botao botao-noite" href={inscricaoImersao}>{t.inscrever} <span aria-hidden="true">↗</span></a>
+  <section id="inscricao" class="conteudo secao inscrever" aria-labelledby="final">
+    <div class="coluna">
+      <p class="rotulo destaque">{t.quando}</p>
+      <h2 id="final">{t.finalTitulo[0]} <em>{t.finalTitulo[1]}</em></h2>
+      <p class="abertura">{t.finalTexto}</p>
+      <ul class="incluso">
+        {t.incluso.map((item) => <li>{item}</li>)}
+      </ul>
     </div>
+    <FormInscricao idioma={idioma} />
   </section>
 </Base>
 
@@ -270,6 +276,12 @@ const agenda = endereco('agenda/imersao-ia-fevereiro-2027.ics');
     .encontros li, .encontros li + li { padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--fio); }
   }
 
+  .inscrever { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 32px clamp(32px, 5vw, 72px); align-items: start; }
+  .inscrever h2 em { color: var(--ciano); }
+  .incluso { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 10px; }
+  .incluso li { padding-left: 28px; position: relative; color: #d4dfed; }
+  .incluso li::before { content: "✓"; position: absolute; left: 0; color: var(--ciano); font-weight: 700; }
+  @media (max-width: 900px) { .inscrever { grid-template-columns: 1fr; } }
   .conduz { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 32px clamp(32px, 5vw, 72px); align-items: center; }
   .foto-conduz { max-width: 380px; }
   @media (max-width: 760px) { .conduz { grid-template-columns: 1fr; } .foto-conduz { max-width: 320px; } }

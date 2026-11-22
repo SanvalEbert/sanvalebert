@@ -99,6 +99,49 @@ test('a versão em espanhol traduz a página inicial, os destaques e o San', asy
   await expect(page.locator('main')).not.toContainText(/Conheça|Pesquisa e publicações|Dicas e treinamentos/);
 });
 
+test('inscrição na própria página: valida, envia e mostra o link do grupo', async ({ page }) => {
+  let enviado: Record<string, unknown> | null = null;
+  await page.route('**/api/inscricoes', async (rota) => {
+    enviado = rota.request().postDataJSON();
+    await rota.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ ok: true, grupo: 'https://chat.whatsapp.com/teste' }) });
+  });
+  await abrir(page, '/ia-para-professores/');
+  const form = page.locator('[data-formulario]');
+  await form.getByRole('button', { name: 'Confirmar minha inscrição' }).click();
+  await expect(form.getByRole('alert')).toContainText('Revise os campos');
+  expect(enviado).toBeNull();
+  await form.getByLabel('Nome completo', { exact: true }).fill('Maria da Silva');
+  await form.getByLabel('WhatsApp com DDD', { exact: true }).fill('(71) 99999-1234');
+  await form.getByLabel('E-mail', { exact: true }).fill('maria@escola.edu.br');
+  await form.getByLabel('Cidade', { exact: true }).fill('Salvador');
+  await form.locator('select[name="estado"]').selectOption('BA');
+  await form.getByLabel('Instituição onde ensina', { exact: true }).fill('Escola Estadual');
+  await form.getByLabel('Iniciante', { exact: true }).check();
+  await form.getByRole('checkbox').check();
+  await form.getByRole('button', { name: 'Confirmar minha inscrição' }).click();
+  const sucesso = page.locator('[data-sucesso]');
+  await expect(sucesso).toBeVisible();
+  await expect(sucesso).toContainText('Inscrição confirmada!');
+  await expect(sucesso.getByRole('link', { name: /Entrar no grupo do WhatsApp/ })).toHaveAttribute('href', 'https://chat.whatsapp.com/teste');
+  expect(enviado).toMatchObject({ email: 'maria@escola.edu.br', estado: 'BA', experiencia_ia: 'Iniciante', consentimento_lgpd: true });
+});
+
+test('inscrição mostra mensagem clara quando o e-mail já está inscrito', async ({ page }) => {
+  await page.route('**/api/inscricoes', (rota) => rota.fulfill({ status: 409, contentType: 'application/json', body: '{"erro":"already_registered"}' }));
+  await abrir(page, '/es/ia-para-docentes/');
+  const form = page.locator('[data-formulario]');
+  await form.getByLabel('Nombre completo').fill('María Pérez');
+  await form.getByLabel('WhatsApp con código de área').fill('71999991234');
+  await form.getByLabel('Correo electrónico').fill('maria@escuela.edu');
+  await form.getByLabel('Ciudad').fill('Salvador');
+  await form.getByLabel('Estado (Brasil)').selectOption('BA');
+  await form.getByLabel('Institución donde enseña').fill('Escuela');
+  await form.getByLabel('Avanzada').check();
+  await form.getByRole('checkbox').check();
+  await form.getByRole('button', { name: 'Confirmar mi inscripción' }).click();
+  await expect(form.getByRole('alert')).toContainText('ya está inscrito');
+});
+
 test('menu leva o professor à página IA para Professores nos três idiomas', async ({ page }) => {
   for (const [rota, menu, nome, destino] of [
     ['/', 'Menu principal', 'IA para Professores', '/ia-para-professores/'],
@@ -123,9 +166,10 @@ test('página da imersão traz as novas datas, a programação e a inscrição e
     await expect(page.locator(`time[datetime="${data}"]`)).toHaveCount(1);
   }
   const inscricao = page.getByRole('link', { name: /Quero participar gratuitamente/ });
-  await expect(inscricao).toHaveCount(2);
-  await expect(inscricao.first()).toHaveAttribute('href', 'https://professor-ia-eosin.vercel.app/#inscricao');
-  await expect(inscricao.first()).toHaveAttribute('target', '_blank');
+  await expect(inscricao).toHaveCount(1);
+  await expect(inscricao).toHaveAttribute('href', '#inscricao');
+  await expect(page.locator('main a[href*="professor-ia-eosin"]')).toHaveCount(0);
+  await expect(page.locator('main')).toContainText('algo ainda mais prazeroso');
   await expect(page.getByRole('link', { name: 'Adicionar à agenda' })).toHaveAttribute('href', '/agenda/imersao-ia-fevereiro-2027.ics');
   const ics = await (await page.request.get('/agenda/imersao-ia-fevereiro-2027.ics')).text();
   expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(3);

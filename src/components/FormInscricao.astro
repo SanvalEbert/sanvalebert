@@ -1,0 +1,217 @@
+---
+// Formulário de inscrição da imersão. Envia para /api/inscricoes (servidor), que grava no Supabase.
+// Sem JavaScript, o formulário mostra a orientação de contato; com JavaScript, envia e mostra o resultado
+// na própria página, com o link do grupo do WhatsApp.
+import { link, type Idioma } from '../data/site';
+import { tr } from '../i18n/tr';
+
+interface Props { idioma: Idioma }
+const { idioma } = Astro.props;
+
+const estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+const t = tr(idioma, {
+  pt: {
+    titulo: 'Inscrição gratuita',
+    nome: 'Nome completo', whatsapp: 'WhatsApp com DDD', email: 'E-mail', cidade: 'Cidade', estado: 'Estado', escolha: 'Selecione',
+    instituicao: 'Instituição onde ensina', experiencia: 'Sua experiência com IA em sala de aula',
+    niveis: { Nenhuma: 'Nenhuma', Iniciante: 'Iniciante', 'Intermediário': 'Intermediária', 'Avançado': 'Avançada' },
+    consentimento: 'Autorizo o uso destes dados para organizar minha participação na imersão e receber comunicações sobre ela, conforme a',
+    politica: 'Política de Privacidade',
+    enviar: 'Confirmar minha inscrição', enviando: 'Enviando…',
+    sucessoTitulo: 'Inscrição confirmada!',
+    sucessoTexto: 'Agora entre no grupo oficial do WhatsApp para receber os links das mentorias, os materiais e os avisos da imersão.',
+    grupo: 'Entrar no grupo do WhatsApp',
+    erros: {
+      invalid_fields: 'Revise os campos destacados e tente novamente.',
+      already_registered: 'Este e-mail já está inscrito nesta edição da imersão.',
+      too_many_requests: 'Muitas tentativas seguidas. Aguarde alguns minutos e tente de novo.',
+      registrations_not_configured: 'As inscrições estão sendo configuradas. Tente novamente em breve.',
+      padrao: 'Não foi possível concluir sua inscrição agora. Tente novamente em instantes.',
+    },
+    obrigatorio: 'Campos obrigatórios. Seus dados ficam protegidos e não são compartilhados.',
+    reserva: 'Enquanto isso, inscreva-se por este formulário',
+  },
+  en: {
+    titulo: 'Free registration',
+    nome: 'Full name', whatsapp: 'WhatsApp with area code', email: 'Email', cidade: 'City', estado: 'State (Brazil)', escolha: 'Select',
+    instituicao: 'Institution where you teach', experiencia: 'Your experience with AI in the classroom',
+    niveis: { Nenhuma: 'None', Iniciante: 'Beginner', 'Intermediário': 'Intermediate', 'Avançado': 'Advanced' },
+    consentimento: 'I authorize the use of this data to organize my participation in the immersion and to receive communications about it, under the',
+    politica: 'Privacy Policy',
+    enviar: 'Confirm my registration', enviando: 'Sending…',
+    sucessoTitulo: 'You are registered!',
+    sucessoTexto: 'Now join the official WhatsApp group to receive the session links, materials and announcements.',
+    grupo: 'Join the WhatsApp group',
+    erros: {
+      invalid_fields: 'Please review the highlighted fields and try again.',
+      already_registered: 'This email is already registered for this edition.',
+      too_many_requests: 'Too many attempts in a row. Please wait a few minutes and try again.',
+      registrations_not_configured: 'Registration is being set up. Please try again soon.',
+      padrao: 'We could not complete your registration right now. Please try again shortly.',
+    },
+    obrigatorio: 'All fields are required. Your data is protected and never shared.',
+    reserva: 'Meanwhile, register through this form',
+  },
+  es: {
+    titulo: 'Inscripción gratuita',
+    nome: 'Nombre completo', whatsapp: 'WhatsApp con código de área', email: 'Correo electrónico', cidade: 'Ciudad', estado: 'Estado (Brasil)', escolha: 'Seleccione',
+    instituicao: 'Institución donde enseña', experiencia: 'Su experiencia con IA en el aula',
+    niveis: { Nenhuma: 'Ninguna', Iniciante: 'Principiante', 'Intermediário': 'Intermedia', 'Avançado': 'Avanzada' },
+    consentimento: 'Autorizo el uso de estos datos para organizar mi participación en la inmersión y recibir comunicaciones sobre ella, conforme a la',
+    politica: 'Política de Privacidad',
+    enviar: 'Confirmar mi inscripción', enviando: 'Enviando…',
+    sucessoTitulo: '¡Inscripción confirmada!',
+    sucessoTexto: 'Ahora entre al grupo oficial de WhatsApp para recibir los enlaces de las mentorías, los materiales y los avisos.',
+    grupo: 'Entrar al grupo de WhatsApp',
+    erros: {
+      invalid_fields: 'Revise los campos marcados e intente de nuevo.',
+      already_registered: 'Este correo ya está inscrito en esta edición.',
+      too_many_requests: 'Demasiados intentos seguidos. Espere unos minutos e intente de nuevo.',
+      registrations_not_configured: 'Las inscripciones se están configurando. Intente de nuevo pronto.',
+      padrao: 'No fue posible completar su inscripción ahora. Intente de nuevo en unos instantes.',
+    },
+    obrigatorio: 'Todos los campos son obligatorios. Sus datos están protegidos y no se comparten.',
+    reserva: 'Mientras tanto, inscríbase por este formulario',
+  },
+});
+---
+
+<div class="inscricao" data-inscricao data-erros={JSON.stringify(t.erros)} data-enviando={t.enviando} data-reserva="https://professor-ia-eosin.vercel.app/#inscricao" data-reserva-texto={t.reserva}>
+  <form class="formulario" novalidate data-formulario>
+    <h3>{t.titulo}</h3>
+    <p class="apoio">{t.obrigatorio}</p>
+    <label class="isca" aria-hidden="true">Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+    <label>{t.nome}<input name="nome_completo" type="text" required minlength="3" maxlength="160" autocomplete="name" /></label>
+    <div class="duas">
+      <label>{t.whatsapp}<input name="whatsapp" type="tel" required inputmode="tel" pattern="[0-9()+\s-]{10,20}" maxlength="20" autocomplete="tel" placeholder="(71) 99999-9999" /></label>
+      <label>{t.email}<input name="email" type="email" required maxlength="180" autocomplete="email" placeholder="voce@exemplo.com" /></label>
+    </div>
+    <div class="duas">
+      <label>{t.cidade}<input name="cidade" type="text" required minlength="2" maxlength="120" autocomplete="address-level2" /></label>
+      <label>{t.estado}
+        <select name="estado" required autocomplete="address-level1">
+          <option value="">{t.escolha}</option>
+          {estados.map((uf) => <option value={uf}>{uf}</option>)}
+        </select>
+      </label>
+    </div>
+    <label>{t.instituicao}<input name="instituicao_ensino" type="text" required minlength="2" maxlength="180" autocomplete="organization" /></label>
+    <fieldset>
+      <legend>{t.experiencia}</legend>
+      <div class="niveis">
+        {Object.entries(t.niveis).map(([valor, rotulo]) => (
+          <label class="nivel"><input type="radio" name="experiencia_ia" value={valor} required /><span>{rotulo}</span></label>
+        ))}
+      </div>
+    </fieldset>
+    <label class="consentimento"><input type="checkbox" name="consentimento_lgpd" value="true" required /><span>{t.consentimento} <a href={link('privacidade', idioma)}>{t.politica}</a>.</span></label>
+    <p class="mensagem-erro" role="alert" data-erro hidden></p>
+    <button class="botao enviar" type="submit">{t.enviar}</button>
+  </form>
+
+  <div class="sucesso" data-sucesso hidden tabindex="-1">
+    <p class="rotulo destaque">✓</p>
+    <h3>{t.sucessoTitulo}</h3>
+    <p>{t.sucessoTexto}</p>
+    <a class="botao" data-grupo href="https://chat.whatsapp.com/FLHy7jnIBoTIf3cewk6zTW" target="_blank" rel="noopener noreferrer">{t.grupo} <span aria-hidden="true">↗</span></a>
+  </div>
+</div>
+
+<script>
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-inscricao]')) {
+    const form = raiz.querySelector<HTMLFormElement>('[data-formulario]')!;
+    const erro = raiz.querySelector<HTMLElement>('[data-erro]')!;
+    const sucesso = raiz.querySelector<HTMLElement>('[data-sucesso]')!;
+    const grupo = raiz.querySelector<HTMLAnchorElement>('[data-grupo]')!;
+    const botao = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const textoBotao = botao.textContent;
+    const erros = JSON.parse(raiz.dataset.erros || '{}');
+    const parametros = new URLSearchParams(location.search);
+
+    const mostrarErro = (codigo: string) => {
+      erro.textContent = erros[codigo] || erros.padrao;
+      // Reserva temporária: enquanto o banco não estiver configurado no portal, aponta o formulário anterior.
+      if (codigo === 'registrations_not_configured' && raiz.dataset.reserva) {
+        const a = document.createElement('a');
+        a.href = raiz.dataset.reserva; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.textContent = raiz.dataset.reservaTexto || '';
+        erro.append(' ', a, '.');
+      }
+      erro.hidden = false;
+    };
+
+    form.addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      erro.hidden = true;
+      if (!form.checkValidity()) {
+        form.classList.add('validar');
+        mostrarErro('invalid_fields');
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        return;
+      }
+      const dados = Object.fromEntries(new FormData(form).entries());
+      Object.assign(dados, {
+        consentimento_lgpd: form.consentimento_lgpd.checked,
+        origem: parametros.get('utm_source') || 'portal-sanvalebert',
+        utm_source: parametros.get('utm_source') || '',
+        utm_medium: parametros.get('utm_medium') || '',
+        utm_campaign: parametros.get('utm_campaign') || '',
+      });
+      botao.disabled = true;
+      botao.textContent = raiz.dataset.enviando || '…';
+      try {
+        const resposta = await fetch('/api/inscricoes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados),
+        });
+        const retorno = await resposta.json().catch(() => ({}));
+        if (!resposta.ok) { mostrarErro(retorno.erro); return; }
+        if (retorno.grupo) grupo.href = retorno.grupo;
+        form.hidden = true;
+        sucesso.hidden = false;
+        sucesso.focus();
+      } catch {
+        mostrarErro('padrao');
+      } finally {
+        botao.disabled = false;
+        botao.textContent = textoBotao;
+      }
+    });
+  }
+</script>
+
+<style>
+  .inscricao { background: linear-gradient(160deg, rgba(20, 40, 68, .95), rgba(9, 19, 35, .97)); border: 1px solid rgba(130, 232, 242, .35); border-radius: 22px; padding: clamp(22px, 3vw, 34px); }
+  .formulario, .sucesso { display: flex; flex-direction: column; gap: 16px; }
+  .formulario[hidden], .sucesso[hidden] { display: none; }
+  .formulario h3, .sucesso h3 { font-size: clamp(22px, 2vw, 26px); }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: var(--papel); }
+  input[type='text'], input[type='tel'], input[type='email'], select {
+    width: 100%; min-width: 0; box-sizing: border-box;
+    font: inherit; font-weight: 400; font-size: 16px; min-height: 48px; padding: 10px 14px;
+    color: var(--papel); background: rgba(6, 12, 24, .7); border: 1px solid rgba(139, 188, 255, .35); border-radius: 12px;
+  }
+  input::placeholder { color: rgba(179, 194, 216, .55); }
+  input:focus-visible, select:focus-visible { outline: 2px solid var(--ciano); outline-offset: 2px; border-color: var(--ciano); }
+  .validar input:invalid, .validar select:invalid { border-color: #ff9a9a; }
+  .duas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  fieldset { border: 0; margin: 0; padding: 0; }
+  legend { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .niveis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .nivel { flex-direction: row; align-items: center; gap: 8px; min-height: 44px; padding: 8px 10px; border: 1px solid rgba(139, 188, 255, .3); border-radius: 12px; font-weight: 500; cursor: pointer; }
+  .nivel:has(input:checked) { border-color: var(--ciano); background: rgba(130, 232, 242, .1); }
+  .nivel input, .consentimento input { accent-color: var(--ciano); width: 18px; height: 18px; flex: none; }
+  .consentimento { flex-direction: row; align-items: flex-start; gap: 10px; font-weight: 400; font-size: 14px; line-height: 1.55; color: #d4dfed; }
+  .consentimento a { color: var(--ciano); }
+  .mensagem-erro a { color: #fff; }
+  .mensagem-erro { padding: 10px 14px; border-radius: 12px; background: rgba(255, 120, 120, .12); border: 1px solid rgba(255, 154, 154, .45); color: #ffd4d4; font-size: 14px; }
+  .enviar { align-self: stretch; text-align: center; font-size: 14px; }
+  .enviar:disabled { opacity: .7; cursor: progress; }
+  .isca { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .sucesso { align-items: flex-start; }
+  .sucesso p:not(.rotulo) { color: #d4dfed; }
+  .sucesso .rotulo { font-size: 28px; }
+  @media (max-width: 560px) { .duas { grid-template-columns: 1fr; } .niveis { grid-template-columns: 1fr 1fr; } }
+  .inscricao { min-width: 0; }
+</style>

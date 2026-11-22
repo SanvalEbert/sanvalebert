@@ -12,7 +12,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "check:links": "node scripts/check-links.mjs",
-    "test": "npm run check && npm run build && npm run check:links && node --test tests/api.test.mjs && npm run test:e2e",
+    "test": "npm run check && npm run build && npm run check:links && node --test tests/api.test.mjs tests/inscricoes.test.mjs && npm run test:e2e",
     "test:e2e": "playwright test"
   },
   "dependencies": {
