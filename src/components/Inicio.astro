@@ -139,13 +139,9 @@ const sobre = tr(idioma, {
       </div>
       <article class="universidade" aria-labelledby="uni-titulo">
         <div class="uni-intro">
-          <div class="cartao-topo">
-            <span class="selo selo-uni" aria-hidden="true">SC</span>
-            <span class="apoio">{uni.nome}</span>
-          </div>
-          <p class="rotulo destaque">{uni.rotulo[idioma]}</p>
+          <p class="rotulo destaque">{uni.nome} · {uni.rotulo[idioma]}</p>
           <h3 id="uni-titulo">{uni.titulo[idioma]}</h3>
-          <p class="cartao-resumo">{uni.resumo[idioma]}</p>
+          <p class="uni-resumo">{uni.resumo[idioma]}</p>
         </div>
         <div class="uni-cursos">
           <p class="apoio uni-nota">{uni.nota[idioma]}</p>
@@ -154,45 +150,34 @@ const sobre = tr(idioma, {
               <li>
                 <a class="curso" href={c.url} rel="noopener" target="_blank">
                   <span class="curso-nome">{c.nome[idioma]}</span>
-                  <span class="curso-dados"><span>{c.formato[idioma]}</span><span aria-hidden="true">·</span><span>{c.duracao[idioma]}</span></span>
-                  <span class="curso-acao">{uni.botaoCurso[idioma]}<span class="so-leitor">: {c.nome[idioma]} ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span> <span aria-hidden="true">↗</span></span>
+                  <span class="curso-dados">{c.formato[idioma]} · {c.duracao[idioma]}</span>
+                  <span class="curso-seta" aria-hidden="true">↗</span>
+                  <span class="so-leitor"> ({uni.botaoCurso[idioma]}, {tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span>
                 </a>
               </li>
             ))}
           </ul>
-        </div>
-        <div class="uni-outros">
-          <p>{uni.outrosTitulo[idioma]}</p>
-          <ul class="linha">
-            {uni.outros.map((o) => (
-              <li><a class="pilula" href={o.url} rel="noopener" target="_blank">{o.rotulo[idioma]}<span class="so-leitor"> — {uni.nome} ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span> <span aria-hidden="true">↗</span></a></li>
-            ))}
-          </ul>
+          <p class="uni-outros">
+            {uni.outrosTitulo[idioma]}{' '}
+            {uni.outros.map((o, k) => <>{k > 0 && <span aria-hidden="true"> · </span>}<a href={o.url} rel="noopener" target="_blank">{o.rotulo[idioma]}<span class="so-leitor"> — {uni.nome} ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span></a></>)}
+          </p>
         </div>
       </article>
 
-      <Carrossel idioma={idioma} rotulo={i.noticiasTitulo} modo="cartoes" automatico={6000}>
-        {noticias.map((n) => (
-          <li class="recomendacao">
-            <article class="cartao" aria-labelledby={`rec-${n.url.replace(/\W+/g, '-')}`}>
-              <div class="cartao-topo">
-                <span class="selo" aria-hidden="true">{n.fonte.split(' ').map((p) => p[0]).join('').slice(0, 3)}</span>
-                <span class="apoio">{n.fonte}</span>
-              </div>
-              <p class="rotulo destaque">{categorias[n.categoria][idioma]}</p>
-              <h3 id={`rec-${n.url.replace(/\W+/g, '-')}`}>{n.titulo[idioma]}</h3>
-              <p class="cartao-resumo">{n.resumo[idioma]}</p>
-              {n.etiquetas && (
-                <ul class="etiquetas" aria-label={tr(idioma, { pt: 'Características', en: 'Features', es: 'Características' })}>
-                  {n.etiquetas.map((e) => <li>{e[idioma]}</li>)}
-                </ul>
-              )}
-              {n.data && <p class="apoio"><time datetime={n.data}>{dataCurta(n.data)}</time></p>}
-              <a class="botao acessar" href={n.url} rel="noopener" target="_blank">
-                {i.noticiasElo}<span class="so-leitor"> {n.titulo[idioma]} ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            </article>
+      <Carrossel idioma={idioma} rotulo={i.noticiasTitulo} automatico={7000}>
+        {noticias.map((n, k) => (
+          <li class="nota-curadoria" aria-roledescription={tr(idioma, { pt: 'item', en: 'slide', es: 'diapositiva' })} aria-label={`${k + 1} / ${noticias.length}`}>
+            <div class="nota-plataforma">
+              <p class="nota-numero" aria-hidden="true">{String(k + 1).padStart(2, '0')}</p>
+              <p class="apoio">{n.fonte} · {categorias[n.categoria][idioma]}</p>
+              <h3>{n.titulo[idioma]}</h3>
+              {n.etiquetas && <p class="nota-etiquetas">{n.etiquetas.map((e) => e[idioma]).join(' · ')}</p>}
+            </div>
+            <blockquote class="nota-texto">
+              <p class="rotulo destaque">{tr(idioma, { pt: 'Por que recomendo', en: 'Why I recommend it', es: 'Por qué lo recomiendo' })}</p>
+              <p>{n.porque[idioma]}</p>
+              <a class="nota-link" href={n.url} rel="noopener" target="_blank">{i.noticiasElo} {n.titulo[idioma]}<span class="so-leitor"> ({tr(idioma, { pt: 'abre em nova aba', en: 'opens in a new tab', es: 'se abre en una pestaña nueva' })})</span> <span aria-hidden="true">↗</span></a>
+            </blockquote>
           </li>
         ))}
       </Carrossel>
@@ -270,140 +255,55 @@ const sobre = tr(idioma, {
 
   .nota { max-width: 40em; }
 
-  .recomendacao { display: flex; height: 100%; }
-  .cartao {
-    position: relative;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: clamp(22px, 2.4vw, 30px);
-    border: 1px solid var(--fio);
-    border-radius: 20px;
-    background: linear-gradient(160deg, rgba(20, 40, 68, .95), rgba(9, 19, 35, .97));
-    box-shadow: inset 0 1px 0 rgba(130, 232, 242, .12), 0 18px 40px rgba(0, 0, 0, .18);
-    overflow: hidden;
-    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
-  }
-  .cartao::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto;
-    height: 3px;
-    background: linear-gradient(90deg, var(--azul), var(--ciano));
-    opacity: .8;
-  }
-  .cartao-topo { display: flex; align-items: center; gap: 12px; }
-  .selo {
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    border-radius: 12px;
-    background: rgba(36, 82, 223, .22);
-    border: 1px solid rgba(139, 188, 255, .35);
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ciano);
-    letter-spacing: .04em;
-  }
-  .cartao h3 { font-size: clamp(23px, 2vw, 27px); }
-  .cartao-resumo { color: #d4dfed; font-size: 16px; line-height: 1.6; }
-  .etiquetas { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  .etiquetas li {
-    font-family: var(--mono);
-    font-size: 11px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(130, 232, 242, .3);
-    color: var(--nevoa);
-  }
-  .acessar { margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; }
-  @media (hover: hover) {
-    .cartao:hover { transform: translateY(-4px); border-color: rgba(130, 232, 242, .45); box-shadow: inset 0 1px 0 rgba(130, 232, 242, .16), 0 24px 56px rgba(0, 0, 0, .28); }
-  }
-  .cartao:focus-within { border-color: rgba(130, 232, 242, .6); }
-
   .universidade {
-    position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: 28px clamp(28px, 4vw, 48px);
-    margin-bottom: 24px;
-    padding: clamp(24px, 3vw, 40px);
-    border: 1px solid rgba(130, 232, 242, .35);
-    border-radius: 24px;
-    background:
-      radial-gradient(ellipse at 100% 0%, rgba(53, 163, 204, .22), transparent 60%),
-      linear-gradient(135deg, #10234b, #0a172e);
-    box-shadow: 0 20px 70px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(130, 232, 242, .12);
-    overflow: hidden;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 28px clamp(32px, 5vw, 72px);
+    margin-bottom: clamp(48px, 6vw, 72px);
+    padding-bottom: clamp(40px, 5vw, 56px);
+    border-bottom: 1px solid var(--fio);
   }
-  .universidade::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto;
-    height: 3px;
-    background: linear-gradient(90deg, var(--azul), var(--ciano));
-  }
-  .uni-intro { display: flex; flex-direction: column; gap: 14px; }
-  .universidade h3 { font-size: clamp(26px, 2.6vw, 34px); line-height: 1.15; }
-  .selo-uni { background: rgba(130, 232, 242, .14); border-color: rgba(130, 232, 242, .5); }
-  .uni-cursos { display: flex; flex-direction: column; gap: 12px; }
-  .uni-nota { text-transform: uppercase; letter-spacing: .1em; font-size: 11px; }
-  .uni-cursos ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .uni-intro { display: flex; flex-direction: column; gap: 16px; }
+  .universidade h3 { font-size: clamp(28px, 3vw, 40px); line-height: 1.1; letter-spacing: -.02em; }
+  .uni-resumo { color: #d4dfed; font-size: 17px; line-height: 1.65; max-width: 34em; }
+  .uni-cursos { display: flex; flex-direction: column; gap: 6px; }
+  .uni-nota { text-transform: uppercase; letter-spacing: .12em; font-size: 11px; }
+  .uni-cursos ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(130, 232, 242, .35); }
   .curso {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "nome acao" "dados acao";
-    gap: 4px 16px;
+    grid-template-areas: "nome seta" "dados seta";
+    gap: 6px 16px;
     align-items: center;
-    padding: 18px 20px;
-    border: 1px solid rgba(139, 188, 255, .3);
-    border-radius: 16px;
-    background: rgba(6, 12, 24, .45);
+    padding: 20px 0;
+    border-bottom: 1px solid var(--fio);
     text-decoration: none;
-    transition: border-color .2s ease, background .2s ease, transform .2s ease;
   }
-  .curso-nome { grid-area: nome; font-size: 19px; font-weight: 650; line-height: 1.25; }
-  .curso-dados { grid-area: dados; display: flex; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--nevoa); }
-  .curso-acao { grid-area: acao; font-family: var(--mono); font-size: 12px; color: var(--ciano); white-space: nowrap; }
-  .curso:hover { border-color: var(--ciano); background: rgba(18, 40, 74, .7); color: var(--papel); }
-  .uni-outros {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px 24px;
-    padding-top: 22px;
-    border-top: 1px solid rgba(139, 188, 255, .2);
+  .curso-nome { grid-area: nome; font-size: clamp(21px, 2.1vw, 27px); font-weight: 650; line-height: 1.2; letter-spacing: -.01em; transition: color .2s ease; }
+  .curso-dados { grid-area: dados; font-family: var(--mono); font-size: 12px; color: var(--nevoa); }
+  .curso-seta { grid-area: seta; font-size: 22px; color: var(--ciano); transition: transform .2s ease; }
+  .curso:hover { color: var(--papel); }
+  .curso:hover .curso-nome { color: var(--ciano); }
+  .curso:hover .curso-seta { transform: translate(3px, -3px); }
+  .uni-outros { margin-top: 14px; color: #d4dfed; font-size: 15px; line-height: 1.7; }
+  .uni-outros a { color: var(--ciano); text-underline-offset: .2em; }
+  @media (max-width: 860px) { .universidade { grid-template-columns: 1fr; } }
+
+  .nota-curadoria {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 28px clamp(32px, 5vw, 72px);
+    align-items: start;
   }
-  .uni-outros p { flex: 1 1 360px; color: #d4dfed; font-size: 16px; }
-  .uni-outros ul { list-style: none; margin: 0; padding: 0; gap: 10px; }
-  .pilula {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 44px;
-    padding: 8px 16px;
-    border: 1px solid rgba(130, 232, 242, .4);
-    border-radius: 999px;
-    font-family: var(--mono);
-    font-size: 12px;
-    text-decoration: none;
-    transition: border-color .2s ease, background .2s ease;
-  }
-  .pilula:hover { border-color: var(--ciano); background: rgba(36, 82, 223, .25); color: var(--papel); }
-  @media (max-width: 860px) {
-    .universidade { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 480px) {
-    .curso { grid-template-columns: 1fr; grid-template-areas: "nome" "dados" "acao"; }
-    .curso-acao { margin-top: 6px; }
-  }
-  @media (hover: hover) { .curso:hover { transform: translateY(-2px); } }
+  .nota-plataforma { display: flex; flex-direction: column; gap: 10px; }
+  .nota-numero { font-family: var(--mono); font-size: 13px; color: var(--ciano); letter-spacing: .1em; }
+  .nota-plataforma h3 { font-size: clamp(34px, 4.4vw, 58px); line-height: 1.02; letter-spacing: -.035em; }
+  .nota-etiquetas { font-family: var(--mono); font-size: 12px; color: var(--nevoa); letter-spacing: .04em; }
+  .nota-texto { margin: 0; padding: 4px 0 4px clamp(20px, 2.4vw, 32px); border-left: 2px solid var(--ciano); display: flex; flex-direction: column; gap: 14px; }
+  .nota-texto p:not(.rotulo) { font-size: clamp(19px, 1.8vw, 23px); line-height: 1.55; color: var(--papel); }
+  .nota-link { align-self: flex-start; font-family: var(--mono); font-size: 13px; color: var(--ciano); text-underline-offset: .25em; padding: 10px 0; }
+  .nota-link:hover { color: var(--papel); }
+  @media (max-width: 760px) { .nota-curadoria { grid-template-columns: 1fr; } }
 
   .so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 </style>

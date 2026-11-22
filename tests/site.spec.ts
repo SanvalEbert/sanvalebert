@@ -189,15 +189,15 @@ test('dicas e treinamentos passam sozinhas em carrossel, com setas para voltar',
   await expect(carrossel.getByRole('button', { name: 'Pausar a passagem automática' })).toBeVisible();
 });
 
-test('dicas e treinamentos mostram os quatro cartões com botão de acesso', async ({ page }) => {
+test('dicas e treinamentos mostram as quatro notas de curadoria com link de acesso', async ({ page }) => {
   for (const [rota, titulo, botao] of [['/', 'Dicas e treinamentos', 'Acessar'], ['/en/', 'Tips and training', 'Visit']]) {
     await abrir(page, rota);
     const secao = page.locator('section', { has: page.getByRole('heading', { level: 2, name: titulo }) });
-    const cartoes = secao.locator('[data-carrossel] article');
+    const cartoes = secao.locator('[data-carrossel] .nota-curadoria');
     await expect(cartoes).toHaveCount(4);
     for (const cartao of await cartoes.all()) {
-      await expect(cartao).toBeVisible();
       await expect(cartao.getByRole('heading', { level: 3 })).not.toBeEmpty();
+      await expect(cartao.locator('blockquote')).not.toBeEmpty();
       const link = cartao.getByRole('link', { name: new RegExp(botao) });
       await expect(link).toHaveAttribute('href', /^https:\/\//);
       await expect(link).toHaveAttribute('target', '_blank');
