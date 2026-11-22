@@ -1,0 +1,193 @@
+---
+// Fotos da abertura: retrato e registros em palco e em sala, alternando com transição suave.
+// Sem moldura: as fotos se fundem ao fundo pela borda inferior.
+// A primeira foto carrega com prioridade; as demais só depois. A troca para quando o visitante
+// passa o mouse, foca os controles ou troca de aba, e não acontece com prefers-reduced-motion.
+import { endereco, type Idioma } from '../data/site';
+import { tr } from '../i18n/tr';
+
+interface Props { idioma: Idioma; legenda: string }
+const { idioma, legenda } = Astro.props;
+
+const fotos = [
+  {
+    arquivo: 'images/sanval-ebert.png', largura: 322, altura: 357, foco: '50% 30%',
+    alt: { pt: 'Retrato de Sanval Ebert, com óculos e blazer preto', en: 'Portrait of Sanval Ebert wearing glasses and a black blazer', es: 'Retrato de Sanval Ebert, con gafas y blazer negro' },
+  },
+  {
+    arquivo: 'images/conversa-jaqueta-jeans.jpg', largura: 760, altura: 950, foco: '50% 30%',
+    alt: { pt: 'Sanval Ebert conversa sorrindo, sentado, de jaqueta jeans', en: 'Sanval Ebert smiling during a conversation, seated, wearing a denim jacket', es: 'Sanval Ebert conversa sonriendo, sentado, con chaqueta de jean' },
+  },
+  {
+    arquivo: 'images/palco-cimatec-microfone.jpg', largura: 760, altura: 950, foco: '50% 40%',
+    alt: { pt: 'Sanval Ebert fala ao microfone, sentado no palco de um evento do SENAI CIMATEC', en: 'Sanval Ebert speaking into a microphone, seated on stage at a SENAI CIMATEC event', es: 'Sanval Ebert habla al micrófono, sentado en el escenario de un evento del SENAI CIMATEC' },
+  },
+  {
+    arquivo: 'images/sala-de-aula.jpg', largura: 760, altura: 950, foco: '50% 35%',
+    alt: { pt: 'Sanval Ebert explica um conteúdo em sala de aula', en: 'Sanval Ebert explaining a topic in a classroom', es: 'Sanval Ebert explica un contenido en el aula' },
+  },
+  {
+    arquivo: 'images/palco-cimatec-aplausos.jpg', largura: 760, altura: 950, foco: '50% 40%',
+    alt: { pt: 'Sanval Ebert aplaude, sentado no palco, diante do painel Educação, Ciência, Tecnologia, Inovação e Negócios', en: 'Sanval Ebert applauding on stage in front of the Education, Science, Technology, Innovation and Business banner', es: 'Sanval Ebert aplaude en el escenario, frente al panel Educación, Ciencia, Tecnología, Innovación y Negocios' },
+  },
+];
+const rotulos = {
+  regiao: tr(idioma, { pt: 'Fotos de Sanval Ebert', en: 'Photos of Sanval Ebert', es: 'Fotos de Sanval Ebert' }),
+  foto: tr(idioma, { pt: 'Mostrar foto', en: 'Show photo', es: 'Mostrar foto' }),
+  pausar: tr(idioma, { pt: 'Pausar a troca de fotos', en: 'Pause photo rotation', es: 'Pausar el cambio de fotos' }),
+  continuar: tr(idioma, { pt: 'Retomar a troca de fotos', en: 'Resume photo rotation', es: 'Reanudar el cambio de fotos' }),
+};
+---
+
+<figure class="fotos" role="region" aria-roledescription={tr(idioma, { pt: 'carrossel', en: 'carousel', es: 'carrusel' })} aria-label={rotulos.regiao} data-fotos data-pausar={rotulos.pausar} data-continuar={rotulos.continuar}>
+  <div class="palco">
+    {fotos.map((f, n) => (
+      <img
+        class:list={['foto', { ativa: n === 0 }]}
+        src={endereco(f.arquivo)}
+        width={f.largura}
+        height={f.altura}
+        alt={f.alt[idioma]}
+        style={`object-position: ${f.foco}`}
+        loading={n === 0 ? 'eager' : 'lazy'}
+        fetchpriority={n === 0 ? 'high' : undefined}
+        decoding="async"
+        aria-hidden={n === 0 ? undefined : 'true'}
+      />
+    ))}
+  </div>
+  <div class="controles-fotos">
+    {fotos.map((_, n) => (
+      <button type="button" class:list={['ponto', { ativa: n === 0 }]} data-ponto={n} aria-label={`${rotulos.foto} ${n + 1}`} aria-pressed={n === 0 ? 'true' : 'false'}></button>
+    ))}
+    <button type="button" class="pausa-fotos" data-pausa-fotos aria-label={rotulos.pausar} aria-pressed="false" hidden>
+      <svg class="i-pausar" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="0.5" width="2.8" height="9" rx=".8" fill="currentColor" /><rect x="6.2" y="0.5" width="2.8" height="9" rx=".8" fill="currentColor" /></svg>
+      <svg class="i-continuar" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1v8l7-4z" fill="currentColor" /></svg>
+    </button>
+  </div>
+  <figcaption class="perfil-profissional">{legenda}</figcaption>
+</figure>
+
+<script>
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-fotos]')) {
+    const fotos = [...raiz.querySelectorAll<HTMLImageElement>('.foto')];
+    const pontos = [...raiz.querySelectorAll<HTMLButtonElement>('[data-ponto]')];
+    const pausa = raiz.querySelector<HTMLButtonElement>('[data-pausa-fotos]')!;
+    const poucoMovimento = matchMedia('(prefers-reduced-motion: reduce)');
+    const intervalo = 5500;
+    let atual = 0;
+    let pausado = false;
+    let suspenso = false;
+    let temporizador: number | undefined;
+
+    const mostrar = (i: number) => {
+      atual = (i + fotos.length) % fotos.length;
+      fotos.forEach((f, k) => {
+        f.classList.toggle('ativa', k === atual);
+        if (k === atual) { f.removeAttribute('aria-hidden'); f.loading = 'eager'; } else f.setAttribute('aria-hidden', 'true');
+      });
+      pontos.forEach((p, k) => { p.classList.toggle('ativa', k === atual); p.setAttribute('aria-pressed', String(k === atual)); });
+      // Pré-carrega a próxima para a troca não piscar.
+      fotos[(atual + 1) % fotos.length].loading = 'eager';
+    };
+    const ativo = () => !pausado && !suspenso && !poucoMovimento.matches && !document.hidden;
+    const reiniciar = () => {
+      window.clearTimeout(temporizador);
+      if (ativo()) temporizador = window.setTimeout(() => { mostrar(atual + 1); reiniciar(); }, intervalo);
+    };
+    const marcarPausa = () => {
+      pausa.hidden = poucoMovimento.matches;
+      pausa.classList.toggle('pausado', pausado);
+      pausa.setAttribute('aria-pressed', String(pausado));
+      pausa.setAttribute('aria-label', pausado ? raiz.dataset.continuar! : raiz.dataset.pausar!);
+    };
+
+    pontos.forEach((p, k) => p.addEventListener('click', () => { mostrar(k); reiniciar(); }));
+    pausa.addEventListener('click', () => { pausado = !pausado; marcarPausa(); reiniciar(); });
+    raiz.addEventListener('mouseenter', () => { suspenso = true; reiniciar(); });
+    raiz.addEventListener('mouseleave', () => { suspenso = false; reiniciar(); });
+    raiz.addEventListener('focusin', () => { suspenso = true; reiniciar(); });
+    raiz.addEventListener('focusout', (e) => { if (!raiz.contains(e.relatedTarget as Node)) { suspenso = false; reiniciar(); } });
+    document.addEventListener('visibilitychange', reiniciar);
+    poucoMovimento.addEventListener('change', () => { marcarPausa(); reiniciar(); });
+    // A primeira troca espera a página carregar, para não competir com o conteúdo principal.
+    window.addEventListener('load', () => { fotos[1].loading = 'eager'; reiniciar(); }, { once: true });
+    marcarPausa();
+  }
+</script>
+
+<style>
+  .fotos {
+    flex: 1 1 340px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+  }
+  .palco {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 22px;
+    overflow: hidden;
+    /* Sem moldura: a borda inferior dissolve no fundo da página. */
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+  }
+  .foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 1.1s ease, transform 6s ease-out;
+    border: 0;
+    border-radius: 0;
+  }
+  .foto.ativa { opacity: 1; transform: scale(1); }
+
+  .controles-fotos { display: flex; align-items: center; gap: 8px; margin-top: -6px; }
+  .ponto {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+  }
+  .ponto::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    top: 50%;
+    height: 3px;
+    border-radius: 3px;
+    background: rgba(139, 188, 255, .35);
+    transform: translateY(-50%);
+    transition: background .3s ease;
+  }
+  .ponto.ativa::before, .ponto:hover::before { background: var(--ciano); }
+  .ponto:focus-visible { outline-offset: 0; border-radius: 6px; }
+  .pausa-fotos {
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid rgba(130, 232, 242, .35);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--nevoa);
+    cursor: pointer;
+  }
+  .pausa-fotos[hidden] { display: none; }
+  .pausa-fotos:hover { color: var(--papel); border-color: var(--ciano); }
+  .pausa-fotos .i-continuar, .pausa-fotos.pausado .i-pausar { display: none; }
+  .pausa-fotos.pausado .i-continuar { display: block; }
+  .perfil-profissional { font-size: 13px; line-height: 1.7; color: var(--nevoa); }
+  @media (max-width: 760px) { .fotos { max-width: 100%; } }
+</style>

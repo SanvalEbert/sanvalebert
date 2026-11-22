@@ -245,6 +245,21 @@ test('navega até o rodapé e retorna ao topo', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
 });
 
+test('fotos da abertura se alternam, sem moldura, com controles acessíveis', async ({ page }) => {
+  await page.clock.install();
+  await abrir(page, '/');
+  const fotos = page.getByRole('region', { name: 'Fotos de Sanval Ebert' });
+  await expect(fotos.locator('img')).toHaveCount(5);
+  for (const img of await fotos.locator('img').all()) await expect(img).toHaveAttribute('alt', /Sanval Ebert/);
+  await expect(fotos.locator('img.ativa')).toHaveCount(1);
+  await page.mouse.move(0, 0);
+  await page.clock.runFor(6000);
+  await expect(fotos.locator('img').nth(1)).toHaveClass(/ativa/);
+  await fotos.getByRole('button', { name: 'Mostrar foto 4' }).click();
+  await expect(fotos.locator('img').nth(3)).toHaveClass(/ativa/);
+  await expect(fotos.getByRole('button', { name: 'Pausar a troca de fotos' })).toBeVisible();
+});
+
 test('apresentação leva aos perfis', async ({ page }) => {
   await abrir(page, '/');
   await page.getByRole('navigation', { name: 'Menu principal' }).getByRole('link', { name: /Sobre/ }).click();

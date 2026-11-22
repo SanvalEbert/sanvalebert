@@ -8,6 +8,7 @@ import { categorias, noticias } from '../data/noticias';
 import { universidade as uni } from '../data/universidade';
 import Carrossel from './Carrossel.astro';
 import Perfis from './Perfis.astro';
+import FotosAbertura from './FotosAbertura.astro';
 import { t } from '../i18n/textos';
 
 interface Props {
@@ -77,10 +78,7 @@ const sobre = tr(idioma, {
       <p class="abertura">{i.resumo}</p>
       {pronta('sobre') && <div class="linha"><a class="italico" href={para('sobre')}>{i.verTrajetoria}</a></div>}
     </div>
-    <figure class="figura foto">
-      <img class="retrato" src={endereco('images/sanval-ebert.png')} width="322" height="357" alt={tr(idioma, { pt: 'Retrato de Sanval Ebert, com óculos e blazer preto', en: 'Portrait of Sanval Ebert wearing glasses and a black blazer', es: 'Retrato de Sanval Ebert, con gafas y blazer negro' })} fetchpriority="high" />
-      <figcaption class="perfil-profissional">{i.credenciais.join(' | ')}</figcaption>
-    </figure>
+    <FotosAbertura idioma={idioma} legenda={i.credenciais.join(' | ')} />
   </section>
 
   <section id="sobre" class="conteudo secao sobre" aria-labelledby="sobre-titulo">
@@ -203,18 +201,7 @@ const sobre = tr(idioma, {
     gap: 24px;
   }
 
-  .foto {
-    flex: 1 1 340px;
-    max-width: 380px;
-    padding: 12px;
-    border: 1px solid rgba(130,232,242,.3);
-    border-radius: 24px;
-    background: linear-gradient(145deg,rgba(24,53,85,.8),rgba(7,17,31,.9));
-    box-shadow: 0 24px 80px rgba(0,0,0,.35),0 0 64px rgba(32,105,198,.16),inset 0 1px 0 rgba(130,232,242,.1);
-  }
 
-  .retrato { display: block; width: 100%; height: auto; }
-  .perfil-profissional { padding: 6px 2px 2px; line-height: 1.7; }
 
   .sobre-grade { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; }
   .sobre-abertura { font-size: clamp(21px, 2vw, 26px); line-height: 1.45; color: var(--papel); font-weight: 500; }
